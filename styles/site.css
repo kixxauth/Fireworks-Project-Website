@@ -1,0 +1,8 @@
+@import url(reset.css);
+@import url(type.css);
+@import url(grid.css);
+
+#page {
+	width: 940px;
+	margin: 0 auto;
+}
