@@ -3,7 +3,8 @@
 	margin: 0 auto;
 }
 
-.block:after {
+.block:after,
+.clear:after {
 	content: '.';
 	display: block;
 	height: 0;
@@ -11,7 +12,8 @@
 	visibility: hidden;
 }
 
-.block { zoom: 1; }
+.block,
+.clear { zoom: 1; }
 
 .unit { 
 	float: left;
