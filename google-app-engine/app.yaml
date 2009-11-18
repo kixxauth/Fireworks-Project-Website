@@ -1,0 +1,21 @@
+application: fireworkscomputer 
+version: 3
+runtime: python
+api_version: 1
+
+handlers:
+- url: /css
+  static_dir: static/css
+
+- url: /images
+  static_dir: static/images
+
+- url: /mozilla-downloads
+  static_dir: static/mozilla-downloads
+  secure: always 
+
+- url: /.*
+  script: request.py
+
+- url: /.*
+  script: not_found.py
