@@ -61,11 +61,15 @@ class NotFoundHandler(webapp.RequestHandler):
     self.response.out.write('! This page was not found.');
 
 class TemplateListHandler(webapp.RequestHandler):
+  #todo: protect with authentication
   def get(self):
-    # os.listdir('ok')
-    # open(os.path.abspath(__file__)).read()
+    def readf(f):
+      return {'name': f,
+          'content': open(os.path.abspath(os.path.join('tpl', f))).read()}
+
     self.response.headers['Content-Type'] = 'text/plain'
-    self.response.out.write(simplejson.dumps(os.listdir('tpl')));
+    self.response.out.write(
+        simplejson.dumps([readf(f) for f in os.listdir('tpl')]))
 
 application = webapp.WSGIApplication([
   # Homepage
