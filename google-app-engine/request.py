@@ -35,26 +35,36 @@ def getRenderedPage(name):
 
 class IndexHandler(webapp.RequestHandler):
   def get(self):
-    page = getRenderedPage('home_1');
+    self.response.out.write(
+        open(os.path.abspath(os.path.join('tpl', 'index.html'))).read())
+
+class AboutHandler(webapp.RequestHandler):
+  def get(self):
+    page = getRenderedPage('about_1');
     if page is None:
       self.response.set_status(404)
       self.response.out.write('<h1>Todo: Create a better "not found" page.</h1>')
 
-class AboutHandler(webapp.RequestHandler):
-  def get(self):
-    self.response.out.write('*About The Fireworks Project*')
-
 class ProjectsListHandler(webapp.RequestHandler):
   def get(self):
-    self.response.out.write("Look at all the cool projects we're working on")
+    page = getRenderedPage('projects_1');
+    if page is None:
+      self.response.set_status(404)
+      self.response.out.write('<h1>Todo: Create a better "not found" page.</h1>')
 
 class ProjectsHandler(webapp.RequestHandler):
   def get(self, project):
-    self.response.out.write('This is the project page for %s'% project)
+    page = getRenderedPage('project_1');
+    if page is None:
+      self.response.set_status(404)
+      self.response.out.write('<h1>Todo: Create a better "not found" page.</h1>')
 
 class JoinHandler(webapp.RequestHandler):
   def get(self):
-    self.response.out.write('*Join Our Circus*')
+    page = getRenderedPage('join_1');
+    if page is None:
+      self.response.set_status(404)
+      self.response.out.write('<h1>Todo: Create a better "not found" page.</h1>')
 
 class NotFoundHandler(webapp.RequestHandler):
   def get(self):
