@@ -7,8 +7,8 @@ handlers:
 - url: /css
   static_dir: static/css
 
-- url: /images
-  static_dir: static/images
+- url: /img
+  static_dir: static/img
 
 - url: /mozilla-downloads
   static_dir: static/mozilla-downloads
