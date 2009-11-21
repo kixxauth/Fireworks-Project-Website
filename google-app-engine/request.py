@@ -81,6 +81,19 @@ class TemplateListHandler(webapp.RequestHandler):
     self.response.out.write(
         simplejson.dumps([readf(f) for f in os.listdir('tpl')]))
 
+class PageListHandler(webapp.RequestHandler):
+  #todo: protect with authentication
+  def get(self):
+    def readp(p):
+      return {
+          'name': p.key().name(),
+          'rendered': p.rendered
+          }
+
+    self.response.headers['Content-Type'] = 'text/plain'
+    self.response.out.write(
+        simplejson.dumps([readp(p) for p in Page.all()]))
+
 application = webapp.WSGIApplication([
   # Homepage
   # www.fireworksproject.com/
@@ -104,6 +117,9 @@ application = webapp.WSGIApplication([
 
   # Admin: view available templates
   ('/content-manager/templates/', TemplateListHandler),
+
+  # Admin: view page entities
+  ('/content-manager/pages/', PageListHandler),
 
   # Not Found
   ('/.*', NotFoundHandler)
