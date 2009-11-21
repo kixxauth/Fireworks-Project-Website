@@ -1,0 +1,190 @@
+body {
+	background: #eee url(../img/bg.png) repeat-x;
+	color: #666;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 13px;
+	line-height: 1.5;
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: #369;
+	text-decoration: none;
+	outline: none;
+}
+
+a:hover {
+	color: #69c;
+	text-decoration: underline;
+}
+
+a img {
+	border: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: #333;
+	margin: 0;
+	padding: 0;
+}
+
+h2 {
+	font-size: 3em;
+	line-height: 1;
+	margin-bottom: .5em;
+}
+
+h3 {
+	font-size: 1.5em;
+	line-height: 1;
+	margin-bottom: 1em;
+}
+
+h4 {
+	font-size: 1.25em;
+	line-height: 1.2;
+	margin-bottom: 1.2em;
+}
+
+p, ul, ol {
+	margin-bottom: 1.5em;
+}
+
+input, textarea, button {
+	font-family: inherit;
+	font-size: inherit;
+	line-height: 1;
+	outline: 0;
+	margin: 0;
+	padding: 4px;
+}
+
+input, textarea {
+	background: #fff;
+	border: 1px solid #ccc;
+	-webkit-border-radius: .3em;
+	-moz-border-radius: .3em;
+}
+
+button, .button {
+	background: #000 url(../img/btn-bg.png) repeat-x;
+	border: 1px solid #000;
+	color: #fff;
+	margin: 0;
+	padding: 5px;
+	-webkit-border-radius: .25em;
+	-moz-border-radius: .25em;
+}
+
+#page {
+	width: 940px;
+	margin: 0 auto;
+	padding: 30px;
+}
+
+#header {
+	padding: 0 10px;
+}
+
+#logo {
+	float: left;
+	margin: 0;
+}
+
+#navigation {
+	float: left;
+	font-size: 1.25em;
+	line-height: 80px;
+	list-style: none;
+	margin: 0;
+	padding: 0 0 0 40px;
+}
+
+#navigation li {
+	float: left;
+}
+
+#navigation li + li {
+	margin-left: 2em;
+}
+
+#navigation li a {
+	color: #666;
+	text-decoration: none;
+}
+
+#navigation li a:hover {
+	color: #333;
+}
+
+#search {
+	float: right;
+	line-height: 80px;
+}
+
+#masthead {
+	background: url(../img/arch.png) no-repeat;
+	color: #ccc;
+	padding: 40px 25px 0;
+}
+
+#masthead .screenshot {
+	background: #000;
+	border: 1px solid #333;
+	float: left;
+	width: 500px;
+	height: 300px;
+	overflow: hidden;
+}
+
+#masthead .description {
+	float: right;
+	width: 360px;
+	padding: 20px 0 0;
+}
+
+#masthead h2 {
+	color: #fff;
+}
+
+#masthead h4 {
+	color: #fff;
+	margin: 0;
+}
+
+#masthead .download {
+	background-color: #f90;
+	border-color: #f90;
+	color: #fff;
+	display: block;
+	font-size: 1.5em;
+	font-weight: bold;
+	width: 150px;
+	padding: .5em .75em;
+	text-shadow: rgba(0, 0, 0, .25) 0 1px 1px;
+	-webkit-border-radius: .5em;
+	-moz-border-radius: .5em;
+}
+
+#masthead .download:hover {
+	color: #fff;
+	text-decoration: none;
+}
+
+#content {
+	background: #fff;
+	height: 400px;
+}
+
+.clearfix:after {
+	content: '.';
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+.clearfix {
+	zoom: 1;
+}
