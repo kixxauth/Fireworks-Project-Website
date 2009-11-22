@@ -16,7 +16,14 @@ class Page(db.Model):
   """
   # The output of template rendering.
   # Thie is the actual text/markup that will form the body of the response.
-  rendered = db.TextProperty()
+  rendered = db.TextProperty(indexed=False)
+
+class ContentItem(db.Model):
+  """This class serves as a model for datastore entities that represent a
+  single content item in our content inventory. These items may be mixed and
+  matched, and applied to templates to render the page output.
+  """
+  content = db.ListProperty(db.Text, required=True, indexed=False)
 
 def sanitizePageName(name):
   """Entities of type Page are stored with a user supplied key, so we
