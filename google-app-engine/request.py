@@ -7,6 +7,7 @@ from google.appengine.ext import db
 from django.utils import simplejson
 
 import os
+import re
 
 class Page(db.Model):
   """This class serves as a model for datastore entities that represent a
@@ -23,12 +24,11 @@ def sanitizePageName(name):
   """
   return 'page:'+ name
 
-def getPage(name):
-  # will return null if the Page entity does not exist
-  return Page.get_by_key_name(sanitizePageName(name))
+def desanitizePageName(name):
+  return name.replace('page:', '')
 
 def getRenderedPage(name):
-  page = getPage(name)
+  page = Page.get_by_key_name(sanitizePageName(name))
   if page is None:
     return None
   return page.rendered
@@ -71,8 +71,8 @@ class NotFoundHandler(webapp.RequestHandler):
     self.response.out.write('! This page was not found.');
 
 class TemplateListHandler(webapp.RequestHandler):
-  #todo: protect with authentication
   def get(self):
+  #todo: protect with authentication
     def readf(f):
       return {'name': f,
           'content': open(os.path.abspath(os.path.join('tpl', f))).read()}
@@ -81,18 +81,41 @@ class TemplateListHandler(webapp.RequestHandler):
     self.response.out.write(
         simplejson.dumps([readf(f) for f in os.listdir('tpl')]))
 
-class PageListHandler(webapp.RequestHandler):
-  #todo: protect with authentication
-  def get(self):
-    def readp(p):
-      return {
-          'name': p.key().name(),
-          'rendered': p.rendered
-          }
+def readPage(page):
+  if page is None:
+    return page
+  return {
+      'name': desanitizePageName(page.key().name()),
+      'rendered': page.rendered
+      }
 
+class PageListHandler(webapp.RequestHandler):
+  def get(self):
+  #todo: protect with authentication
     self.response.headers['Content-Type'] = 'text/plain'
+
     self.response.out.write(
-        simplejson.dumps([readp(p) for p in Page.all()]))
+        simplejson.dumps([readPage(p) for p in Page.all()]))
+
+class PageHandler(webapp.RequestHandler):
+  def put(self, page_name):
+  #todo: protect with authentication
+    self.response.headers['Content-Type'] = 'text/plain'
+    if re.search('[^\w]+', page_name):
+      self.response.set_status(409)
+      self.response.out.write('unallowed characters in page name')
+      return
+
+    page = Page.get_by_key_name(sanitizePageName(page_name))
+    if page is None:
+      self.response.headers['Location'] = ('http://www.fireworksproject.com/'
+        'content-manager/pages/%s'% page_name)
+      self.response.set_status(201)
+      page = Page(key_name=sanitizePageName(page_name))
+
+    # todo: make updates
+    page.put()
+    self.response.out.write(simplejson.dumps(readPage(page)))
 
 application = webapp.WSGIApplication([
   # Homepage
@@ -120,6 +143,9 @@ application = webapp.WSGIApplication([
 
   # Admin: view page entities
   ('/content-manager/pages/', PageListHandler),
+
+  # PUT a page entity (compiles templates)
+  ('/content-manager/pages/(.*)', PageHandler),
 
   # Not Found
   ('/.*', NotFoundHandler)
