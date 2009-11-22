@@ -37,48 +37,68 @@ def desanitizePageName(name):
     return name
   return name.replace('page:', '')
 
-def getRenderedPage(name):
-  page = Page.get_by_key_name(sanitizePageName(name))
-  if page is None:
-    return None
-  return page.rendered
+class BaseHandler(webapp.RequestHandler):
+  def handleUnconfigured(self, msg):
+    self.response.set_status(503)
+    self.response.out.write('<h1>Todo: Create a better "error" page.</h1>')
+    self.response.out.write('<p>'+ msg +'</p>')
 
-class IndexHandler(webapp.RequestHandler):
-  def get(self):
-    self.response.out.write(
-        open(os.path.abspath(os.path.join('tpl', 'index.html'))).read())
-
-class AboutHandler(webapp.RequestHandler):
-  def get(self):
-    page = getRenderedPage('about_1');
+  def getRenderedPage(self, name):
+    page = Page.get_by_key_name(sanitizePageName(name))
     if page is None:
-      self.response.set_status(404)
-      self.response.out.write('<h1>Todo: Create a better "not found" page.</h1>')
+      return None
+    return page.rendered
 
-class ProjectsListHandler(webapp.RequestHandler):
-  def get(self):
-    page = getRenderedPage('projects_1');
+  def respond(self, page):
+    self.response.out.write(page.rendered)
+
+  def handleGet(self, name):
+    page_name = config.pages.get(name)
+    if page_name is None:
+      self.handleUnconfigured('No page name configured for %s'% name)
+      return
+
+    page = Page.get_by_key_name(sanitizePageName(page_name))
     if page is None:
-      self.response.set_status(404)
-      self.response.out.write('<h1>Todo: Create a better "not found" page.</h1>')
+      self.handleUnconfigured('No page data found for %s'% page_name)
+      return
 
-class ProjectsHandler(webapp.RequestHandler):
-  def get(self, project):
-    page = getRenderedPage('project_1');
-    if page is None:
-      self.response.set_status(404)
-      self.response.out.write('<h1>Todo: Create a better "not found" page.</h1>')
+    self.respond(page)
 
-class JoinHandler(webapp.RequestHandler):
+class IndexHandler(BaseHandler):
   def get(self):
-    page = getRenderedPage('join_1');
-    if page is None:
-      self.response.set_status(404)
-      self.response.out.write('<h1>Todo: Create a better "not found" page.</h1>')
+    self.handleGet('home')
 
-class NotFoundHandler(webapp.RequestHandler):
+class AboutHandler(BaseHandler):
   def get(self):
-    self.response.out.write('! This page was not found.');
+    self.handleGet('about')
+
+class ProjectsListHandler(BaseHandler):
+  def get(self):
+    self.handleGet('projects_listing')
+
+class ProjectsHandler(BaseHandler):
+  def get(self, project_name):
+    self.handleGet('projects-'+ project_name)
+
+class JoinHandler(BaseHandler):
+  def get(self):
+    self.handleGet('join')
+
+class NotFoundHandler(BaseHandler):
+  def get(self):
+    self.response.set_status(404)
+    page_name = config.pages.get('not_found')
+    if page_name is None:
+      self.response.out.write('<h1>Todo: Create a better "Not Found" page.</h1>')
+      return
+
+    page = Page.get_by_key_name(sanitizePageName(page_name))
+    if page is None:
+      self.response.out.write('<h1>Todo: Create a better "Not Found" page.</h1>')
+      return
+
+    self.response.out.write(page.rendered)
 
 class TemplateListHandler(webapp.RequestHandler):
   def get(self):
@@ -124,7 +144,7 @@ class PageHandler(webapp.RequestHandler):
     #todo: protect with authentication
     self.response.headers['Content-Type'] = 'text/plain'
 
-    if re.search('[^\w]+', page_name):
+    if re.search('[^\w\-]+', page_name):
       self.response.set_status(400)
       self.response.out.write('unallowed characters in page name')
       return
@@ -137,16 +157,14 @@ class PageHandler(webapp.RequestHandler):
       page = Page(key_name=sanitizePageName(page_name))
 
     page_data = simplejson.loads(self.request.body)
-    if not page_data.get('template'):
-      self.response.set_status(400)
-      self.response.out.write('page data must include a template name')
-      return
-
+    page.rendered = ''
     try:
-      page.rendered = template.render(
-          os.path.join(
-            os.path.dirname(__file__), 'tpl', page_data.get('template')),
-          page_data.get('context')) 
+      for snip in page_data:
+        # snip[0] -> the template name
+        # snip[1] -> the context object
+        page.rendered += template.render(
+            os.path.join(os.path.dirname(__file__), 'tpl', snip[0]),
+            snip[1])
     except Exception, e:
       self.response.set_status(400)
       self.response.out.write(repr(e))
@@ -208,6 +226,11 @@ class InventoryListHandler(webapp.RequestHandler):
     self.response.set_status(200)
     self.response.out.write(simplejson.dumps(readContentItem(item)))
 
+class ConfigsHandler(webapp.RequestHandler):
+  def get(self):
+    self.response.headers['Content-Type'] = 'text/plain'
+    self.response.out.write(simplejson.dumps(config.pages))
+
 class EnvironsHandler(webapp.RequestHandler):
   def get(self):
     for name in os.environ.keys():
@@ -255,6 +278,9 @@ application = webapp.WSGIApplication([
 
   # Admin: view or POST content entities
   ('/content-manager/inventory/', InventoryListHandler),
+
+  # Admin: GET configs
+  ('/content-manager/configs', ConfigsHandler),
 
   # Admin: print out env variables
   ('/environs', EnvironsHandler),
