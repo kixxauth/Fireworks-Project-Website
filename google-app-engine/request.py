@@ -53,7 +53,7 @@ class BaseHandler(webapp.RequestHandler):
     self.response.out.write(page.rendered)
 
   def handleGet(self, name):
-    page_name = config.pages.get(name)
+    page_name = config.pages.get(name)[0]
     if page_name is None:
       self.handleUnconfigured('No page name configured for %s'% name)
       return
