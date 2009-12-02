@@ -109,7 +109,7 @@ class TemplateListHandler(webapp.RequestHandler):
 
     self.response.headers['Content-Type'] = 'text/plain'
     self.response.out.write(
-        simplejson.dumps([readf(f) for f in os.listdir('tpl')]))
+        simplejson.dumps([readf(f) for f in os.listdir('tpl') if f != 'README.txt']))
 
 def readPage(page):
   if page is None:
