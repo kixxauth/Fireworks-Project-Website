@@ -1,0 +1,4 @@
+  {# <!-- Content --> #}
+  <div id="content">
+    {% block content %}{% endblock %}
+  </div>
