@@ -18,6 +18,7 @@ class Page(db.Model):
   # The output of template rendering.
   # Thie is the actual text/markup that will form the body of the response.
   rendered = db.TextProperty(indexed=False)
+  configs = db.TextProperty(indexed=False)
 
 class ContentItem(db.Model):
   """This class serves as a model for datastore entities that represent a
@@ -25,6 +26,7 @@ class ContentItem(db.Model):
   matched, and applied to templates to render the page output.
   """
   content = db.ListProperty(db.Text, required=True, indexed=False)
+  description = db.StringProperty(indexed=False)
 
 def sanitizePageName(name):
   """Entities of type Page are stored with a user supplied key, so we
@@ -88,7 +90,7 @@ class JoinHandler(BaseHandler):
 class NotFoundHandler(BaseHandler):
   def get(self):
     self.response.set_status(404)
-    page_name = config.pages.get('not_found')
+    page_name = config.pages.get('not_found')[0]
     if page_name is None:
       self.response.out.write('<h1>Todo: Create a better "Not Found" page.</h1>')
       return
@@ -119,6 +121,7 @@ def readPage(page):
   return {
       'name': name,
       'uri': 'http://%s/content-manager/pages/%s'% (os.environ.get('HTTP_HOST'), name),
+      'configs': simplejson.loads(page.configs),
       'rendered': page.rendered
       }
 
@@ -128,6 +131,16 @@ class PageListHandler(webapp.RequestHandler):
     self.response.headers['Content-Type'] = 'text/plain'
     self.response.out.write(
         simplejson.dumps([readPage(p) for p in Page.all()]))
+
+def constructContext(configs):
+  rv = {}
+  for n in configs:
+    if isinstance(configs[n], dict):
+      rv[n] = constructContext(configs[n])
+    else:
+      rv[n] = ContentItem.get(db.Key(configs[n])).content
+
+  return rv;
 
 class PageHandler(webapp.RequestHandler):
   def get(self, page_name):
@@ -139,7 +152,6 @@ class PageHandler(webapp.RequestHandler):
       return
 
     self.response.out.write(page.rendered)
-
   def put(self, page_name):
     #todo: protect with authentication
     self.response.headers['Content-Type'] = 'text/plain'
@@ -156,20 +168,27 @@ class PageHandler(webapp.RequestHandler):
       self.response.set_status(201)
       page = Page(key_name=sanitizePageName(page_name))
 
-    page_data = simplejson.loads(self.request.body)
+    try:
+      page_data = simplejson.loads(self.request.body)
+    except:
+      self.response.set_status(400)
+      self.response.out.write('invalid JSON data: '+ self.request.body)
+      return
+
     page.rendered = ''
     try:
       for snip in page_data:
         # snip[0] -> the template name
-        # snip[1] -> the context object
+        # snip[1] -> the context object configuration
         page.rendered += template.render(
             os.path.join(os.path.dirname(__file__), 'tpl', snip[0]),
-            snip[1])
+            constructContext(snip[1]))
     except Exception, e:
       self.response.set_status(400)
       self.response.out.write(repr(e))
       return
 
+    page.configs = self.request.body
     page.put()
     self.response.out.write(simplejson.dumps(readPage(page)))
 
@@ -178,6 +197,7 @@ def readContentItem(item):
     return item
   return {
       'id': str(item.key()),
+      'description': item.description,
       'content': item.content 
       }
 
@@ -196,6 +216,7 @@ class InventoryListHandler(webapp.RequestHandler):
     id = context.get('id')
     #todo: sanitize content ??
     content = db.Text(context.get('content'))
+    desc = context.get('description')
 
     item = None
 
@@ -216,11 +237,12 @@ class InventoryListHandler(webapp.RequestHandler):
         return
 
       item.content.append(content)
-      item.put()
 
     else:
       item = ContentItem(content=[content])
-      item.put()
+
+    item.description = desc
+    item.put()
         
     self.response.headers['Content-Type'] = 'text/plain'
     self.response.set_status(200)
