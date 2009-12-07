@@ -1,4 +1,5 @@
   {# <!-- Featured Content Slider --> #}
   <div id="masthead">
-    {{masthead}}
+    <div class="screenshot">{{screenshot}}</div>
+    <div class="description">{{description}}</div>
   </div><!-- masthead -->

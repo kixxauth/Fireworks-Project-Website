@@ -118,11 +118,6 @@ button, .button {
 	color: #333;
 }
 
-#search {
-	float: right;
-	line-height: 80px;
-}
-
 #masthead {
 	background: url(../img/arch.png) no-repeat;
 	color: #ccc;
