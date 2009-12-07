@@ -138,7 +138,8 @@ def constructContext(configs):
     if isinstance(configs[n], dict):
       rv[n] = constructContext(configs[n])
     else:
-      rv[n] = ContentItem.get(db.Key(configs[n])).content
+      content = ContentItem.get_by_id(configs[n]).content
+      rv[n] = content[(len(content) -1)]
 
   return rv;
 
@@ -152,6 +153,7 @@ class PageHandler(webapp.RequestHandler):
       return
 
     self.response.out.write(page.rendered)
+
   def put(self, page_name):
     #todo: protect with authentication
     self.response.headers['Content-Type'] = 'text/plain'
@@ -196,7 +198,7 @@ def readContentItem(item):
   if item is None:
     return item
   return {
-      'id': str(item.key()),
+      'id': item.key().id(),
       'description': item.description,
       'content': item.content 
       }
@@ -221,15 +223,7 @@ class InventoryListHandler(webapp.RequestHandler):
     item = None
 
     if id:
-      k = None 
-      try:
-        k = db.Key(id)
-      except:
-        self.response.set_status(400)
-        self.response.out.write('invalid id: %s'% id)
-        return
-
-      item = db.get(k)
+      item = ContentItem.get_by_id(id)
 
       if item is None:
         self.response.set_status(400)

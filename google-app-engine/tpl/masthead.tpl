@@ -1,4 +1,4 @@
   {# <!-- Featured Content Slider --> #}
   <div id="masthead">
-    {% block masthead %}{% endblock %}
+    {{masthead}}
   </div><!-- masthead -->

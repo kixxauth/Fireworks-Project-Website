@@ -1,9 +1,8 @@
 {# <!-- Copyright, Site Map, Miscellaneous --> #}
   <div id="footer">
-    {% block footer %}{% endblock %}
+    {{footer}}
   </div><!-- footer -->
 
 </div><!-- page -->
 </body>
 </html>
-

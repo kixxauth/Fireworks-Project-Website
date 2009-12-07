@@ -1,4 +1,4 @@
   {# <!-- Content --> #}
   <div id="content">
-    {% block content %}{% endblock %}
-  </div>
+  {{maincontent}}
+  </div><!-- content -->
