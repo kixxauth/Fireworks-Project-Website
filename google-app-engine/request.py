@@ -133,12 +133,23 @@ class PageListHandler(webapp.RequestHandler):
         simplejson.dumps([readPage(p) for p in Page.all()]))
 
 def constructContext(configs):
-  rv = {}
+  defaults = Page.get_by_key_name('defaults_1')
+  if defaults is None:
+    rv = {}
+  else:
+    rv = simplejson.loads(defaults.configs)
+
   for n in configs:
     if isinstance(configs[n], dict):
       rv[n] = constructContext(configs[n])
+      if rv[n] is False:
+        return False
     else:
-      content = ContentItem.get_by_id(configs[n]).content
+      try:
+        content = ContentItem.get_by_id(configs[n]).content
+      except:
+        return False
+
       rv[n] = content[(len(content) -1)]
 
   return rv;
@@ -182,9 +193,15 @@ class PageHandler(webapp.RequestHandler):
       for snip in page_data:
         # snip[0] -> the template name
         # snip[1] -> the context object configuration
+        context = constructContext(snip[1])
+        if context is False:
+          self.response.set_status(400)
+          self.response.out.write('invalid context object: '+ simplejson.dumps(snip[1]))
+          return
+
         page.rendered += template.render(
             os.path.join(os.path.dirname(__file__), 'tpl', snip[0]),
-            constructContext(snip[1]))
+            context)
     except Exception, e:
       self.response.set_status(400)
       self.response.out.write(repr(e))
@@ -247,6 +264,65 @@ class ConfigsHandler(webapp.RequestHandler):
     self.response.headers['Content-Type'] = 'text/plain'
     self.response.out.write(simplejson.dumps(config.pages))
 
+def constructDefaults(configs):
+  rv = {}
+  for n in configs:
+    if isinstance(configs[n], dict):
+      rv[n] = constructDefaults(configs[n])
+      if rv[n] is False:
+        return False
+    else:
+      try:
+        content = ContentItem.get_by_id(configs[n]).content
+      except:
+        return False
+
+      rv[n] = content[(len(content) -1)]
+
+  return rv
+
+class DefaultsHandler(webapp.RequestHandler):
+  def get(self):
+    rv = '{}'
+
+    defaults = Page.get_by_key_name('defaults_1')
+
+    if defaults is not None:
+      rv = defaults.configs
+
+    self.response.headers['Content-Type'] = 'text/plain'
+    self.response.out.write(rv)
+
+  def put(self):
+    self.response.headers['Content-Type'] = 'text/plain'
+
+    defaults = Page.get_by_key_name('defaults_1')
+
+    if defaults is None:
+      self.response.headers['Location'] = ('http://www.fireworksproject.com/'
+        'content-manager/defaults')
+      self.response.set_status(201)
+      defaults = Page(key_name='defaults_1')
+
+    try:
+      configs = simplejson.loads(self.request.body)
+    except:
+      self.response.set_status(400)
+      self.response.out.write('invalid JSON: '+ self.request.body)
+      return
+
+    loaded = constructDefaults(configs)
+
+    if loaded is False:
+      self.response.set_status(400)
+      self.response.out.write('invalid context object: '+ self.request.body)
+      return
+
+    defaults.configs = simplejson.dumps(loaded)
+    defaults.put()
+    self.response.out.write(defaults.configs)
+
+
 class EnvironsHandler(webapp.RequestHandler):
   def get(self):
     for name in os.environ.keys():
@@ -297,6 +373,9 @@ application = webapp.WSGIApplication([
 
   # Admin: GET configs
   ('/content-manager/configs', ConfigsHandler),
+
+  # Admin: GET or PUT default content object
+  ('/content-manager/defaults', DefaultsHandler),
 
   # Admin: print out env variables
   ('/environs', EnvironsHandler),
