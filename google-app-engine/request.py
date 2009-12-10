@@ -132,12 +132,29 @@ class PageListHandler(webapp.RequestHandler):
     self.response.out.write(
         simplejson.dumps([readPage(p) for p in Page.all()]))
 
+def constructDefaults(configs):
+  rv = {}
+  for n in configs:
+    if isinstance(configs[n], dict):
+      rv[n] = constructDefaults(configs[n])
+      if rv[n] is False:
+        return False
+    else:
+      try:
+        content = ContentItem.get_by_id(configs[n]).content
+      except:
+        return False
+
+      rv[n] = content[(len(content) -1)].decode('utf-8')
+
+  return rv
+
 def constructContext(configs):
   defaults = Page.get_by_key_name('defaults_1')
   if defaults is None:
     rv = {}
   else:
-    rv = simplejson.loads(defaults.configs)
+    rv = constructDefaults(simplejson.loads(defaults.configs))
 
   for n in configs:
     if isinstance(configs[n], dict):
@@ -150,7 +167,7 @@ def constructContext(configs):
       except:
         return False
 
-      rv[n] = content[(len(content) -1)]
+      rv[n] = content[(len(content) -1)].decode('utf-8')
 
   return rv;
 
@@ -188,7 +205,6 @@ class PageHandler(webapp.RequestHandler):
       self.response.out.write('invalid JSON data: '+ self.request.body)
       return
 
-    page.rendered = ''
     try:
       for snip in page_data:
         # snip[0] -> the template name
@@ -199,7 +215,7 @@ class PageHandler(webapp.RequestHandler):
           self.response.out.write('invalid context object: '+ simplejson.dumps(snip[1]))
           return
 
-        page.rendered += template.render(
+        page.rendered = template.render(
             os.path.join(os.path.dirname(__file__), 'tpl', snip[0]),
             context)
     except Exception, e:
@@ -264,23 +280,6 @@ class ConfigsHandler(webapp.RequestHandler):
     self.response.headers['Content-Type'] = 'text/plain'
     self.response.out.write(simplejson.dumps(config.pages))
 
-def constructDefaults(configs):
-  rv = {}
-  for n in configs:
-    if isinstance(configs[n], dict):
-      rv[n] = constructDefaults(configs[n])
-      if rv[n] is False:
-        return False
-    else:
-      try:
-        content = ContentItem.get_by_id(configs[n]).content
-      except:
-        return False
-
-      rv[n] = content[(len(content) -1)]
-
-  return rv
-
 class DefaultsHandler(webapp.RequestHandler):
   def get(self):
     rv = '{}'
@@ -318,10 +317,9 @@ class DefaultsHandler(webapp.RequestHandler):
       self.response.out.write('invalid context object: '+ self.request.body)
       return
 
-    defaults.configs = simplejson.dumps(loaded)
+    defaults.configs = self.request.body
     defaults.put()
     self.response.out.write(defaults.configs)
-
 
 class EnvironsHandler(webapp.RequestHandler):
   def get(self):
