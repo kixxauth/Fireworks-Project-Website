@@ -3,11 +3,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>{{ subtitle }} - {{ title }}</title>
-  {% block stylesheets %}
-  <link rel="stylesheet" href="/css/master.css">
-  {% endblock stylesheets %}
-  {% block styles %}
-  {% endblock styles %}
+  {% block stylesheets %}<link rel="stylesheet" href="/css/master.css">{% endblock stylesheets %}
+  {% block styles %}{% endblock styles %}
 </head>
 <body>
   <div id="page">
