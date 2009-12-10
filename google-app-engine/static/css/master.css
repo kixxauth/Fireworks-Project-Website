@@ -5,7 +5,238 @@
 
 body {
   background: #ccc url(../img/bg.png) repeat-x;
-  color: #444;
+  color: #333;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 0.8em;
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a img {
+  border: none;
+}
+
+h3, h4 {
+  margin-bottom: 1em;
+}
+
+/* forces our divs to contain any floated elements that might be inside */
+/* http://www.sitepoint.com/blogs/2005/02/26/simple-clearing-of-floats/ */
+div {
+  overflow: hidden;
+}
+
+/* all buttonish elements */
+.button {
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+  padding: 0.5em 1em 0.5em 1em;
+}
+
+/* an important button */
+.button-1 {
+  background: #f90 url(../img/btn-bg.png) repeat-x;
+  border: 1px solid #f90;
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+}
+
+.button-1:hover {
+  background-color: #fa3;
+  border: 1px solid #fa3;
+}
+
+/* a button of mediocre importance */
+.button-2 {
+  background: #000 url(../img/btn-bg.png) repeat-x;
+  border: 1px solid #000;
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+}
+
+.button-2:hover {
+  background-color: #222;
+  border: 1px solid #222;
+}
+
+/* anchors as buttons need to be treated differently */
+a.button {
+  color: #fff;
+}
+
+a.button:hover {
+  text-decoration: none;
+  color: #fff;
+}
+
+/* container wrappers for buttons */
+.button-ctn {
+  text-align: center;
+  margin: 2em 0 1em 0;
+}
+
+input, textarea {
+  background: #fff;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+}
+
+label {
+  margin-right: 1em;
+}
+
+.left-col {
+  float: left;
+  width: 35%;
+  padding: 2em 0 2em 9%;
+}
+
+.right-col {
+  float: right;
+  width: 35%;
+  padding: 2em 10% 2em 9%;
+}
+
+.pre-heading {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.heading {
+  font-size: 2.2em;
+  line-height: 1.1;
+  margin: 0 0 0.5em 0;
+}
+
+.content-text {
+  line-height: 1.7;
+  margin-bottom: 1em;
+}
+
+.tiny-text {
+  font-size: 0.8em;
+}
+
+#page {
+  width: 940px;
+  margin: 0 auto;
+}
+
+#header {
+  float: left;
+  background: transparent url(../img/the_fireworks_project_logo.gif) no-repeat;
+  padding-left: 50px;
+  min-height: 72px;
+  margin-top: 2.5em;
+}
+
+#logo {
+  font-size: 3.3em;
+  font-weight: normal;
+  line-height: 1;
+}
+
+#logo a {
+  color: #333;
+}
+
+#logo a:hover {
+  text-decoration: none;
+}
+
+#subheading {
+  line-height: 1.3;
+  margin-left: 1em;
+}
+
+#navigation {
+  float: right;
+  font-size: 1.5em;
+  list-style: none;
+  line-height: 0;
+  margin: 4em 2em 0 0;
+}
+
+#navigation li {
+  float: left;
+}
+
+#navigation li + li {
+  margin-left: 2em;
+}
+
+#navigation li a {
+  color: #666;
+  text-decoration: none;
+}
+
+#navigation li a:hover {
+  color: #222;
+  text-decoration: underline;
+}
+
+/* don't use padding in the #masthead... it bollocks it.
+ * (other than padding-top) */
+#masthead {
+  clear: both;
+  background: transparent url(../img/arch.gif) no-repeat;
+  color: #fff;
+  font-size: 1.2em;
+  padding-top: 2em;
+  margin-top: 8em;
+}
+
+#masthead p.content-text {
+  line-height: 1.5;
+}
+
+/* in the masthead, the left column needs more room. */
+#masthead .left-col {
+  width: 38%;
+  padding: 2em 0 2em 6%;
+}
+
+#masthead a {
+  color: #9cf;
+}
+
+/* don't use borders or padding on this #content div, because we
+ * want it to collapse if it contains no content */
+#content {
+  background: #fff;
+  clear: both;
+}
+
+#content .content-text a {
+  color: #039;
+}
+
+#footer {
+  margin-top: 3em;
+  border-top: 7px solid #fa0;
+  background: #fff;
+  padding-top: 1em;
+}
+
+#footer a {
+  color: #039;
+}
+
+#footer p {
+  margin-bottom: 1em;
+}
+
+#footer-wrapper {
+  width: 940px;
+  margin: 0 auto;
+  padding: 1em 0 1em 0;
 }
