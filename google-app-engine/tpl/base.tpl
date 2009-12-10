@@ -3,7 +3,11 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>{{ subtitle }} - {{ title }}</title>
-  <link rel="stylesheet" href="css/master.css">
+  {% block stylesheets %}
+  <link rel="stylesheet" href="/css/master.css">
+  {% endblock stylesheets %}
+  {% block styles %}
+  {% endblock styles %}
 </head>
 <body>
   <div id="page">
@@ -19,9 +23,9 @@
 
     <ul id="navigation">
       <li><a href="/" title="{{ nav.home.title }}">{{ nav.home.name }}</a></li>
-      <li><a href="projects/" title="{{ nav.projects.title }}">{{ nav.projects.name }}</a></li>
-      <li><a href="join" title="{{ nav.join.title }}">{{ nav.join.name }}</a></li>
-      <li><a href="about" title="{{ nav.about.title }}">{{ nav.about.name }}</a></li>
+      <li><a href="/projects/" title="{{ nav.projects.title }}">{{ nav.projects.name }}</a></li>
+      <li><a href="/join" title="{{ nav.join.title }}">{{ nav.join.name }}</a></li>
+      <li><a href="/about" title="{{ nav.about.title }}">{{ nav.about.name }}</a></li>
     </ul><!-- end #navigation -->
 
     <div id="masthead">

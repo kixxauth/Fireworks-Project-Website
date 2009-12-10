@@ -5,8 +5,8 @@
         {{ masthead.left }}
       </div><!-- end .left-col -->
       <div class="right-col">
-        <h1 class="pre-heading">{{ masthead.right.pre_heading }}</h1>
-        <h1 class="heading">{{ masthead.right.heading }}</h1>
+        <h3 class="pre-heading">{{ masthead.right.pre_heading }}</h3>
+        <h2 class="heading">{{ masthead.right.heading }}</h2>
         {{ masthead.right.content }}
       </div><!-- end .right-col -->
 {% endblock masthead %}
