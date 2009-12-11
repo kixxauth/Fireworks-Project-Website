@@ -55,17 +55,31 @@ class BaseHandler(webapp.RequestHandler):
     self.response.out.write(page.rendered)
 
   def handleGet(self, name):
-    page_name = config.pages.get(name)[0]
-    if page_name is None:
-      self.handleUnconfigured('No page name configured for %s'% name)
+    configs = config.pages.get(name)
+    if configs is None:
+      self.handleNotFound()
       return
 
-    page = Page.get_by_key_name(sanitizePageName(page_name))
+    page = Page.get_by_key_name(sanitizePageName(configs[0]))
     if page is None:
       self.handleUnconfigured('No page data found for %s'% page_name)
       return
 
     self.respond(page)
+
+  def handleNotFound(self):
+    self.response.set_status(404)
+    page_name = config.pages.get('not_found')[0]
+    if page_name is None:
+      self.response.out.write('<h1>Todo: Create a better "Not Found" page.</h1>')
+      return
+
+    page = Page.get_by_key_name(sanitizePageName(page_name))
+    if page is None:
+      self.response.out.write('<h1>Todo: Create a better "Not Found" page.</h1>')
+      return
+
+    self.response.out.write(page.rendered)
 
 class IndexHandler(BaseHandler):
   def get(self):
@@ -89,18 +103,7 @@ class JoinHandler(BaseHandler):
 
 class NotFoundHandler(BaseHandler):
   def get(self):
-    self.response.set_status(404)
-    page_name = config.pages.get('not_found')[0]
-    if page_name is None:
-      self.response.out.write('<h1>Todo: Create a better "Not Found" page.</h1>')
-      return
-
-    page = Page.get_by_key_name(sanitizePageName(page_name))
-    if page is None:
-      self.response.out.write('<h1>Todo: Create a better "Not Found" page.</h1>')
-      return
-
-    self.response.out.write(page.rendered)
+    self.handleNotFound()
 
 class TemplateListHandler(webapp.RequestHandler):
   def get(self):
