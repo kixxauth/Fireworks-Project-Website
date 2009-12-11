@@ -27,15 +27,15 @@
           <p>
             <label for="email" accesskey="2">email:</label><input type="text" id="email" name="email" />
           </p>
-          <p>
+          <p class="button-ctn">
             <input type="submit" class="button button-1" value="{{ join.button }}" />
           </p>
-          <p class="conent-text">
+          <p class="content-text">
             {{ join.agreement }}
           </p>
         </form>
         <p class="right-col">
           {{ join.instructions }}
         </p>
-      <div>
+      </div>
 {% endblock content %}
