@@ -152,24 +152,44 @@ def constructDefaults(configs):
 def constructContext(configs):
   defaults = Page.get_by_key_name('defaults_1')
   if defaults is None:
-    rv = {}
+    context = {}
   else:
-    rv = constructDefaults(simplejson.loads(defaults.configs))
+    context = constructDefaults(simplejson.loads(defaults.configs))
 
-  for n in configs:
-    if isinstance(configs[n], dict):
-      rv[n] = constructContext(configs[n])
-      if rv[n] is False:
-        return False
+  return constructContextRe(configs, context)
+
+def constructContextRe(configs, context=None):
+  def getItem(item):
+    if isinstance(item, dict) or isinstance(item, list):
+      return constructContextRe(item)
     else:
       try:
-        content = ContentItem.get_by_id(configs[n]).content
+        content = ContentItem.get_by_id(item).content
       except:
+        # todo: log this error
         return False
 
-      rv[n] = content[(len(content) -1)].decode('utf-8')
+      return content[(len(content) -1)].decode('utf-8')
 
-  return rv;
+  if isinstance(configs, dict):
+    if context is None:
+      context = {}
+    for k in configs:
+      v = getItem(configs[k])
+      if v is False:
+        return v
+      context[k] = v;
+
+  else:
+    if context is None:
+      context = []
+    for i in configs:
+      v = getItem(i)
+      if v is False:
+        return v
+      context.append(v);
+
+  return context
 
 class PageHandler(webapp.RequestHandler):
   def get(self, page_name):
