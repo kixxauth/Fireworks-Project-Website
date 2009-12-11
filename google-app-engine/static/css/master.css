@@ -39,14 +39,14 @@ div {
   color: #fff;
   font-weight: bold;
   padding: 0.5em 1em 0.5em 1em;
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
 }
 
 /* an important button */
 .button-1 {
   background: #f90 url(../img/btn-bg.png) repeat-x;
   border: 1px solid #f90;
-  -webkit-border-radius: 0.5em;
-  -moz-border-radius: 0.5em;
 }
 
 .button-1:hover {
@@ -58,8 +58,6 @@ div {
 .button-2 {
   background: #000 url(../img/btn-bg.png) repeat-x;
   border: 1px solid #000;
-  -webkit-border-radius: 0.5em;
-  -moz-border-radius: 0.5em;
 }
 
 .button-2:hover {
@@ -207,6 +205,22 @@ label {
 
 #masthead a {
   color: #9cf;
+}
+
+/* change button links back to white */
+#masthead a.button {
+  color: #fff;
+}
+
+/* button 2 needs to be lighter to work on a black background */
+#masthead .button-2 {
+  background-color: #222;
+  border: 1px solid #222;
+}
+
+#masthead .button-2:hover {
+  background-color: #333;
+  border: 1px solid #333;
 }
 
 /* don't use borders or padding on this #content div, because we

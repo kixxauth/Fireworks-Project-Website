@@ -62,7 +62,7 @@ class BaseHandler(webapp.RequestHandler):
 
     page = Page.get_by_key_name(sanitizePageName(configs[0]))
     if page is None:
-      self.handleUnconfigured('No page data found for %s'% page_name)
+      self.handleUnconfigured('No page data found for %s'% configs[0])
       return
 
     self.respond(page)
@@ -95,7 +95,7 @@ class ProjectsListHandler(BaseHandler):
 
 class ProjectsHandler(BaseHandler):
   def get(self, project_name):
-    self.handleGet('projects-'+ project_name)
+    self.handleGet('project-'+ project_name)
 
 class JoinHandler(BaseHandler):
   def get(self):
