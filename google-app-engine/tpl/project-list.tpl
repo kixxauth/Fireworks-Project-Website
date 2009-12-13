@@ -7,7 +7,7 @@
 {% endblock styles %}
 
 {% block content %}
-  <h1>{{ projects_header }}</h1>
+  <h1 id="projects-header">{{ projects_header }}</h1>
   {% for project in project_list %}
   <div class="project-button">
     <h3><a  href="{{ project.location }}">{{ project.name }}</a></h3>

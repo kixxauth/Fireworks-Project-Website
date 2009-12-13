@@ -160,8 +160,9 @@ label {
   float: right;
   font-size: 1.5em;
   list-style: none;
-  line-height: 0;
+  line-height: 1;
   margin: 4em 2em 0 0;
+  overflow: hidden;
 }
 
 #navigation li {
@@ -197,10 +198,16 @@ label {
   line-height: 1.5;
 }
 
-/* in the masthead, the left column needs more room. */
+/* in the masthead, the columns need more room. */
 #masthead .left-col {
-  width: 38%;
-  padding: 2em 0 2em 6%;
+  width: 47%;
+  padding: 0;
+  margin: 2em 0 3em 3%;
+}
+#masthead .right-col {
+  width: 40%;
+  padding: 0;
+  margin: 2em 6% 2em 0;
 }
 
 #masthead a {
