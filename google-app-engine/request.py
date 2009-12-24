@@ -6,6 +6,9 @@ from google.appengine.ext.webapp import util
 from google.appengine.ext import db
 from django.utils import simplejson
 from google.appengine.ext.webapp import template
+from google.appengine.api import mail
+
+import logging
 
 import os
 import re
@@ -27,6 +30,14 @@ class ContentItem(db.Model):
   """
   content = db.ListProperty(db.Text, required=True, indexed=False)
   description = db.StringProperty(indexed=False)
+
+class NewMember(db.Model):
+  """This class is a subclass of db.Model that is used to keep records of
+  users who have posted their intention to join The Fireworks Project under
+  the agreement on http://www.fireworksproject.com/join
+  """
+  name = db.StringProperty(required=True)
+  email = db.StringProperty(required=True)
 
 def sanitizePageName(name):
   """Entities of type Page are stored with a user supplied key, so we
@@ -100,6 +111,19 @@ class ProjectsHandler(BaseHandler):
 class JoinHandler(BaseHandler):
   def get(self):
     self.handleGet('join')
+
+  def post(self):
+    name = self.request.get('name', 'not-given')
+    email = self.request.get('email', 'not-given')
+    logging.info('New member posting to /join (name: %s, email: %s)',
+        name, email)
+    NewMember(name=name,email=email).put()
+    mail.send_mail(
+        config.join_notify_sender,
+        config.join_notify_receiver,
+        config.join_notify_subject,
+        ('name: %s, email: %s' % (name, email)))
+    self.handleGet('join-post')
 
 class NotFoundHandler(BaseHandler):
   def get(self):
