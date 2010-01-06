@@ -1,0 +1,14 @@
+full:
+- module: basic
+  classes:
+  - name: NotFound
+    tests:
+    - test_notFound
+  - name: StaticHTML
+    tests:
+    - test_home
+    - test_about
+    - test_join
+    - test_projects
+    - test_projects_kixx
+    - test_projects_dcube
