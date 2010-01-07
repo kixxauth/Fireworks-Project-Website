@@ -33,6 +33,15 @@ class Defaults(unittest.TestCase):
     assert len(response.read()) > 200, 'sitemap.xml body length'
     cxn.close()
 
+  def test_goog_verify(self):
+    """Check for google verification response."""
+    cxn = tests.httpConnection()
+    cxn.request('GET', '/googlef734612d306d87e6.html')
+    response = cxn.getresponse()
+    self.assertEqual(response.status, 200)
+    self.assertEqual(response.read(), 'google-site-verification: googlef734612d306d87e6.html')
+    cxn.close()
+
 # todo: test headers
 class StaticHTML(unittest.TestCase):
   methods = ['GET','POST','PUT','DELETE','OPTIONS','HEAD','TRACE']

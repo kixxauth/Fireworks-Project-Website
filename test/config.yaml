@@ -7,6 +7,7 @@ full:
     - test_notFound
     - test_robots
     - test_sitemap
+    - test_goog_verify
 
   - name: StaticHTML
     tests:
