@@ -24,6 +24,15 @@ class Defaults(unittest.TestCase):
     self.assertEqual(response.read(), 'User-agent: *\nAllow: /\n')
     cxn.close()
 
+  def test_sitemap(self):
+    """Check for sitemap.xml response."""
+    cxn = tests.httpConnection()
+    cxn.request('GET', '/sitemap.xml')
+    response = cxn.getresponse()
+    self.assertEqual(response.status, 200)
+    assert len(response.read()) > 200, 'sitemap.xml body length'
+    cxn.close()
+
 # todo: test headers
 class StaticHTML(unittest.TestCase):
   methods = ['GET','POST','PUT','DELETE','OPTIONS','HEAD','TRACE']
