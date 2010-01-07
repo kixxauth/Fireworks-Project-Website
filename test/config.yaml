@@ -1,9 +1,12 @@
 full:
 - module: basic
   classes:
-  - name: NotFound
+
+  - name: Defaults
     tests:
     - test_notFound
+    - test_robots
+
   - name: StaticHTML
     tests:
     - test_home
@@ -12,3 +15,7 @@ full:
     - test_projects
     - test_projects_kixx
     - test_projects_dcube
+
+  - name: TestContent
+    tests:
+    - test_testcontent

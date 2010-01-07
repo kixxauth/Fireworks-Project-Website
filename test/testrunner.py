@@ -31,6 +31,8 @@ def main():
   print ''
   print 'running tests on %s' % tests.HOST
   print ''
+  
+  tests.setupLocalContent()
 
   suites.run_suites(['full'])
 

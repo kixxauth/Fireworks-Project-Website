@@ -1,5 +1,5 @@
 application: fireworkscomputer 
-version: 3
+version: 4
 runtime: python
 api_version: 1
 
@@ -16,9 +16,10 @@ handlers:
 - url: /mozilla-downloads
   static_dir: static/mozilla-downloads
   secure: always 
+ 
+- url: /robots\.txt
+  static_files: static/robots.txt
+  upload: static/robots.txt
 
 - url: /.*
   script: request.py
-
-- url: /.*
-  script: not_found.py

@@ -23,11 +23,57 @@ def set_PASSKEY(val):
   global PASSKEY 
   PASSKEY = val
 
-def httpConnection():
-  return httplib.HTTPConnection(HOST)
+def setupLocalContent():
+  if HOST != LOCALHOST:
+    return
 
-def makeRequest(method='GET', url='/', body=None, headers={}):
-  cxn = httpConnection()
+  code, reason, headers, body = makeRequest(
+      method='GET',
+      url='/',
+      headers={'content-length': 0})
+
+  if code == 200 and len(body) > 100:
+    return
+
+  print
+  print 'INFO loading remote page content to local dev_appserver'
+
+  code, reason, headers, body = makeRequest(
+      host='www.fireworksproject.com',
+      method='GET',
+      url='/content-manager/configs',
+      headers={'content-length': 0})
+
+  configs = simplejson.loads(body)
+
+  for k in configs:
+    page_name = configs[k][0]
+    code, reason, headers, content = makeRequest(
+        host='www.fireworksproject.com',
+        method='GET',
+        url='/content-manager/pages/%s'% page_name,
+        headers={'content-length': 0})
+
+    if code != 200:
+      continue
+
+    print 'Loading page %s'% page_name
+    post = 'name=%s&content=%s'% (page_name, content)
+    code, reason, headers, body = makeRequest(
+        method='POST',
+        url='/testcontent/',
+        body=post,
+        headers={'content-length': len(post)})
+
+  print 'Done'
+  print
+
+def httpConnection(host=None):
+  host = host or HOST
+  return httplib.HTTPConnection(host)
+
+def makeRequest(host=None, method='GET', url='/', body=None, headers={}):
+  cxn = httpConnection(host)
   cxn.request(method, url, body, headers)
   r = cxn.getresponse()
   headers = r.getheaders()

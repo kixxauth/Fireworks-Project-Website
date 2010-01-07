@@ -115,6 +115,10 @@ class JoinHandler(BaseHandler):
   def post(self):
     name = self.request.get('name', 'not-given')
     email = self.request.get('email', 'not-given')
+
+    if name == 'automatedtest':
+      return
+
     logging.info('New member posting to /join (name: %s, email: %s)',
         name, email)
     NewMember(name=name,email=email).put()
@@ -368,6 +372,26 @@ class DefaultsHandler(webapp.RequestHandler):
     defaults.put()
     self.response.out.write(defaults.configs)
 
+class TestContentHandler(webapp.RequestHandler):
+  def post(self):
+    if not config.on_dev_server:
+      self.response.set_status(403)
+      return
+
+    content = self.request.get('content')
+    name = self.request.get('name')
+
+    if not name:
+      self.response.set_status(409)
+      self.response.out.write('invalid post data "%s"' % self.request.body)
+      return
+
+    key_name = sanitizePageName(name)
+    page = Page.get_by_key_name(key_name) or Page(key_name=key_name)
+    page.rendered = content
+    page.put()
+    self.response.set_status(204)
+
 class EnvironsHandler(webapp.RequestHandler):
   def get(self):
     for name in os.environ.keys():
@@ -421,6 +445,10 @@ application = webapp.WSGIApplication([
 
   # Admin: GET or PUT default content object
   ('/content-manager/defaults', DefaultsHandler),
+
+  # Root: This url is used by the local dev_appserver ONLY
+  # Loads CMS data into the local datastore for testing on dev_appserver.
+  ('/testcontent/', TestContentHandler),
 
   # Admin: print out env variables
   ('/environs', EnvironsHandler),
