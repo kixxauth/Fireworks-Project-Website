@@ -1,48 +1,60 @@
 import unittest
-import tests
+import test_utils
 
-# todo: robots.txt
-# todo: favicon
-# todo: setup cms for testing on dev_appserver 
+# TODO: robots.txt
+# TODO: favicon
 
 class Defaults(unittest.TestCase):
   def test_notFound(self):
     """Check for not found response."""
-    cxn = tests.httpConnection()
-    cxn.request('GET', '/foo')
-    response = cxn.getresponse()
+    response = test_utils.make_http_request(
+        method='GET',
+        url='/lost_city_of_atlantis',
+        body=None,
+        headers={'User-Agent':'testing :: not found',
+                 'Content-Length': 0,
+                 'Host': test_utils.HOST})
     self.assertEqual(response.status, 404)
-    assert len(response.read()) > 30, 'not found body length'
-    cxn.close()
+    assert len(response.body) > 30, 'not found body length'
 
   def test_robots(self):
     """Check for robots.txt response."""
-    cxn = tests.httpConnection()
-    cxn.request('GET', '/robots.txt')
-    response = cxn.getresponse()
+    response = test_utils.make_http_request(
+        method='GET',
+        url='/robots.txt',
+        body=None,
+        headers={'User-Agent':'testing :: Google verification',
+                 'Content-Length': 0,
+                 'Host': test_utils.HOST})
     self.assertEqual(response.status, 200)
-    self.assertEqual(response.read(), 'User-agent: *\nAllow: /\n')
-    cxn.close()
+    self.assertEqual(response.body, 'User-agent: *\nAllow: /\n')
 
   def test_sitemap(self):
     """Check for sitemap.xml response."""
-    cxn = tests.httpConnection()
-    cxn.request('GET', '/sitemap.xml')
-    response = cxn.getresponse()
+    response = test_utils.make_http_request(
+        method='GET',
+        url='/sitemap.xml',
+        body=None,
+        headers={'User-Agent':'testing :: Google verification',
+                 'Content-Length': 0,
+                 'Host': test_utils.HOST})
     self.assertEqual(response.status, 200)
-    assert len(response.read()) > 200, 'sitemap.xml body length'
-    cxn.close()
+    # TODO: the sitemap.xml test should be exactly character for character
+    assert len(response.body) > 200, 'sitemap.xml body length'
 
   def test_goog_verify(self):
     """Check for google verification response."""
-    cxn = tests.httpConnection()
-    cxn.request('GET', '/googlef734612d306d87e6.html')
-    response = cxn.getresponse()
+    response = test_utils.make_http_request(
+        method='GET',
+        url='/googlef734612d306d87e6.html',
+        body=None,
+        headers={'User-Agent':'testing :: Google verification',
+                 'Content-Length': 0,
+                 'Host': test_utils.HOST})
     self.assertEqual(response.status, 200)
-    self.assertEqual(response.read(), 'google-site-verification: googlef734612d306d87e6.html')
-    cxn.close()
+    self.assertEqual(response.body, 'google-site-verification: googlef734612d306d87e6.html')
 
-# todo: test headers
+# TODO: test headers
 class StaticHTML(unittest.TestCase):
   methods = ['GET','POST','PUT','DELETE','OPTIONS','HEAD','TRACE']
 
@@ -163,4 +175,5 @@ class TestContent(unittest.TestCase):
         headers={'content-length': len(body)})
     self.assertEqual(code, expected_code or 204)
 
-# todo: test images, scripts, styles, downloads, etc.
+# TODO: test images, scripts, styles, downloads, etc.
+

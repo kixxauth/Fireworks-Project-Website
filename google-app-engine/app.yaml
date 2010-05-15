@@ -1,5 +1,5 @@
 application: fireworkscomputer 
-version: 4
+version: 5
 runtime: python
 api_version: 1
 
@@ -29,5 +29,11 @@ handlers:
   static_files: static/googlef734612d306d87e6.html
   upload: static/googlef734612d306d87e6.html
 
-- url: /.*
+# Insecure! For local dev_appserver only (localhost:8080).
+# To setup a tempory sys admin for testing.
+- url: /testsetup
+  script: testsetup.py
+
+# All other dynamic page requests.
+- url: .*
   script: request.py

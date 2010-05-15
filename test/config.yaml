@@ -9,15 +9,3 @@ full:
     - test_sitemap
     - test_goog_verify
 
-  - name: StaticHTML
-    tests:
-    - test_home
-    - test_about
-    - test_join
-    - test_projects
-    - test_projects_kixx
-    - test_projects_dcube
-
-  - name: TestContent
-    tests:
-    - test_testcontent
