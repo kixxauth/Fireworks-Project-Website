@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 import sys
 import os
+import re
 import httplib
 import simplejson
 import yaml
@@ -30,32 +31,38 @@ def make_auth_request(host, username, passkey=None, nonce=None, nextnonce=None):
     creds = test_utils.create_credentials(passkey, username, nonce, nextnonce)
 
   cxn = httplib.HTTPConnection(host)
-  cxn.request('POST', '/content-management/', '', {
+  cxn.request('GET', '/content-management/', '', {
         'User-Agent': 'UA:DCube test :: Auth sys-admin',
         'Authorization': ('Digest qop="chap" realm="fireworksproject.com" '
                           'username="%s" response="%s" cnonce="%s"' % creds),
         'Content-Length': 0,
         'Accept': '*/*'})
   response = cxn.getresponse()
-  auth_header = response.getheader('Authentication')
-  response_body = response.read()
   cxn.close()
 
-  assert response.status is 200, \
-      'Unexpected HTTP status code (%d) on login.'% response.status
-  json = simplejson.loads(response_body)
+  auth_header = response.getheader('WWW-Authenticate', None)
+  if auth_header is None:
+    auth_header = response.getheader('Authentication-Info', None)
 
-  len_auth = len(json['head']['authorization'])
-  if len_auth < 1:
+  assert auth_header, \
+      'No Authentication header available in the server response.'
+
+  assert response.status is 200 or response.status is 401, \
+      'Unexpected HTTP status code (%d) on login.'% response.status
+
+  creds = dict(re.compile('(\w+)[=] ?"?(\w+)"?').findall(auth_header))
+
+  if creds.get('username') is None:
     return False, None, None, None
 
-  if len_auth is 3:
-    auth = json['head']['status'] is 200 and True or False
-    nonce = json['head']['authorization'][1]
-    nextnonce = json['head']['authorization'][2]
-    return auth, username, nonce, nextnonce
+  if creds.get('nonce') is None:
+    return False, username, None, None
 
-  return False, username, None, None
+  auth = response.status is 200 and True or False
+  nonce = creds.get('nonce')
+  nextnonce = creds.get('nextnonce')
+  return auth, username, nonce, nextnonce
+
 
 def prompt_username():
   un = raw_input('admin username: ')
@@ -114,13 +121,15 @@ def main():
 
   elif checkhost(remote_host):
     host = remote_host
-    temp_test_admin, passkey = authenticate(host)
-    if temp_test_admin is None:
-      print 'User does not exist.'
-      exit()
-    if passkey is None:
-      print 'Invalid passkey... exit()'
-      exit()
+    # TODO: Temp assignment.
+    temp_test_admin = None
+    # temp_test_admin, passkey = authenticate(host)
+    # if temp_test_admin is None:
+    #   print 'User does not exist.'
+    #   exit()
+    # if passkey is None:
+    #   print 'Invalid passkey... exit()'
+    #   exit()
 
   else:
     raise Exception('no connection to %s or %s'% (localhost, remote_host))
