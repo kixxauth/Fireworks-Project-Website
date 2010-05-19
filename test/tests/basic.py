@@ -2,55 +2,8 @@ import re
 import unittest
 import test_utils
 
-METHODS = ['GET','POST','PUT','DELETE','OPTIONS','HEAD','TRACE']
-
-# TODO: Test other browsers. (This is Firefox 3.6.3)
-BROWSER_HEADERS = dict([
-    ('Host', test_utils.HOST),
-    ('User-Agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.3'),
-    ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),
-    # TODO: Test other languages.
-    ('Accept-Language', 'en-us,en;q=0.5'),
-    ('Accept-Encoding', 'gzip,deflate'),
-    ('Accept-Charset', 'ISO-8859-1,utf-8;q=0.7,*;q=0.7'),
-    ('Keep-Alive', '115'),
-    ('Connection', 'keep-alive'),
-    ('Cache-Control', 'max-age=0')
-  ])
-
-HTTP_DATE_RX = re.compile('^[SMTWF]{1}[unoedhriat]{2}, [0-3]{1}[0-9]{1} [JFMASOND]{1}[anebrpyulgctov]{2} 20[0-9]{2} [012]{1}[0-9]{1}:[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1} GMT$')
-
-NO_CACHE_HEADER = 'no-cache, no-store, must-revalidate, pre-check=0, post-check=0'
-
-def update_browser_headers(new_headers):
-  headers = dict(BROWSER_HEADERS)
-  headers.update(new_headers)
-  return headers
-
-def make_fake_body(method=None):
-  body = 'k=tfp&num=44'
-  if method != None:
-    return (method == 'POST' or method == 'PUT') and body or None
-
-def run_methods(mapping, function):
-  for t in mapping:
-    function(*t)
-
-def check_headers(test, response, headers, msg=''):
-  for type, k, expected_value in headers:
-    value = response.headers.get(k)
-    if type == 'regex':
-      assert expected_value.match(value), \
-          ('header %s: %s ; does not match regex %s' %
-              (k, value, expected_value))
-      continue
-    if type == 'len':
-      value = len(value)
-    test.assertEqual(value, expected_value,
-        "header '%s' is %s; %s" % (k, value, msg))
-
 class Defaults(unittest.TestCase):
-  # TODO: favicon
+  # TODO: Test favicon.ico
 
   def test_notFound(self):
     """Check for not found response.
@@ -68,20 +21,20 @@ class Defaults(unittest.TestCase):
 
     response_headers = [
         ('eq', 'server', server),
-        ('regex', 'date', HTTP_DATE_RX),
+        ('regex', 'date', test_utils.HTTP_DATE_RX),
         ('eq', 'expires', '-1'),
         ('eq', 'pragma', 'no-cache'),
-        ('eq', 'cache-control', NO_CACHE_HEADER),
+        ('eq', 'cache-control', test_utils.NO_CACHE_HEADER),
         ('eq', 'content-encoding', content_encoding),
         ('eq', 'content-length', content_length),
         ('eq', 'content-type', 'text/html; charset=utf-8'),
         ('eq', 'x-xss-protection', '0')
         ]
 
-    headers = BROWSER_HEADERS
+    headers = test_utils.update_browser_headers()
 
-    for method in METHODS:
-      body = make_fake_body(method)
+    for method in test_utils.METHODS:
+      body = test_utils.make_fake_body(method)
       if body:
         headers.update([('Content-Length', len(body))])
       elif headers.get('Content-Length'):
@@ -114,7 +67,7 @@ class Defaults(unittest.TestCase):
         response_headers[5] = ('eq', 'content-encoding', content_encoding)
         response_headers[6] = ('eq', 'content-length', str(content_length))
 
-      check_headers(self, response, response_headers, method)
+      test_utils.check_headers(self, response, response_headers, method)
 
   def test_robots(self):
     """Check for robots.txt response."""
@@ -123,8 +76,8 @@ class Defaults(unittest.TestCase):
     response_headers = [
         ('len', 'etag', 8),
         ('eq', 'server', 'Google Frontend'),
-        ('regex', 'date', HTTP_DATE_RX),
-        ('regex', 'expires', HTTP_DATE_RX),
+        ('regex', 'date', test_utils.HTTP_DATE_RX),
+        ('regex', 'expires', test_utils.HTTP_DATE_RX),
         ('eq', 'cache-control', 'public, max-age=1814400'),
         ('eq', 'content-encoding', 'gzip'),
         ('eq', 'content-length', '43'), # Set by GAE even with HEAD req
@@ -137,10 +90,10 @@ class Defaults(unittest.TestCase):
       response_headers[5] = ('eq', 'content-encoding', None)
       response_headers[6] = ('eq', 'content-length', '23')
 
-    headers = BROWSER_HEADERS
+    headers = test_utils.update_browser_headers()
 
-    for method in METHODS:
-      body = make_fake_body(method)
+    for method in test_utils.METHODS:
+      body = test_utils.make_fake_body(method)
       if body:
         headers.update([('Content-Length', len(body))])
       elif headers.get('Content-Length'):
@@ -156,7 +109,7 @@ class Defaults(unittest.TestCase):
       self.assertEqual(response.status, 200,
           'status for method %s is %d' % (method, response.status))
 
-      check_headers(self, response, response_headers, method)
+      test_utils.check_headers(self, response, response_headers, method)
 
       if method == 'HEAD':
         self.assertEqual(response.body, '',
@@ -173,8 +126,8 @@ class Defaults(unittest.TestCase):
     response_headers = [
         ('len', 'etag', 8),
         ('eq', 'server', 'Google Frontend'),
-        ('regex', 'date', HTTP_DATE_RX),
-        ('regex', 'expires', HTTP_DATE_RX),
+        ('regex', 'date', test_utils.HTTP_DATE_RX),
+        ('regex', 'expires', test_utils.HTTP_DATE_RX),
         ('eq', 'cache-control', 'public, max-age=86400'),
         # GAE static does not gzip application/xml
         ('eq', 'content-encoding', None),
@@ -192,10 +145,10 @@ class Defaults(unittest.TestCase):
       response_headers[5] = ('eq', 'content-encoding', None)
       response_headers[6] = ('eq', 'content-length', '1225')
 
-    headers = BROWSER_HEADERS
+    headers = test_utils.update_browser_headers()
 
-    for method in METHODS:
-      body = make_fake_body(method)
+    for method in test_utils.METHODS:
+      body = test_utils.make_fake_body(method)
       if body:
         headers.update([('Content-Length', len(body))])
       elif headers.get('Content-Length'):
@@ -211,7 +164,7 @@ class Defaults(unittest.TestCase):
       self.assertEqual(response.status, 200,
           'status for method %s is %d' % (method, response.status))
 
-      check_headers(self, response, response_headers, method)
+      test_utils.check_headers(self, response, response_headers, method)
 
       assert isinstance(response.body, str), \
           'response body is %r for %s'% (type(response.body), method)
@@ -231,8 +184,8 @@ class Defaults(unittest.TestCase):
     response_headers = [
         ('len', 'etag', 8),
         ('eq', 'server', 'Google Frontend'),
-        ('regex', 'date', HTTP_DATE_RX),
-        ('regex', 'expires', HTTP_DATE_RX),
+        ('regex', 'date', test_utils.HTTP_DATE_RX),
+        ('regex', 'expires', test_utils.HTTP_DATE_RX),
         ('eq', 'cache-control', 'public, max-age=1814400'),
         ('eq', 'content-encoding', 'gzip'),
         ('eq', 'content-length', '70'), # Set by GAE even with HEAD req
@@ -245,10 +198,10 @@ class Defaults(unittest.TestCase):
       response_headers[5] = ('eq', 'content-encoding', None)
       response_headers[6] = ('eq', 'content-length', '53')
 
-    headers = BROWSER_HEADERS
+    headers = test_utils.update_browser_headers()
 
-    for method in METHODS:
-      body = make_fake_body(method)
+    for method in test_utils.METHODS:
+      body = test_utils.make_fake_body(method)
       if body:
         headers.update([('Content-Length', len(body))])
       elif headers.get('Content-Length'):
@@ -264,7 +217,7 @@ class Defaults(unittest.TestCase):
       self.assertEqual(response.status, 200,
           'status for method %s is %d' % (method, response.status))
 
-      check_headers(self, response, response_headers, method)
+      test_utils.check_headers(self, response, response_headers, method)
 
       assert isinstance(response.body, str), \
           'response body is %r for %s'% (type(response.body), method)

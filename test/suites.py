@@ -3,9 +3,11 @@ import unittest
 import yaml
 
 def run_suites(suite_names):
-  """Run the given list of test suite names corresponding to the SUITES
-  configuration global.
+  """Run the given list of test suites.
+
+  `suite_names` should be a list of string names.
   """
+  # Parse config.yaml.
   suites = yaml.load(
       open(
         os.path.join(
@@ -30,3 +32,4 @@ def run_suites(suite_names):
 
   unittest.TextTestRunner().run(unittest.TestSuite(
     map(build_test, reduce(build_names, suite_names, []))))
+
