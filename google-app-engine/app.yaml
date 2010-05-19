@@ -186,9 +186,6 @@ handlers:
 - url: /testsetup
   script: testsetup.py
 
-- url: /headertests
-  script: headertests.py
-
 # ### All other requests are dynamic.
 - url: .*
   script: request.py

@@ -1,3 +1,4 @@
+import re
 import unittest
 import test_utils
 
@@ -17,6 +18,10 @@ BROWSER_HEADERS = dict([
     ('Cache-Control', 'max-age=0')
   ])
 
+HTTP_DATE_RX = re.compile('^[SMTWF]{1}[unoedhriat]{2}, [0-3]{1}[0-9]{1} [JFMASOND]{1}[anebrpyulgctov]{2} 20[0-9]{2} [012]{1}[0-9]{1}:[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1} GMT$')
+
+NO_CACHE_HEADER = 'no-cache, no-store, must-revalidate, pre-check=0, post-check=0'
+
 def update_browser_headers(new_headers):
   headers = dict(BROWSER_HEADERS)
   headers.update(new_headers)
@@ -34,6 +39,11 @@ def run_methods(mapping, function):
 def check_headers(test, response, headers, msg=''):
   for type, k, expected_value in headers:
     value = response.headers.get(k)
+    if type == 'regex':
+      assert expected_value.match(value), \
+          ('header %s: %s ; does not match regex %s' %
+              (k, value, expected_value))
+      continue
     if type == 'len':
       value = len(value)
     test.assertEqual(value, expected_value,
@@ -47,37 +57,37 @@ class Defaults(unittest.TestCase):
     """
     url = '/lost_city_of_atlantis'
 
+    content_length = test_utils.LOCAL and 238 or 200
+    server = test_utils.LOCAL and 'Development/1.0' or 'Google Frontend'
+    if test_utils.LOCAL:
+      content_encoding = None
+    else:
+      content_encoding = 'gzip'
+
+    body_rx = re.compile('.+404 Not Found.+')
+
     response_headers = [
-        # TODO: Date header should be tested with a regex.
-        ('len', 'date', 29),
+        ('eq', 'server', server),
+        ('regex', 'date', HTTP_DATE_RX),
         ('eq', 'expires', '-1'),
-        ('eq', 'cache-control', 'no-cache, no-store, must-revalidate, pre-check=0, post-check=0'),
-        ('eq', 'content-encoding', 'gzip',
-        ('eq', 'content-length', '55'),
-        ('eq', 'content-type', 'text/plain'),
-        #('eq', 'content-length', None),
+        ('eq', 'pragma', 'no-cache'),
+        ('eq', 'cache-control', NO_CACHE_HEADER),
+        ('eq', 'content-encoding', content_encoding),
+        ('eq', 'content-length', content_length),
+        ('eq', 'content-type', 'text/html; charset=utf-8'),
         ('eq', 'x-xss-protection', '0')
         ]
 
-    # GAE does not allow setting content-encoding header and although it is set
-    # when making the request with a browser, it is not set here when using
-    # httplib.
-    # TODO! Is there a way to trick GAE into thinking this request is
-    # coming from a browser?
-    if not test_utils.LOCAL:
-      response_headers[3] = ('eq', 'content-encoding', None)
-      response_headers[4] = ('eq', 'content-length', None)
-      response_headers.append(('eq', 'transfer-encoding', 'chunked'))
-
-    headers = update_browser_headers(
-        [('User-Agent', 'testing :: not found')])
-
-    print headers
+    headers = BROWSER_HEADERS
 
     for method in METHODS:
       body = make_fake_body(method)
       if body:
         headers.update([('Content-Length', len(body))])
+      elif headers.get('Content-Length'):
+        # A content-length header will confuse the server if there is no
+        # content sent in the request.
+        del headers['Content-Length']
 
       response = test_utils.make_http_request(
           method=method,
@@ -89,52 +99,52 @@ class Defaults(unittest.TestCase):
           'status for method %s is %d' % (method, response.status))
 
       if method == 'HEAD':
+        self.assertEqual(len(response.body), 0,
+            'body len()=%d for method %s' % (len(response.body), method))
+        response_headers[5] = ('eq', 'content-encoding', None)
         response_headers[6] = ('eq', 'content-length', '0')
-        # GAE Servers remove the x-xss-protection header when there is no content.
-        expected_body = ''
       else:
-        response_headers[6] = ('eq', 'content-length', '55')
-        #response_headers[5] = ('eq', 'content-length', None)
-        expected_body = 'Could not find url %s%s'% (test_utils.HOST, url)
+        if test_utils.LOCAL:
+          assert body_rx.search(response.body), \
+              ('body \n%s\ndoes not match regex %s' % (response.body, body_rx.pattern))
+        else:
+          assert isinstance(response.body, str), \
+              ('body \n%s\nis not an instance of str() but %r' %
+                  (response.body, type(response.body)))
+        response_headers[5] = ('eq', 'content-encoding', content_encoding)
+        response_headers[6] = ('eq', 'content-length', str(content_length))
 
       check_headers(self, response, response_headers, method)
-
-      self.assertEqual(response.body, expected_body,
-          'body %s for method %s' % (response.body, method))
 
   def test_robots(self):
     """Check for robots.txt response."""
     url = '/robots.txt'
 
     response_headers = [
-        # TODO: Date header should be tested with a regex.
-        ('len', 'date', 29),
-        # TODO: A more robust check of the Expires header.
-        ('len', 'expires', 29),
+        ('len', 'etag', 8),
+        ('eq', 'server', 'Google Frontend'),
+        ('regex', 'date', HTTP_DATE_RX),
+        ('regex', 'expires', HTTP_DATE_RX),
         ('eq', 'cache-control', 'public, max-age=1814400'),
-        # The Content-* headers should not have values for a HEAD request, but
-        # the GAE static file server that puts them there, so there's not
-        # anything we can do about it.
-        ('eq', 'content-encoding', None),
-        ('eq', 'content-type', 'text/plain'),
-        # GAE does not set the x-xss-protection header for text/plain.
-        ('eq', 'x-xss-protection', None)
+        ('eq', 'content-encoding', 'gzip'),
+        ('eq', 'content-length', '43'), # Set by GAE even with HEAD req
+        ('eq', 'content-type', 'text/plain')
         ]
 
-    # The GAE server does not send a content length header from static files if
-    # the Content-Type is text/plain.
     if test_utils.LOCAL:
-      response_headers.append(('eq', 'content-length', '23'))
-    else:
-      response_headers.append(('eq', 'content-length', None))
+      response_headers[0] = ('eq', 'etag', None)
+      response_headers[1] = ('eq', 'server', 'Development/1.0')
+      response_headers[5] = ('eq', 'content-encoding', None)
+      response_headers[6] = ('eq', 'content-length', '23')
 
-    headers = update_browser_headers(
-        [('User-Agent', 'testing :: robots.txt')])
+    headers = BROWSER_HEADERS
 
     for method in METHODS:
       body = make_fake_body(method)
       if body:
         headers.update([('Content-Length', len(body))])
+      elif headers.get('Content-Length'):
+        del headers['Content-Length']
 
       response = test_utils.make_http_request(
           method=method,
@@ -142,18 +152,18 @@ class Defaults(unittest.TestCase):
           body=body,
           headers=headers)
 
+      # Static GAE server does not send back 405 for unsupported request methods.
       self.assertEqual(response.status, 200,
           'status for method %s is %d' % (method, response.status))
 
-      if method == 'HEAD':
-        expected_body = ''
-      else:
-        expected_body = 'User-agent: *\nAllow: /\n'
-
       check_headers(self, response, response_headers, method)
 
-      self.assertEqual(response.body, expected_body,
-          'body %s for method %s' % (response.body, method))
+      if method == 'HEAD':
+        self.assertEqual(response.body, '',
+            'body %s for method %s' % (response.body, method))
+
+      assert isinstance(response.body, str), \
+          'response body is %r for %s'% (type(response.body), method)
 
   def test_sitemap(self):
     """Check for sitemap.xml response.
@@ -161,29 +171,35 @@ class Defaults(unittest.TestCase):
     url = '/sitemap.xml'
 
     response_headers = [
-        # TODO: Date header should be tested with a regex.
-        ('len', 'date', 29),
-        # TODO: A more robust check of the Expires header.
-        ('len', 'expires', 29),
+        ('len', 'etag', 8),
+        ('eq', 'server', 'Google Frontend'),
+        ('regex', 'date', HTTP_DATE_RX),
+        ('regex', 'expires', HTTP_DATE_RX),
         ('eq', 'cache-control', 'public, max-age=86400'),
-        # The Content-* headers should not have values for a HEAD request, but
-        # the GAE static file server that puts them there, so there's not
-        # anything we can do about it.
+        # GAE static does not gzip application/xml
         ('eq', 'content-encoding', None),
-        ('eq', 'content-type', 'application/xml'),
+        # Set by GAE static server even with HEAD req
         ('eq', 'content-length', '1225'),
-        # GAE does not set the x-xss-protection header for application/xml.
-        ('eq', 'x-xss-protection', None)
+        ('eq', 'content-type', 'application/xml')
         ]
 
-    headers = update_browser_headers(
-        [('User-Agent', 'testing :: site map')])
+    body_len = 1225
+
+    if test_utils.LOCAL:
+      body_len = 1225
+      response_headers[0] = ('eq', 'etag', None)
+      response_headers[1] = ('eq', 'server', 'Development/1.0')
+      response_headers[5] = ('eq', 'content-encoding', None)
+      response_headers[6] = ('eq', 'content-length', '1225')
+
+    headers = BROWSER_HEADERS
 
     for method in METHODS:
-
       body = make_fake_body(method)
       if body:
         headers.update([('Content-Length', len(body))])
+      elif headers.get('Content-Length'):
+        del headers['Content-Length']
 
       response = test_utils.make_http_request(
           method=method,
@@ -191,19 +207,21 @@ class Defaults(unittest.TestCase):
           body=body,
           headers=headers)
 
+      # Static GAE server does not send back 405 for unsupported request methods.
       self.assertEqual(response.status, 200,
           'status for method %s is %d' % (method, response.status))
 
-      if method == 'HEAD':
-        expected_body = 0
-      else:
-        expected_body = 1225
-
       check_headers(self, response, response_headers, method)
 
-      # TODO: A more robust check of the site map contents.
-      self.assertEqual(len(response.body), expected_body,
-          'body %s for method %s' % (len(response.body), method))
+      assert isinstance(response.body, str), \
+          'response body is %r for %s'% (type(response.body), method)
+
+      if method == 'HEAD':
+        self.assertEqual(response.body, '',
+            'body %s for method %s' % (response.body, method))
+      else:
+        self.assertEqual(len(response.body), body_len,
+            'body %d for method %s' % (len(response.body), method))
 
   def test_goog_verify(self):
     """Check for google verification response.
@@ -211,33 +229,30 @@ class Defaults(unittest.TestCase):
     url = '/googlef734612d306d87e6.html'
 
     response_headers = [
-        # TODO: Date header should be tested with a regex.
-        ('len', 'date', 29),
-        # TODO: A more robust check of the Expires header.
-        ('len', 'expires', 29),
+        ('len', 'etag', 8),
+        ('eq', 'server', 'Google Frontend'),
+        ('regex', 'date', HTTP_DATE_RX),
+        ('regex', 'expires', HTTP_DATE_RX),
         ('eq', 'cache-control', 'public, max-age=1814400'),
-        # The Content-* headers should not have values for a HEAD request, but
-        # the GAE static file server that puts them there, so there's not
-        # anything we can do about it.
-        ('eq', 'content-encoding', None),
-        ('eq', 'content-type', 'text/html'),
-        ('eq', 'x-xss-protection', None)
+        ('eq', 'content-encoding', 'gzip'),
+        ('eq', 'content-length', '70'), # Set by GAE even with HEAD req
+        ('eq', 'content-type', 'text/html')
         ]
 
-    # Why doesn't the GAE static file server set the Content-Length?
     if test_utils.LOCAL:
-      response_headers.append(('eq', 'content-length', '53'))
-    else:
-      response_headers.append(('eq', 'content-length', None))
+      response_headers[0] = ('eq', 'etag', None)
+      response_headers[1] = ('eq', 'server', 'Development/1.0')
+      response_headers[5] = ('eq', 'content-encoding', None)
+      response_headers[6] = ('eq', 'content-length', '53')
 
-    headers = update_browser_headers([
-      ('Accept-Encoding', 'deflate'),
-      ('User-Agent', 'testing :: Google verification')])
+    headers = BROWSER_HEADERS
 
     for method in METHODS:
       body = make_fake_body(method)
       if body:
         headers.update([('Content-Length', len(body))])
+      elif headers.get('Content-Length'):
+        del headers['Content-Length']
 
       response = test_utils.make_http_request(
           method=method,
@@ -245,16 +260,16 @@ class Defaults(unittest.TestCase):
           body=body,
           headers=headers)
 
+      # Static GAE server does not send back 405 for unsupported request methods.
       self.assertEqual(response.status, 200,
           'status for method %s is %d' % (method, response.status))
 
-      if method == 'HEAD':
-        expected_body = ''
-      else:
-        expected_body = 'google-site-verification: googlef734612d306d87e6.html'
-
       check_headers(self, response, response_headers, method)
 
-      self.assertEqual(response.body, expected_body,
-          'body %s for method %s' % (response.body, method))
+      assert isinstance(response.body, str), \
+          'response body is %r for %s'% (type(response.body), method)
+
+      if method == 'HEAD':
+        self.assertEqual(response.body, '',
+            'body %s for method %s' % (response.body, method))
 

@@ -45,10 +45,11 @@ def main():
              'users',
              'sys_admin',
              'user_admin',
-             'account_admin',
-             'database']
-      import pychap
-      pychap.authenticate(store.put_user, user)
+             'account_admin'
+             ]
+      user.nonce = 'foo'
+      user.nextnonce = 'bar'
+      user.put()
 
     respond('200 OK', TEMP_TEST_USERNAME)
 
