@@ -1,11 +1,100 @@
 full:
-- module: basic
+- module: urls
   classes:
 
-  - name: Defaults
+  - name: RobotsTxt
     tests:
-    - test_notFound
-    - test_robots
-    - test_sitemap
-    - test_goog_verify
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+  - name: Sitemap
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+  - name: GoogleVerify
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+
+  - name: NotFound
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+
+robots_txt:
+- module: urls
+  classes:
+
+  - name: RobotsTxt
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+sitemap:
+- module: urls
+  classes:
+
+  - name: Sitemap
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+google_verify:
+- module: urls
+  classes:
+
+  - name: GoogleVerify
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+not_found:
+- module: urls
+  classes:
+
+  - name: NotFound
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
 
