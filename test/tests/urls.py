@@ -721,3 +721,138 @@ class Join(unittest.TestCase):
     configs.update('firefox36', self.firefox36_not_allowed)
     return configs.items()
 
+class Projects(unittest.TestCase):
+  url = '/projects/'
+
+  def configure(self):
+
+    self.firefox36 = test_utils.TestRequest(firefox36_config)
+    self.firefox36.response_status = 200
+    self.firefox36.response_body = True
+
+    if test_utils.LOCAL:
+      self.firefox36.response_headers = [
+            ('etag', 'regex', re.compile('"[0-9a-f]{32}"')),
+            ('server', 'eq', 'Development/1.0'),
+            ('date', 'regex', test_utils.HTTP_DATE_RX),
+            ('expires', 'regex', test_utils.HTTP_DATE_RX),
+            ('pragma', 'eq', None),
+            # Expire in 4 days.
+            ('cache-control', 'eq', 'public, max-age=345600'),
+            ('content-encoding', 'eq', None),
+            ('content-length', 'regex', re.compile('[0-9]+')),
+            ('content-type', 'eq', 'text/html; charset=utf-8'),
+            ('x-xss-protection', 'eq', '0')
+          ]
+
+    else:
+      self.firefox36.response_headers = [
+            ('etag', 'regex', re.compile('"[0-9a-f]{32}"')),
+            ('server', 'eq', 'Google Frontend'),
+            ('date', 'regex', test_utils.HTTP_DATE_RX),
+            ('expires', 'regex', test_utils.HTTP_DATE_RX),
+            ('pragma', 'eq', None),
+            # Expire in 4 days.
+            ('cache-control', 'eq', 'public, max-age=345600'),
+            ('content-encoding', 'eq', 'gzip'),
+            ('content-length', 'regex', re.compile('[0-9]+')),
+            ('content-type', 'eq', 'text/html; charset=utf-8'),
+            ('x-xss-protection', 'eq', '0')
+          ]
+
+    # Make a special request for the not allowed method tests.
+    self.firefox36_not_allowed = test_utils.TestRequest(self.firefox36)
+    self.firefox36_not_allowed.response_status = 405
+
+    # The error page is served in simple text/html.
+    self.firefox36_not_allowed.response_body = True
+    self.firefox36_not_allowed.response_headers[8] = ('content-type', 'eq', 'text/html')
+    self.firefox36_not_allowed.response_headers[9] = ('x-xss-protection', 'eq', None)
+    self.firefox36_not_allowed.response_headers.append(
+        ('allow', 'eq', 'GET, HEAD'))
+    self.firefox36_not_allowed.response_headers[0] = ('etag', 'eq', None)
+
+    if test_utils.LOCAL:
+      # The dev_appserver autimatically sets the Expires and Cache-Control
+      # headers -- annoying.
+      self.firefox36_not_allowed.response_headers[3] = (
+          'expires', 'eq', 'Fri, 01 Jan 1990 00:00:00 GMT')
+      self.firefox36_not_allowed.response_headers[5] = (
+          'cache-control', 'eq', 'no-cache')
+    else:
+      self.firefox36_not_allowed.response_headers[3] = (
+          'expires', 'eq', None)
+      # And the production server automatically sets the Cache-Control header,
+      # but I'm assuming this is because we don't set it in our 405 handler.
+      # See issue #28
+      self.firefox36_not_allowed.response_headers[5] = (
+          'cache-control', 'eq', 'private, x-gzip-ok=""')
+
+  @test_function
+  def get(self):
+    """GET request for /projects/
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36)
+    return configs.items()
+
+  @test_function
+  def put(self):
+    """PUT request for /projects/
+    """
+    ff36 = test_utils.TestRequest(self.firefox36_not_allowed)
+    ff36.body = '<html>Some HTML</html>'
+    ff36.headers['Content-Length'] = str(len(ff36.body))
+    ff36.headers['Content-Type'] = 'text/html'
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', ff36)
+    return configs.items()
+
+  @test_function
+  def post(self):
+    """POST request for /projects/
+    """
+    ff36 = test_utils.TestRequest(self.firefox36_not_allowed)
+    ff36.body = 's=foo&num=44'
+    ff36.headers['Content-Length'] = str(len(ff36.body))
+    ff36.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', ff36)
+    return configs.items()
+
+  @test_function
+  def delete(self):
+    """DELETE request for /projects/
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36_not_allowed)
+    return configs.items()
+
+  @test_function
+  def head(self):
+    """HEAD request for /projects/
+    """
+    ff36 = test_utils.TestRequest(self.firefox36)
+    ff36.response_headers[6] = ('content-encoding', 'eq', None)
+    ff36.response_headers[7] = ('content-length', 'eq', '0')
+    ff36.response_body = None
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', ff36)
+    return configs.items()
+
+  @test_function
+  def options(self):
+    """OPTIONS request for /projects/
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36_not_allowed)
+    return configs.items()
+
+  @test_function
+  def trace(self):
+    """TRACE request for /projects/
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36_not_allowed)
+    return configs.items()
+

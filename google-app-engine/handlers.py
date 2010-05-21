@@ -63,11 +63,16 @@ class IndexHandler(SimpleHandler):
 class JoinHandler(SimpleHandler):
   template = 'join'
 
+class ProjectsHandler(SimpleHandler):
+  template = 'projects'
+
 class TestException(Handler):
   def get(self):
     assert False, 'Test Exception Raised!'
 
 handler_map = [('/', 'index', IndexHandler)
+    , ('/projects', 'projects', ProjectsHandler)
+    , ('/projects/', 'projects', ProjectsHandler)
     , ('/join', 'join', JoinHandler)
     , ('/exception', 'exception', TestException)
     ]
