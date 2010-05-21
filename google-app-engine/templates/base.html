@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>{% block title %}Custom built software - The Fireworks Project{% endblock %}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="{% block decription %}Custom software.{% endblock %}" />
+<link rel="stylesheet" href="/css/master.css" type="text/css" media="handheld, all" />
+</head>
+<body id="fireworks-project">
+  {% block body %}{% endblock %}
+  <div id="footer">
+    <p>
+    <a href="http://creativecommons.org/licenses/by-sa/3.0/">
+    <img alt="Creative Commons License" height="31" width="88"
+    style="float: left; padding-right: 1em;"
+    src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" />
+    </a>
+    </p>
+    <p>
+    Portions of this content are &copy; 2009 - {% now "Y" %} by contributors to
+    <a href="http://www.fireworksproject.com">The Fireworks Project Inc.</a>
+    and, unless otherwise indicated, the text of documents in this
+    collection is available under a
+    <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
+      Creative Commons Attribution-Share Alike 3.0 Unported License</a>.
+    </p>
+  </div><!-- end #footer -->
+</body>
+</html>
+

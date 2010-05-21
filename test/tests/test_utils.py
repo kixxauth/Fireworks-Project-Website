@@ -43,9 +43,14 @@ def test_response_headers(test, response, headers, msg=''):
   for k, cmp, expected_value in headers:
     value = response.headers.get(k)
     if cmp == 'regex':
-      assert expected_value.match(value), \
-          ('header "%s: %s" does not match regex %s; in %s' %
-              (k, value, expected_value, msg))
+      try:
+        assert expected_value.match(value), \
+            ('header "%s: %s" does not match regex %s; in %s' %
+                (k, value, expected_value, msg))
+      except TypeError, e:
+        assert False, \
+            ('header "%s: %s" does not match regex %s; in %s' %
+                (k, value, expected_value, msg))
     elif cmp == 'len':
       test.assertEqual(len(value), expected_value,
           'header "%s: %s" length != %d; %s' % (k, value, expected_value, msg))
@@ -144,6 +149,12 @@ def do_test(test, name, method, request):
         ('response body is expected to be None in %s for method %s'%
           (name, method))
 
+  # In the case of True, we just make sure the body was returned.
+  elif request.response_body is True:
+    assert response.body, \
+      ('response body does not exist in %s for method %s' %
+        (name, method))
+
   # In the case of an integer we test for length.
   elif isinstance(request.response_body, int):
     test.assertEqual(len(response.body), request.response_body,
@@ -152,12 +163,6 @@ def do_test(test, name, method, request):
           request.response_body,
           name,
           method)))
-
-  # In the case of True, we just make sure the body was returned.
-  elif request.response_body is True:
-    assert response.body, \
-      ('response body does not exist in %s for method %s' %
-        (name, method))
 
   # Lastly we do a regex check.
   else:

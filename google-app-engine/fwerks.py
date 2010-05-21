@@ -2,9 +2,9 @@
 from werkzeug.routing import Map, Rule
 from werkzeug.exceptions import HTTPException, MethodNotAllowed
 from werkzeug.exceptions import NotFound, InternalServerError
-from werkzeug import BaseRequest, BaseResponse, CommonResponseDescriptorsMixin
+from werkzeug import BaseRequest, BaseResponse, CommonResponseDescriptorsMixin, ETagResponseMixin
 
-class Response(BaseResponse, CommonResponseDescriptorsMixin):
+class Response(BaseResponse, CommonResponseDescriptorsMixin, ETagResponseMixin):
     """Response class implementing the following Werkzeug mixins:
 
     - :class:`CommonResponseDescriptorsMixin` for various HTTP descriptors
@@ -111,6 +111,6 @@ class Handler(object):
     if callable(method_handler):
       return method_handler(**arguments)
 
-    allowed = [m for m in Handler.methods if getattr(self, m, None)]
+    allowed = [m.upper() for m in Handler.methods if getattr(self, m, None)]
     raise MethodNotAllowed(allowed)
 

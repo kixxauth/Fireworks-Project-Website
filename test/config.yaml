@@ -41,6 +41,15 @@ full:
     - options
     - trace
 
+  - name: Root
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
 
 robots_txt:
 - module: urls
@@ -89,6 +98,20 @@ not_found:
   classes:
 
   - name: NotFound
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+root:
+- module: urls
+  classes:
+
+  - name: Root
     tests:
     - get 
     - put

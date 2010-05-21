@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block body %}<div id="content" class="content">
+    <p>
+    We are a small band of engineers and designers working together to
+    create a great software company. Our goal is to build simple tools for big
+    ideas. The Fireworks Project will deliver the systems you need to operate
+    your small or medium sized organization more efficiently because, we know
+    you have more important things to do.
+    </p>
+    <p>
+    We have been working night and day to bootstrap our software assembly line.
+    This one of a kind innovation we allow us to build amazingly productive
+    software, customized to the needs of your unique organization, at an
+    incredibly affordable price. Best of all, we will be able to deliver your
+    systems in an unbelievably short amount of time.
+    </p>
+    <p>
+    You can see from the unfinished state of our website that we have been
+    night and day in the ugly underbelly of technology so you don't have to. In
+    fact, we are working so hard to get this done for you that it was reported
+    that one of our engineers forgot to call his mom on mothers' day. We
+    regretfully apologize to moms everywhere.
+    </p>
+    <p>
+    Although we love working in the guts of computer systems, what really gets
+    us fired up is hearing from you. We want to know more about you and your
+    organization. If you could have software customized just for you, what
+    would it do? What can we do to help you get more done at work so you can
+    spend more time with the people that really matter?
+    </p>
+  </div><!-- content -->
+  <div id="feed-post">
+    <div id="introduce-feed-post">
+      <p class="content container">
+      Don't be shy. We want to hear your thoughts on our
+      <a href="http://twitter.com/Fireworks_Inc">Twitter Feed</a>.
+      We want to know why you are excited about our company and how you think
+      you could use our services.
+      </p>
+    </div>
+    <div id="submit-feed-post">
+      <p class="content container">
+      Don't worry if you are not a Twitter user. We'll post your comments
+      anonymously instead of using your Twitter username.
+      </p>
+      <textarea id="feedbox"></textarea>
+      <p class="container">
+        <button id="submit-feedbox">Submit</button>
+      </p>
+    </div>
+    <div id="twitter-feed">
+    </div>
+  </div><!-- feed-post -->
+  <form id="subscriptions" action="/subscriptions/subscribers/" method="post">
+    <fieldset id="subscription-forms">
+      <div id="subscription-intro">
+        <p class="content">
+        Or, even better, you can sign up for our company newsletter or our
+        very own organizational management journal.
+        </p>
+      </div><!-- subscription-intro -->
+      <div id="pyrotec-newsletter">
+        <p id="pyrotec-description" class="content">
+        <em class="title">Pyrotec</em>, our company newsletter will only
+        deliver news about The Fireworks Project and will not arrive more than
+        once per week, and usually even less frequently unless we have
+        something really important to tell you about.
+        </p>
+        <p class="line get-feed">
+        Get the <a href="#"><em class="title">Pyrotec</em> RSS feed</a>
+        </p>
+        <p class="line get-email">
+        or subscribe by email: <input id="pyrotec-email" type="checkbox" />
+        </p>
+      </div><!-- pyrotec-newsletter -->
+      <div id="bloom-journal">
+        <p id="bloom-description" class="content">
+        <em class="title">Bloom</em>, our journal for organizations arrives on a
+        monthly basis. Our goal is to bring you some of the great ideas that we
+        find in organizational management, marketing, and productivity. We enjoy
+        learning about these things and we thought you might too.
+        </p>
+        <p class="line get-feed">
+        Get the <a href="#"><em class="title">Bloom</em> RSS feed</a>
+        </p>
+        <p class="line get-email">
+        or subscribe by email: <input id="bloom-email" type="checkbox" />
+        </p>
+      </div><!-- bloom journal -->
+      <div id="submit-subscription">
+        <p class="container">
+        <input id="email" type="text" />
+        <button id="submit-subscription">Subscribe</button>
+        </p>
+      </div>
+    </fieldset><!-- subscription-forms -->
+  </form>{% endblock %}
+

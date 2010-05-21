@@ -1,8 +1,9 @@
+import time
 import logging
 
 from fwerks import Handler
 from config import on_dev_server
-from utils import trace_out
+import utils
 from werkzeug.exceptions import NotFound, InternalServerError
 
 NO_CACHE_HEADER = 'no-cache, no-store, must-revalidate, pre-check=0, post-check=0'
@@ -11,6 +12,16 @@ def set_default_headers(response):
   # We don't want IE munging our response, so we set
   # X-XSS-Protection to 0
   response.headers['X-XSS-Protection'] = '0'
+  return response
+
+def exception_handler(exception, request, out):
+  logging.exception(exception)
+  if on_dev_server:
+    response = out(utils.trace_out())
+    response.status_code = 500
+  else:
+    # TODO: A nice 500 response.
+    response = InternalServerError()
   return response
 
 def not_found(request, out):
@@ -25,21 +36,24 @@ def not_found(request, out):
   response.headers['Content-Type'] = 'text/html; charset=utf-8'
   response.headers['Connection'] = 'close'
   return response
-  
-
-def exception_handler(exception, request, out):
-  logging.exception(exception)
-  if on_dev_server:
-    response = out(trace_out())
-    response.status_code = 500
-  else:
-    # TODO: A nice 500 response.
-    response = InternalServerError()
-  return response
 
 class IndexHandler(Handler):
+  def respond(self):
+    response = set_default_headers(self.out(utils.render_template('home')))
+    response.mimetype = 'text/html'
+    response.add_etag()
+
+    # Expire in 4 days.
+    response.expires = time.time() + (86400 * 4)
+    response.headers['Cache-Control'] = 'public, max-age=%d' % (86400 * 4)
+
+    return response.make_conditional(self.request)
+
   def get(self):
-    return self.out('Hello World!')
+    return self.respond()
+
+  def head(self):
+    return self.respond()
 
 class TestException(Handler):
   def get(self):
