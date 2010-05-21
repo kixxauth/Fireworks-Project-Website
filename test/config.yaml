@@ -51,6 +51,16 @@ full:
     - options
     - trace
 
+  - name: Join
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
 robots_txt:
 - module: urls
   classes:
@@ -112,6 +122,20 @@ root:
   classes:
 
   - name: Root
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+join:
+- module: urls
+  classes:
+
+  - name: Join
     tests:
     - get 
     - put

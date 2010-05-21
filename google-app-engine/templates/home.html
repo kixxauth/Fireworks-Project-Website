@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block body %}<div id="content" class="content">
+{% block body %}<div id="home" class="content">
     <p>
     We are a small band of engineers and designers working together to
     create a great software company. Our goal is to build simple tools for big
@@ -31,6 +31,10 @@
     </p>
   </div><!-- content -->
   <div id="feed-post">
+    <!--
+    The feed-post section should be dynamically loaded with JavaScript
+    because it will require JavaScript to work anyway.
+    -->
     <div id="introduce-feed-post">
       <p class="content container">
       Don't be shy. We want to hear your thoughts on our
@@ -50,6 +54,13 @@
       </p>
     </div>
     <div id="twitter-feed">
+      <ol>
+        <li>Feed</li>
+        <li>items</li>
+        <li>will</li>
+        <li>appear</li>
+        <li>here.</li>
+      </ol>
     </div>
   </div><!-- feed-post -->
   <form id="subscriptions" action="/subscriptions/subscribers/" method="post">
@@ -71,7 +82,8 @@
         Get the <a href="#"><em class="title">Pyrotec</em> RSS feed</a>
         </p>
         <p class="line get-email">
-        or subscribe by email: <input id="pyrotec-email" type="checkbox" />
+        <label for="pyrotec-email" accesskey="1">or subscribe by email: </label>
+        <input id="pyrotec-email" name="pyrotec-email" type="checkbox" />
         </p>
       </div><!-- pyrotec-newsletter -->
       <div id="bloom-journal">
@@ -85,13 +97,14 @@
         Get the <a href="#"><em class="title">Bloom</em> RSS feed</a>
         </p>
         <p class="line get-email">
-        or subscribe by email: <input id="bloom-email" type="checkbox" />
+        <label for="bloom-email" accesskey="2">or subscribe by email: </label>
+        <input id="bloom-email" name="bloom-email" type="checkbox" />
         </p>
       </div><!-- bloom journal -->
       <div id="submit-subscription">
         <p class="container">
         <input id="email" type="text" />
-        <button id="submit-subscription">Subscribe</button>
+        <input id="submit-subscription" type="submit" value="Subscribe" />
         </p>
       </div>
     </fieldset><!-- subscription-forms -->

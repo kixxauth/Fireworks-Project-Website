@@ -37,9 +37,11 @@ def not_found(request, out):
   response.headers['Connection'] = 'close'
   return response
 
-class IndexHandler(Handler):
+class SimpleHandler(Handler):
+  template = 'home'
+
   def respond(self):
-    response = set_default_headers(self.out(utils.render_template('home')))
+    response = set_default_headers(self.out(utils.render_template(self.template)))
     response.mimetype = 'text/html'
     response.add_etag()
 
@@ -55,11 +57,18 @@ class IndexHandler(Handler):
   def head(self):
     return self.respond()
 
+class IndexHandler(SimpleHandler):
+  template = 'home'
+
+class JoinHandler(SimpleHandler):
+  template = 'join'
+
 class TestException(Handler):
   def get(self):
     assert False, 'Test Exception Raised!'
 
 handler_map = [('/', 'index', IndexHandler)
+    , ('/join', 'join', JoinHandler)
     , ('/exception', 'exception', TestException)
     ]
 
