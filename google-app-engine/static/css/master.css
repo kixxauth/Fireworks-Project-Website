@@ -1,3 +1,7 @@
+/* Import font from Google.
+----------------------------- */
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold);
+
 /* Globals
 ---------- */
 
@@ -7,14 +11,17 @@
 }
 
 body {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: .8em;
+  font-family: "Droid Sans","lucida grande","Segoe UI",arial,verdana,"lucida sans unicode",tahoma,sans-serif;
+  font-size: .9em;
+  color: #222;
+  line-height: 0;
 }
 
 /* Global styles for links. */
 a {
   text-decoration: none;
   outline: none;
+  color: #f90;
 }
 
 a:hover {
@@ -30,5 +37,92 @@ img {
 /* http://www.sitepoint.com/blogs/2005/02/26/simple-clearing-of-floats/ */
 div {
   overflow: hidden;
+}
+
+/* Helper for a line feed. */
+.line {
+  display: block;
+  margin-top: 1em;
+}
+
+/* Helper for custom input fields */
+input.custom {
+  border: 2px solid #ddd;
+  padding: .3em .1em .2em .1em;
+  font-weight: bold;
+}
+
+/* Header
+------------ */
+#header {
+  margin: 10px 0 0 20px;
+}
+
+#heading {
+  /* The bg gif is 260 x 100 */
+  background: transparent url(../img/the_fireworks_project_logo.gif) no-repeat;
+  height: 105px;
+  width: 280px;
+  float: left;
+  border-right: 4px solid #f90;
+}
+
+#heading a {
+  display: block;
+  height: 100%;
+  width: 100%;
+  text-indent: -9000px;
+}
+
+#subheading {
+  margin: .48em 0 0 304px; /* right-margin: 304px to match the header + desired margin */
+  line-height: 1;
+  font-size: 70px;
+  color: #ccc;
+}
+
+/* Footer
+--------- */
+#footer {
+  border-top: 2px solid #444;
+  margin-top: 100px;
+}
+
+/* Navigation
+------------- */
+#navigation {
+  list-style-type: none;
+  overflow: hidden;
+  margin: 1em 0 0 2em;
+}
+
+li.navigation {
+  float: left;
+  font-size: 1.7em;
+  line-height: 1;
+  margin-left: 2em;
+  padding-bottom: .3em;
+  border-bottom: 3px solid #f90;
+}
+
+li.navigation a {
+  display: block;
+  color: #444;
+}
+
+li.navigation a:hover {
+  text-decoration: none;
+}
+
+/* CC License footer */
+#creative-commons-license {
+  margin-top: 3em;
+  line-height: 1.2;
+  padding: 0 0 1em 1em;
+  width: 80%;
+}
+
+#creative-commons-image {
+  float: left;
 }
 

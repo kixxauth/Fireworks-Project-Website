@@ -1,112 +1,475 @@
 {% extends "base.html" %}
 
+{% block styles %}<script type="text/javascript" src="js/home.js"></script>
+<!-- Load the Typekit font for the presentation -->
+<script type="text/javascript" src="http://use.typekit.com/fcq2zzl.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+<style type="text/css">
+  #home, #subscriptions, #comments {
+    width: 60em;
+    position: relative;
+    left: 50%;
+    top: 50px;
+    margin-left: -30em;
+  }
+  #intro-1, #intro-2, #intro-3, #intro-4 {
+    text-align: center;
+    margin-top: 0.2em;
+    line-height: 0.8;
+  }
+  #intro-1, #intro-2, #intro-4 {
+    font-size: 30px;
+    font-weight: bold;
+  }
+  #intro-3 {
+    font-size: 25px;
+    color: #f90;
+  }
+
+  #home p.content {
+    margin: 1.5em 0 0 15%;
+    width: 70%;
+    font-size: 1.2em;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  /* Presentation
+  ----------------- */
+  #presentation-player {
+    position: relative;
+    left: 50%;
+    margin-left: -250px;
+    margin-top: 2em;
+    width: 500px;
+    height: 400px;
+  }
+
+  #presentation-viewport {
+    width: 480px;
+    height: 350px;
+    padding: 10px;
+  }
+
+  #presentation-intro {
+    font-family: "good-dog-1", "good-dog-2", cursive;
+    font-size: 1.7em;
+    height: 200px;
+    width: 200px;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -100px;
+    text-align: center;
+    line-height: 1.3;
+    overflow: hidden;
+  }
+
+  #presentation-start-button {
+    display: block;
+    background: transparent url(img/presentation/play-button.gif) 50% 50% no-repeat;
+    height: 60px;
+    width: 100px;
+    margin-top: 1em;
+    position: relative;
+    left: 50%;
+    margin-left: -50px;
+    text-indent: -9000px;
+  }
+
+  #presentation-player-controls {
+    height: 30px;
+    list-style-type: none;
+    overflow: hidden;
+    border-top: 2px dashed #ccc;
+    font-family: "good-dog-1", "good-dog-2", cursive;
+    font-size: 1.2em;
+  }
+
+  #presentation-player-controls li {
+    float: left;
+    margin: 1% 0 0 1em;
+    width: 4em;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  #presentation {
+    position: relative;
+    left: 50%;
+    margin-left: -250px;
+    margin-top: 3em;
+    width: 500px;
+  }
+  
+  #presentation div.slide {
+    width: 500px;
+    height: 400px;
+  }
+
+  p.slide-content {
+    font-family: "good-dog-1", "good-dog-2", cursive;
+    font-size: 1.5em;
+    line-height: 1.2;
+    color: #555;
+  }
+
+  /* presentation illustrations */
+  #complicated-and-expensive, #light-bulb-drawing {
+    margin: 2em 0 0 10%;
+  }
+
+  /* form */
+  #presentation-subscription {
+    margin-top: 2em;
+  }
+
+  /* fieldset */
+  #presentation-pyrotec {
+    border: 3px solid #ddd;
+    padding: 1em;
+  }
+
+  #presentation-pyrotec p.line {
+    margin-bottom: 1em;
+    font-size: 1.1em;
+  }
+
+  #presentation-submit-subscription {
+    margin-left: 3em;
+  }
+
+  #presentation-pyrotec-description {
+    margin-top: 2em;
+    line-height: 1.2;
+  }
+
+  #presentation-pyrotec p.privacy-policy {
+    margin-top: 1em;
+    line-height: 1.2;
+  }
+
+  /* Comments
+  ----------- */
+  #comments-header {
+    background: transparent url(../img/pointer.gif) no-repeat;
+    height: 36px;
+    width: 13em;
+    padding-left: 24px;
+    margin: 4em 0 1em;
+    font-size: 2em;
+    line-height: 1.3;
+  }
+
+  #comment-feed {
+    position: relative;
+    top: -4em;
+    right: 0;
+    width: 29em;
+    height: 17em;
+    overflow: hidden;
+    list-style-type: none;
+    border: 3px solid #ddd;
+  }
+
+  .comment-feed-item {
+    padding: .5em 1em .5em .8em;
+    line-height: 1.2;
+  }
+
+  .comment-feed-item.alt-1 {
+   background: #eee;
+   color: #000;
+  }
+
+  #submit-comment {
+    float: left;
+    width: 28em;
+    margin-right: 1em;
+  }
+
+  #submit-comment p.content {
+    font-size: 1.5em;
+    line-height: 1.2;
+  }
+
+  #comment-input {
+    width: 97%;
+    height: 6em;
+    margin-top: 1em;
+    border: 2px solid #ddd;
+  }
+
+  #submit-comment-container {
+    width: 97%;
+    text-align: left;
+  }
+
+  #submit-comment-button {
+    display: block;
+    margin-top: .5em;
+    float: right;
+  }
+
+  /* Subscriptions
+  ---------------- */
+
+  #subscriptions h3 {
+    background: transparent url(../img/pointer.gif) no-repeat;
+    font-size: 2em;
+    margin-top: 2em;
+    line-height: 1.1;
+    padding-left: 24px;
+    width: 70%;
+  }
+
+  /* fieldset */
+  #pyrotec-newsletter, #bloom-journal, #submit-subscription-fieldset {
+    margin-top: 1em;
+    border: none;
+    width: 70%;
+    font-size: 1.2em;
+    line-height: 1.2;
+  }
+
+  #pyrotec-description, #bloom-description {
+    margin-top: 1em;
+  }
+
+  #submit-subscription-fieldset .privacy-policy {
+    width: 60%;
+    margin-top: 1em;
+    font-size: 0.8em;
+  }
+</style>{% endblock %}
+
 {% block body %}<div id="home" class="content">
-    <p>
-    We are a small band of engineers and designers working together to
-    create a great software company. Our goal is to build simple tools for big
-    ideas. The Fireworks Project will deliver the systems you need to operate
-    your small or medium sized organization more efficiently because, we know
-    you have more important things to do.
+    <p id="intro-1">You need software that just works,</p>
+    <p id="intro-2">personalized for the way you work,</p>
+    <p id="intro-3">and,</p>
+    <p id="intro-4">it must be easily affordable.</p>
+    <p class="content">
+    Is that too much to ask? We don't think so.
+    It's time to think differently about your information systems.
+    Dream big and we'll build it.
     </p>
-    <p>
-    We have been working night and day to bootstrap our software assembly line.
-    This one of a kind innovation we allow us to build amazingly productive
-    software, customized to the needs of your unique organization, at an
-    incredibly affordable price. Best of all, we will be able to deliver your
-    systems in an unbelievably short amount of time.
-    </p>
-    <p>
-    You can see from the unfinished state of our website that we have been
-    night and day in the ugly underbelly of technology so you don't have to. In
-    fact, we are working so hard to get this done for you that it was reported
-    that one of our engineers forgot to call his mom on mothers' day. We
-    regretfully apologize to moms everywhere.
-    </p>
-    <p>
-    Although we love working in the guts of computer systems, what really gets
-    us fired up is hearing from you. We want to know more about you and your
-    organization. If you could have software customized just for you, what
-    would it do? What can we do to help you get more done at work so you can
-    spend more time with the people that really matter?
-    </p>
-  </div><!-- content -->
-  <div id="feed-post">
     <!--
-    The feed-post section should be dynamically loaded with JavaScript
-    because it will require JavaScript to work anyway.
+    The presentation player is dynamically loaded with JavaScript because it
+    will require JavaScript to work anyway.  Because this is a <script> tag the
+    browser will not render it and because the type="text/html" the browser
+    will not try to parse it either. The .innerHTML of this script is then
+    used as a template to create the live DOM fragment and insert it into the
+    document.
     -->
-    <div id="introduce-feed-post">
-      <p class="content container">
-      Don't be shy. We want to hear your thoughts on our
-      <a href="http://twitter.com/Fireworks_Inc">Twitter Feed</a>.
-      We want to know why you are excited about our company and how you think
-      you could use our services.
-      </p>
-    </div>
-    <div id="submit-feed-post">
-      <p class="content container">
-      Don't worry if you are not a Twitter user. We'll post your comments
-      anonymously instead of using your Twitter username.
-      </p>
-      <textarea id="feedbox"></textarea>
-      <p class="container">
-        <button id="submit-feedbox">Submit</button>
-      </p>
-    </div>
-    <div id="twitter-feed">
-      <ol>
-        <li>Feed</li>
-        <li>items</li>
-        <li>will</li>
-        <li>appear</li>
-        <li>here.</li>
-      </ol>
-    </div>
-  </div><!-- feed-post -->
-  <form id="subscriptions" action="/subscriptions/subscribers/" method="post">
-    <fieldset id="subscription-forms">
-      <div id="subscription-intro">
-        <p class="content">
-        Or, even better, you can sign up for our company newsletter or our
-        very own organizational management journal.
+    <script id="presentation-player-template" type="text/html">
+      <div id="presentation-viewport">
+        <div id="presentation-intro">
+        <h3>Press play to find out how.</h3>
+        <a id="presentation-start-button" href="#presentation">Play</a>
+        </div>
+      </div>
+      <ul id="presentation-player-controls">
+        <li id="player-play-pause">Pause</li>
+        <li id="player-back">Back</li>
+        <li id="player-next">Next</li>
+        <li id="player-start">Start</li>
+      </ul>
+    </script><!-- presentation-player -->
+    <div id="presentation">
+      <!-- If JavaScript is enabled, these presentation slides will be removed
+      from the DOM tree and used as slides in a presentation controlled via
+      JavaScript. The interval attribute can be set to control the delay of each
+      slide in milliseconds.
+      -->
+      <div id="slide-1" class="slide" interval="3000">
+        <p class="slide-content">
+         Customized software is expensive and complicated. Right?
         </p>
-      </div><!-- subscription-intro -->
-      <div id="pyrotec-newsletter">
-        <p id="pyrotec-description" class="content">
-        <em class="title">Pyrotec</em>, our company newsletter will only
-        deliver news about The Fireworks Project and will not arrive more than
-        once per week, and usually even less frequently unless we have
-        something really important to tell you about.
+        <img id="complicated-and-expensive" width="60%"
+          src="img/presentation/complicated_and_expensive.gif" />
+      </div>
+      <div id="slide-2" class="slide" interval="2000">
+        <p class="slide-content">
+        We thought so too, but then we started thinking...
         </p>
-        <p class="line get-feed">
-        Get the <a href="#"><em class="title">Pyrotec</em> RSS feed</a>
-        </p>
-        <p class="line get-email">
-        <label for="pyrotec-email" accesskey="1">or subscribe by email: </label>
-        <input id="pyrotec-email" name="pyrotec-email" type="checkbox" />
-        </p>
-      </div><!-- pyrotec-newsletter -->
-      <div id="bloom-journal">
-        <p id="bloom-description" class="content">
-        <em class="title">Bloom</em>, our journal for organizations arrives on a
-        monthly basis. Our goal is to bring you some of the great ideas that we
-        find in organizational management, marketing, and productivity. We enjoy
-        learning about these things and we thought you might too.
-        </p>
-        <p class="line get-feed">
-        Get the <a href="#"><em class="title">Bloom</em> RSS feed</a>
-        </p>
-        <p class="line get-email">
-        <label for="bloom-email" accesskey="2">or subscribe by email: </label>
-        <input id="bloom-email" name="bloom-email" type="checkbox" />
-        </p>
-      </div><!-- bloom journal -->
-      <div id="submit-subscription">
-        <p class="container">
-        <input id="email" type="text" />
-        <input id="submit-subscription" type="submit" value="Subscribe" />
+        <img id="light-bulb-drawing" width="60%"
+          src="img/presentation/light-bulb.gif" />
+      </div>
+      <div id="slide-3" class="slide" interval="7000">
+        <p class="slide-content">
+        What if we could create a sort of factory that would allow us to build
+        simple and affordable software, made to order just for you?
         </p>
       </div>
-    </fieldset><!-- subscription-forms -->
+      <div id="slide-4" class="slide" interval="8000">
+        <p class="slide-content">
+        Our factory idea started out by borrowing some ideas from Henry Ford,
+        who created an assembly line to build affordable cars in 1908.
+        </p>
+      </div>
+      <div id="slide-5" class="slide" interval="5000">
+        <p class="slide-content">
+        First, we created the common nuts and bolts used to connect software
+        components together.
+        </p>
+      </div>
+      <div id="slide-6" class="slide" interval="9000">
+        <p class="slide-content">
+        Next, we designed all the components to be interchangeable so we can
+        easily add or remove functionality, even after the the system is
+        already in use.
+        </p>
+      </div>
+      <div id="slide-7" class="slide" interval="10000">
+        <p class="slide-content">
+        Most importantly your software needs to be easily affordable and
+        delivered quickly just like Henry's Model-T cars. So we're building an assembly
+        line that will allow us to quickly assemble all the your parts into a
+        simple system without breaking the bank.
+        </p>
+      </div>
+      <div id="slide-8" class="slide" interval="11000">
+        <p class="slide-content">
+        One of the best things about made to order software is that you'll be
+        able to personally choose all the features you need without getting
+        stuck with stuff you don't. Some of the possibilities include customer
+        management, billing, document collaboration, calendars, contact lists,
+        and project management.
+        </p>
+      </div>
+      <div id="slide-9" class="slide" interval="10000">
+        <p class="slide-content">
+        You could even include mobile device apps in your system for extra
+        functionality or convienence. And, your new system will also allow you
+        to easily move your information between other systems and applications.
+        It will all just work.
+        </p>
+      </div>
+      <div id="slide-10" class="slide" interval="5000">
+        <p class="slide-content">
+        So, why doesn't anyone else build a software factory like this?
+        </p>
+      </div>
+      <div id="slide-11" class="slide" interval="7000">
+        <p class="slide-content">
+        Frankly, because it is a very hard thing to build. But, we believe that
+        nothing worth doing comes easy.
+        </p>
+        <p class="slide-content" interval="7000">
+        Our factory is not quite operational yet, but it is very close.  We're
+        working day and night to get ready for our grand opening.
+        </p>
+      </div>
+      <div id="slide-12" class="slide" interval="9000">
+        <p class="slide-content">
+        In fact, we've been working so hard that, regretfully, one of us forgot
+        to call his mom on Mother's day. We apologize to moms everwhere and
+        promise to get more sleep and eat healthier as soon as we're done.
+        </p>
+      </div>
+      <div id="slide-13" class="slide">
+        <p class="slide-content">
+        If you would like to know when you can get your first made to order
+        software system for your organization you should subscribe to our
+        newsletter.
+        </p>
+        <form id="presentation-subscription" action="/subscriptions/subscribers/" method="post">
+          <fieldset id="presentation-pyrotec">
+            <p class="line get-feed">
+            Get the <a href="#">RSS feed</a> or
+            </p>
+            <p class="line get-email">
+            <label for="presentation-pyrotec-email" accesskey="1">Subscribe by email* </label>
+            <input id="presentation-pyrotec-email" class="custom" name="email" type="text" />
+            </p>
+            <p class="container">
+            <input id="presentation-submit-subscription" type="submit" value="Subscribe" />
+            </p>
+            <p id="presentation-pyrotec-description">
+            <em class="title">Pyrotec</em>, our company newsletter will not
+            arrive more than once per week, but usually less frequently unless
+            we have something really important to tell you about.
+            </p>
+            <p class="privacy-policy">
+            * Our privacy policy is to never share, rent, or sell your
+            information to anyone, EVER.
+            </p>
+          </fieldset>
+        </form>
+      </div>
+    </div><!-- presentation -->
+  </div><!-- home -->
+  <!--
+  The comment display is dynamically loaded with JavaScript because it
+  will require JavaScript to work anyway.  Because this is a <script> tag the
+  browser will not render it and because the type="text/html" the browser
+  will not try to parse it either. The .innerHTML of this script is then
+  used as a template to create the live DOM fragment and insert it into the
+  document.
+  -->
+  <script id="comments-template" type="text/html">
+    <h3 id="comments-header">What people are saying:</h3>
+    <div id="submit-comment">
+      <p class="content container">
+      Could your information systems be better?
+      Tell us what you think.
+      </p>
+      <textarea id="comment-input"></textarea>
+      <p id="submit-comment-container" class="container">
+        <button id="submit-comment-button">Add your comment.</button>
+      </p>
+    </div>
+    <ol id="comment-feed">
+      <li class="comment-feed-item alt-0">Comments will</li>
+      <li class="comment-feed-item alt-1">scroll through here</li>
+      <li class="comment-feed-item alt-0">with a JavaScript</li>
+      <li class="comment-feed-item alt-1">animation in an</li>
+      <li class="comment-feed-item alt-0">endless loop</li>
+    </ol>
+  </script><!-- comments -->
+  <form id="subscriptions" action="/subscriptions/subscribers/" method="post">
+    <h3 id="subscriptions-header">
+    Don't leave without subscribing to our free newsletter and journal.
+    </h3>
+    <fieldset id="pyrotec-newsletter">
+      <p id="pyrotec-description" class="content">
+      <em class="title">Pyrotec</em>, our company newsletter will not
+      arrive more than once per week, but usually less frequently unless
+      we have something really important to tell you about.
+      </p>
+      <p class="line get-feed">
+      Get the <a href="#"><em class="title">Pyrotec</em> RSS feed</a>
+      </p>
+      <p class="line get-email">
+      <label for="pyrotec-email" accesskey="1">or subscribe by email: </label>
+      <input id="pyrotec-email" class="custom" name="pyrotec-email" type="checkbox" />
+      </p>
+    </fieldset><!-- pyrotec-newsletter -->
+    <fieldset id="bloom-journal">
+      <p id="bloom-description" class="content">
+      <em class="title">Bloom</em>, our journal for organizations arrives on a
+      monthly basis. Our goal is to bring you some of the great ideas that we
+      find in organizational management, marketing, and productivity. We enjoy
+      learning about these things and we thought you might too.
+      </p>
+      <p class="line get-feed">
+      Get the <a href="#"><em class="title">Bloom</em> RSS feed</a>
+      </p>
+      <p class="line get-email">
+      <label for="bloom-email" accesskey="2">or subscribe by email: </label>
+      <input id="bloom-email" class="custom" name="bloom-email" type="checkbox" />
+      </p>
+    </fieldset><!-- bloom journal -->
+    <fieldset id="submit-subscription-fieldset">
+      <p class="container">
+      Email address* <input id="email" class="custom" type="text" />
+      <input id="submit-subscription" type="submit" value="Subscribe" />
+      </p>
+      <p class="privacy-policy">
+      * Our privacy policy is to never share, rent, or sell your
+      information to anyone, EVER.
+      </p>
+    </fieldset>
   </form>{% endblock %}
 

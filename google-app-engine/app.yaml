@@ -149,6 +149,10 @@ handlers:
 - url: /img
   static_dir: static/img
 
+# ### All of our static JavaScript files.
+- url: /js
+  static_dir: static/js
+
 # ### All of our html files.
 - url: /pages
   static_dir: static/pages
