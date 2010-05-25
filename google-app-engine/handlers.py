@@ -1,13 +1,16 @@
+import os
 import time
 import logging
 
 from fwerks import Handler
-from config import on_dev_server
 import utils
 from werkzeug.exceptions import NotFound, InternalServerError
 
 # Standard 'Do not cache this!' declaration for the cache-control header.
 NO_CACHE_HEADER = 'no-cache, no-store, must-revalidate, pre-check=0, post-check=0'
+
+# Determine if we are running locally or not.
+ON_DEV_SERVER = os.environ['SERVER_SOFTWARE'].startswith('Development')
 
 def set_default_headers(response):
   """Utility shortcut available to quickly set some default headers.
@@ -24,7 +27,7 @@ def exception_handler(exception, request, out):
   other tools in this module.
   """
   logging.exception(exception)
-  if on_dev_server:
+  if ON_DEV_SERVER:
     response = out(utils.trace_out())
     response.status_code = 500
   else:
