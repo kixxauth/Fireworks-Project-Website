@@ -1,4 +1,12 @@
-import logging
+"""
+  FWPWebsite.request
+  ~~~~~~~~~~~~~~~~~~
+  WSGI application bootstrap for FWerks handlers.
+  (see handlers.py for more info)
+
+  :copyright: (c) 2010 by The Fireworks Project.
+  :license: MIT, see LICENSE for more details.
+"""
 
 from fwerks import App
 from google.appengine.ext.webapp.util import run_bare_wsgi_app

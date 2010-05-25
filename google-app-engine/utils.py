@@ -1,3 +1,12 @@
+"""
+  FWPWebsite.utils
+  ~~~~~~~~~~~~~~~~
+  Basic utilities toolkit.
+
+  :copyright: (c) 2010 by The Fireworks Project.
+  :license: MIT, see LICENSE for more details.
+"""
+
 import os
 import sys
 import cgi

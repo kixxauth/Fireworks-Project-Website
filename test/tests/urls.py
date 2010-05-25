@@ -1,3 +1,12 @@
+"""
+  FWPWebsite test.tests.urls
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Module containing the test classes referenced in `test/config.yaml`.
+
+  :copyright: (c) 2010 by The Fireworks Project.
+  :license: MIT, see LICENSE for more details.
+"""
+
 import re
 import unittest
 import test_utils
@@ -37,7 +46,12 @@ class RobotsTxt(unittest.TestCase):
   url = '/robots.txt'
 
   def configure(self):
+    """Set up the request/response data.
 
+    The test_utils.test_function decorator will cause this method
+    to be called once for this test class, but NOT each time a test
+    function is called.
+    """
     self.firefox36 = test_utils.TestRequest(firefox36_config)
 
     if test_utils.LOCAL:
@@ -142,7 +156,12 @@ class Sitemap(unittest.TestCase):
   url = '/sitemap.xml'
 
   def configure(self):
+    """Set up the request/response data.
 
+    The test_utils.test_function decorator will cause this method
+    to be called once for this test class, but NOT each time a test
+    function is called.
+    """
     self.firefox36 = test_utils.TestRequest(firefox36_config)
     self.firefox36.response_body = 1225
 
@@ -244,7 +263,12 @@ class GoogleVerify(unittest.TestCase):
   url = '/googlef734612d306d87e6.html'
 
   def configure(self):
+    """Set up the request/response data.
 
+    The test_utils.test_function decorator will cause this method
+    to be called once for this test class, but NOT each time a test
+    function is called.
+    """
     self.firefox36 = test_utils.TestRequest(firefox36_config)
 
     if test_utils.LOCAL:
@@ -349,7 +373,12 @@ class NotFound(unittest.TestCase):
   url = '/lost_city_of_atlantis'
 
   def configure(self):
+    """Set up the request/response data.
 
+    The test_utils.test_function decorator will cause this method
+    to be called once for this test class, but NOT each time a test
+    function is called.
+    """
     self.firefox36 = test_utils.TestRequest(firefox36_config)
     self.firefox36.response_status = 404
 
@@ -455,7 +484,12 @@ class Root(unittest.TestCase):
   url = '/'
 
   def configure(self):
+    """Set up the request/response data.
 
+    The test_utils.test_function decorator will cause this method
+    to be called once for this test class, but NOT each time a test
+    function is called.
+    """
     self.firefox36 = test_utils.TestRequest(firefox36_config)
     self.firefox36.response_status = 200
     self.firefox36.response_body = True
@@ -590,7 +624,12 @@ class Join(unittest.TestCase):
   url = '/join'
 
   def configure(self):
+    """Set up the request/response data.
 
+    The test_utils.test_function decorator will cause this method
+    to be called once for this test class, but NOT each time a test
+    function is called.
+    """
     self.firefox36 = test_utils.TestRequest(firefox36_config)
     self.firefox36.response_status = 200
     self.firefox36.response_body = True
@@ -725,7 +764,12 @@ class Projects(unittest.TestCase):
   url = '/projects/'
 
   def configure(self):
+    """Set up the request/response data.
 
+    The test_utils.test_function decorator will cause this method
+    to be called once for this test class, but NOT each time a test
+    function is called.
+    """
     self.firefox36 = test_utils.TestRequest(firefox36_config)
     self.firefox36.response_status = 200
     self.firefox36.response_body = True

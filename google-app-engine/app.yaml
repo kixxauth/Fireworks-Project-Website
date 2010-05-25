@@ -18,6 +18,25 @@
 #
 # For more info see the [appconfig documentation][1].
 #
+# It also helps to know how GAE makes applications available. From the App
+# Engine Blog on app versioning:
+#
+# "App Engine permits you to deploy multiple versions of your app and have them
+# running side-by-side. All the versions share the samedatastore and memcache,
+# but they run in separate instances and have different URLs. Your 'live'
+# version always serves off yourapp.appspot.com as well as any domains you have
+# mapped, but all your app's versions are accessible at
+# version.latest.yourapp.appspot.com. Multiple versions are particularly useful
+# for testing a new release in a production environment, on real data, before
+# making it available to all your users.
+#
+# Something that's less known is that the different app versions don't even
+# have to have the same runtime! It's perfectly fine to have one version of an
+# app using the Java runtime and another version of the same app using the
+# Python runtime."
+#
+# http://googleappengine.blogspot.com/2009/06/10-things-you-probably-didnt-know-about.html
+#
 
 # Meta
 # ----

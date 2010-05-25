@@ -1,3 +1,13 @@
+"""
+  FWPWebsite test.tests.test_utils
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Common set of testing utitilies and global runtime settings used
+  by the test classes and functions.
+
+  :copyright: (c) 2010 by The Fireworks Project.
+  :license: MIT, see LICENSE for more details.
+"""
+
 import re
 import httplib
 import unittest
@@ -33,7 +43,7 @@ NO_CACHE_HEADER = 'no-cache, no-store, must-revalidate, pre-check=0, post-check=
 def test_response_headers(test, response, headers, msg=''):
   """Iterate through a list of headers, testing each one.
 
-  `test` Should be the test object.
+  `test` Should be the unittest test object.
   `response` Should be an instance of Response.
   `headers` Should be a list of tuples of the form
     (directive, header name, expected value)

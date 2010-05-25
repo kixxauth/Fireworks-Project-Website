@@ -1,3 +1,19 @@
+#
+# The purpose of this config file is to allow the automatic creation of test
+# suites to run with `./testrunner.py`.
+#
+# config.yaml is a list of possible command line arguments that can be passed
+# when executing `testrunner.py`. For example:
+#
+#   `./testrunner.py full`
+#
+# Will run all the tests listed under `full`
+#
+# Each section is followed by a list of modules, followed by a list of class names,
+# followed by a list of test functions. For example, the module `url.py` contains a class
+# named `RobotsTxt` which contains the test function `get`.
+#
+
 full:
 - module: urls
   classes:

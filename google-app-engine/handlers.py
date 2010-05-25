@@ -1,3 +1,12 @@
+"""
+  FWPWebsite.handlers
+  ~~~~~~~~~~~~~~~~~~~
+  WSGI application request handlers for FWerks (see fwerks.py for more info)
+
+  :copyright: (c) 2010 by The Fireworks Project.
+  :license: MIT, see LICENSE for more details.
+"""
+
 import os
 import time
 import logging

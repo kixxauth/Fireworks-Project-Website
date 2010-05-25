@@ -1,3 +1,12 @@
+"""
+  FWPWebsite.fwerks
+  ~~~~~~~~~~~~~~~~~
+  FWerks is a framework for creating a quick and dirty WSGI application with
+  Werkzeug.
+
+  :copyright: (c) 2010 by The Fireworks Project.
+  :license: MIT, see LICENSE for more details.
+"""
 
 from werkzeug.routing import Map, Rule
 from werkzeug.exceptions import HTTPException, MethodNotAllowed

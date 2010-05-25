@@ -1,3 +1,12 @@
+"""
+  FWPWebsite test.suites
+  ~~~~~~~~~~~~~~~~~~~~~~
+  Create and run a set of unittest suites depending on `test/config.yaml`.
+
+  :copyright: (c) 2010 by The Fireworks Project.
+  :license: MIT, see LICENSE for more details.
+"""
+
 import os
 import unittest
 import yaml
