@@ -18,7 +18,7 @@ For Python: (Linux, Mac, and Windows) [code.google.com/appengine/downloads.html]
 #### 3. Get the source code.
 
 You can do this 1 of 2 ways. The best way is to learn how to use Git and create
-a GitHub user account if you have don't have one already. Fork the repository
+a GitHub user account if you don't have one already. Fork the repository
 into your GitHub account by clicking the 'Fork' button at
 [github.com/FireworksProject/Fireworks-Project-Website](http://github.com/FireworksProject/Fireworks-Project-Website).
 Then, clone the repository from GitHub on your local machine with
