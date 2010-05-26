@@ -68,3 +68,10 @@ Unported License (http://creativecommons.org/licenses/by-sa/3.0/).
 
 See CC-LICENSE in this folder for more details.
 
+
+  [1]: http://www.fireworksproject.com
+  [2]: http://code.google.com/appengine/docs/python/overview.html
+  [3]: http://code.google.com/appengine/docs/python/runtime.html#Pure_Python
+  [4]: http://code.google.com/appengine/downloads.html
+  [5]: http://code.google.com/appengine/docs/python/tools/devserver.html
+
