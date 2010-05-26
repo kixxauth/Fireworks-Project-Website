@@ -26,7 +26,8 @@ Then, clone the repository from GitHub on your local machine with
   `git clone http://github.com/USERNAME/Fireworks-Project-Website.git`
 
 where USERNAME is your GitHub username. Make sure to do this while you are in
-the directory you wish to clone the repo to.
+the directory you wish to clone the repo to. GitHub has [great instructions][6] on
+how to complete the forking operation.
 
 The second best way to get the source code is to download the latest package
 from
@@ -79,4 +80,5 @@ See CC-LICENSE in this folder for more details.
   [3]: http://code.google.com/appengine/docs/python/runtime.html#Pure_Python
   [4]: http://code.google.com/appengine/downloads.html
   [5]: http://code.google.com/appengine/docs/python/tools/devserver.html
+  [6]: http://help.github.com/forking/
 
