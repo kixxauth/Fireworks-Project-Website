@@ -5,8 +5,8 @@
   (see handlers.py for more info)
 
   When a request comes in to the GAE servers, and is routed to this script for
-  handling, GAE calls the main(). After the initial call is made, the entire
-  app is cached to speed up future requests.
+  handling, GAE calls the `main()` funtion. After the initial call is made, the
+  entire app is cached to speed up future requests.
 
   Keeping the parsed Python code in memory saves time and allows for faster
   responses. Caching the global environment has other potential uses as well:
@@ -43,7 +43,7 @@
 
   In our case, we've created a quick and dirty WSGI applicaton constructor from
   the WSGI utility collection called Werkzeug (http://werkzeug.pocoo.org/).
-  We import the constructor, called `App` from the fwerks `fwerks.py` module.
+  We import our WSGI constructor, called `App` from the fwerks `fwerks.py` module.
 
   In the handlers `handlers.py` module we have a mapping object called
   `handler_map` that we pass to `App()` to create our WSGI application called

@@ -37,9 +37,9 @@ Quickstart for hackers and explorers:
 
     `google_appengine/dev_appserver.py Fireworks-Project-Website/google-app-engine/`
 
-  The dev_appserver will look for `app.yaml` in
+  The dev\_appserver will look for `app.yaml` in
   `Fireworks-Project-Website/google-app-engine/`. For more information about
-  running the App Engine dev_appserver consult the GAE docs
+  running the App Engine dev\_appserver consult the GAE docs
   [code.google.com/appengine/docs/python/tools/devserver.html][5]
 
 5. Once the dev_appserver is running you can __switch over to your browser__ to see
@@ -55,34 +55,16 @@ If you have any questions please contact me, the project manager, at kixxauth@gm
 
 License
 -------
-Licensed under The MIT License:
 
-The MIT License
+All source code in this directory is licensed under the MIT license unless
+otherwise noted in the source file itself.
 
-Copyright (c) 2009 Fireworks Technology Projects Inc.
-[www.fireworksproject.com][1]
+See MIT-LICENSE in this directory for details.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+All content and images in this directory are (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, are licensed under a Creative Commons Attribution-Share Alike 3.0
+Unported License (http://creativecommons.org/licenses/by-sa/3.0/).
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-  [1]: http://www.fireworksproject.com
-  [2]: http://code.google.com/appengine/docs/python/overview.html
-  [3]: http://code.google.com/appengine/docs/python/runtime.html#Pure_Python
-  [4]: http://code.google.com/appengine/downloads.html
-  [5]: http://code.google.com/appengine/docs/python/tools/devserver.html
+See CC-LICENSE in this folder for more details.
 

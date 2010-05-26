@@ -13,8 +13,9 @@ License
 -------
 
 All source code in this directory is licensed under the MIT license unless
-otherwise noted in the source file itself. See MIT-LICENSE.txt in this
-directory for details.
+otherwise noted in the source file itself.
+
+See MIT-LICENSE in this directory for details.
 
 All content and images in this directory are (c) 2009 - 2010 by contributors to The
 Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
