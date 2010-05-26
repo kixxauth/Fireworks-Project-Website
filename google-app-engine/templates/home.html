@@ -1,3 +1,29 @@
+{#
+
+Home Template
+=============
+
+This is the template for the root www.fireworksproject.com page.
+
+For more information regarding the Django template syntax, have a look at the
+documentation.
+http://docs.djangoproject.com/en/1.2/topics/templates/#topics-templates
+
+License
+-------
+
+All source code in this file is licensed under the MIT license unless
+otherwise noted in the source file itself. See MIT-LICENSE.txt in this
+directory for details.
+
+All text content in this file is (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, is licensed under a Creative Commons Attribution-Share Alike 3.0
+Unported License (http://creativecommons.org/licenses/by-sa/3.0/).
+
+See CC-LICENSE in this folder for more details.
+
+#}
 {% extends "base.html" %}
 
 {% block styles %}<script type="text/javascript" src="js/home.js"></script>
@@ -254,14 +280,14 @@
     It's time to think differently about your information systems.
     Dream big and we'll build it.
     </p>
-    <!--
+    {#
     The presentation player is dynamically loaded with JavaScript because it
     will require JavaScript to work anyway.  Because this is a <script> tag the
     browser will not render it and because the type="text/html" the browser
     will not try to parse it either. The .innerHTML of this script is then
     used as a template to create the live DOM fragment and insert it into the
     document.
-    -->
+    #}
     <script id="presentation-player-template" type="text/html">
       <div id="presentation-viewport">
         <div id="presentation-intro">
@@ -277,11 +303,12 @@
       </ul>
     </script><!-- presentation-player -->
     <div id="presentation">
-      <!-- If JavaScript is enabled, these presentation slides will be removed
+      {#
+      If JavaScript is enabled, these presentation slides will be removed
       from the DOM tree and used as slides in a presentation controlled via
       JavaScript. The interval attribute can be set to control the delay of each
       slide in milliseconds.
-      -->
+      #}
       <div id="slide-1" class="slide" interval="3000">
         <p class="slide-content">
          Customized software is expensive and complicated. Right?
@@ -400,14 +427,14 @@
       </div>
     </div><!-- presentation -->
   </div><!-- home -->
-  <!--
+  {#
   The comment display is dynamically loaded with JavaScript because it
   will require JavaScript to work anyway.  Because this is a <script> tag the
   browser will not render it and because the type="text/html" the browser
   will not try to parse it either. The .innerHTML of this script is then
   used as a template to create the live DOM fragment and insert it into the
   document.
-  -->
+  #}
   <script id="comments-template" type="text/html">
     <h3 id="comments-header">What people are saying:</h3>
     <div id="submit-comment">

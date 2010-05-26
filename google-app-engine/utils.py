@@ -38,6 +38,8 @@ def render_template(name, context=None):
   return template.render(get_template_path('%s.html'% name), context)
 
 def trace_out():
+  """Create and return a system trace string for debugging.
+  """
   lines = ''.join(traceback.format_exception(*sys.exc_info()))
   return cgi.escape(lines, quote=True)
 

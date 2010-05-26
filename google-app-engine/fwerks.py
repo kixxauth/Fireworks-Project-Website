@@ -1,8 +1,9 @@
 """
   FWPWebsite.fwerks
   ~~~~~~~~~~~~~~~~~
-  FWerks is a framework for creating a quick and dirty WSGI application with
-  Werkzeug.
+  FWerks is a framework for creating a quick and dirty WSGI application using
+  the Werkzeug utilities. The WSGI application constructor is built by the
+  class `App` defined in this file.
 
   :copyright: (c) 2010 by The Fireworks Project.
   :license: MIT, see LICENSE for more details.
@@ -16,7 +17,8 @@ from werkzeug import BaseRequest, BaseResponse, CommonResponseDescriptorsMixin, 
 class Response(BaseResponse, CommonResponseDescriptorsMixin, ETagResponseMixin):
     """Response class implementing the following Werkzeug mixins:
 
-    - :class:`CommonResponseDescriptorsMixin` for various HTTP descriptors
+        - :class:`CommonResponseDescriptorsMixin` for various HTTP descriptors.
+        - :class:`ETagResponseMixin` ETag and conditional response utilities.
     """
 
 class App(object):
@@ -109,6 +111,30 @@ class App(object):
     return response(env, start_response)
 
 class Handler(object):
+  """Request handler base class.
+
+  All request handlers should be subclasses of this class.  Handler subclasses
+  should define any HTTP methods they wish to support by defining methods named
+  'get', 'post', 'put', 'delete', 'head', or 'options'.
+
+  Handler methods will be called when a request matching their path rule and
+  method name arrives. Any parameters defined in the routing rule will be
+  passed to the handler method. See the Werkzeug documentation on rule formatting
+  to see how rules work.
+
+  http://werkzeug.pocoo.org/documentation/0.6.2/routing.html#rule-format
+
+  Two addition object will be bound to the handler instance as well.The first,
+  referenced by 'self.request' is a Werkzeug request object. The second,
+  'self.out' is a callable object that will return a Werkzeug response object
+  when invoked.
+
+  Consult the Werkzeug reference documentation at
+  http://werkzeug.pocoo.org/documentation/0.6.2/wrappers.html or in
+  `werkzeug/wrappers.py` for more information about the request and response
+  objects.
+
+  """
   methods = ['get', 'post', 'put', 'delete', 'head', 'options']
   def __init__(self, request, response_constructor):
     self.request = request

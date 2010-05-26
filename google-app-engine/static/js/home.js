@@ -1,3 +1,10 @@
+/**
+ * General scripting and presentation player for the root domain page.
+ *
+ * copyright: (c) 2010 by The Fireworks Project.
+ * license: MIT, see LICENSE.txt in this directory for more details.
+ */
+
 /*jslint
   browser: true
 , onevar: true
@@ -18,6 +25,7 @@
 , jQuery: false
 */
 
+// ECMAScript 5 strict mode.
 "use strict";
 
 var HOME = (function (window, undef) {

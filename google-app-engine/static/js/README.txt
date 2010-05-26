@@ -1,15 +1,15 @@
-CSS
-===
+JavaScript
+==========
 
-This folder contains statically served CSS files.
+This folder contains statically served JavaScript files.
 
 Each file can be referenced in HTML by a URL like
 
-  `http://www.fireworksproject.com/css/FILENAME.css`
+  `http://www.fireworksproject.com/css/FILENAME.js`
 
 or the relative shortcuts
 
-  `/css/FILENAME.css` and `css/FILENAME.css`
+  `/css/FILENAME.js` and `css/FILENAME.js`
 
 License
 -------

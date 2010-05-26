@@ -2,21 +2,18 @@
 # App Configuration (app.yaml)
 # ============================
 #
-# A Python App Engine application must have a configuration file named app.yaml
-# that specifies how URL paths correspond to request handlers and static files.
-# This file also contains information about the application code, such as the
-# application ID and the latest version identifier.
+# A Python App Engine application must have a configuration file named
+# `app.yaml`.  It specifies how URL paths correspond to request handlers and
+# static files among other things such as the application ID and the latest
+# version identifier. The `app.yaml` file is not actually uploaded to the GAE
+# servers, but it is used by the local configuration script, `appconfig.py` to
+# know how to upate the GAE servers.
+#
+# For the impatient who just want to get hacking on the code, go have a look at
+# `/google-app-engine/request.py`.
 #
 # The syntax of app.yaml is the YAML format. For more information about this
 # syntax, see the [YAML website][2].
-#
-# URL and file path patterns use [POSIX extended regular expression syntax][3],
-# excluding collating elements and collation classes. Back-references to
-# grouped matches (e.g. \1) are supported, as are these Perl extensions: \w \W
-# \s \S \d \D  (This is similar to [Codesite search][4], plus back-reference
-# support.)
-#
-# For more info see the [appconfig documentation][1].
 #
 # It also helps to know how GAE makes applications available. From the App
 # Engine Blog on app versioning:
@@ -45,7 +42,7 @@
 # ### The Google App Engine identifier for this app.
 #
 # Everything else is relative to this identifier. For example, when you run the
-# appconfig.py script to configure the application it uses this identifier to
+# `appconfig.py` script to configure the application it uses this identifier to
 # know which GAE application to remotely configure. The URL for the application
 # is also created from the identifier like this: http://myappid.appspot.com/
 #
@@ -53,15 +50,20 @@ application: fireworkscomputer
 
 # ### The version number for the application code.
 #
-# A version specifier for the application code. App Engine retains a copy of
-# your application for each version used. An administrator can change which
-# major version of the application is default using the Administration Console,
-# and can test non-default versions before making them default. The version
-# specifier can contain letters, digits, and hyphens.
+# App Engine retains a copy of the web app for each version used. An
+# administrator can change which major version of the application is default by
+# using the Administration Console. The version specifier can contain letters,
+# digits, and hyphens.
 #
 # Each version of an application retains its own copy of app.yaml. When an
 # application is uploaded, the version mentioned in the app.yaml file being
 # uploaded is the version that gets created or replaced by the upload.
+#
+# It is possible to access each version of this application by using the host name
+#
+#   `VERSION.latest.fireworkscomputer.appspot.com`
+#
+# where `VERSION` refers to this version string.
 #
 version: 5
 
@@ -89,12 +91,20 @@ api_version: 1
 # code, or by serving static files uploaded with the code, such as images, CSS
 # or JavaScript.
 #
+# URL and file path patterns use [POSIX extended regular expression syntax][3],
+# excluding collating elements and collation classes. Back-references to
+# grouped matches (e.g. \1) are supported, as are these Perl extensions: \w \W
+# \s \S \d \D  (This is similar to [Codesite search][4], plus back-reference
+# support.)
+#
+# For more info see the [appconfig documentation][1].
+#
 # Patterns are evaluated in the order they appear in the app.yaml, from top to
 # bottom. The first mapping whose pattern matches the URL is the one used to
 # handle the request.
 #
 # There are two kinds of handlers: script handlers, and static file handlers. A
-# script handler runs a Python script in your application to determine the
+# script handler runs a Python script the application to determine the
 # response for the given URL. A static file handler returns the contents of a
 # file, such as an image, as the response.
 #
@@ -161,29 +171,35 @@ api_version: 1
 handlers:
 
 # ### All of our static CSS files.
+# `/google-app-engine/static/css/README.txt`
 - url: /css
   static_dir: static/css
 
 # ### All of our static image files.
+# `/google-app-engine/static/img/README.txt`
 - url: /img
   static_dir: static/img
 
 # ### All of our static JavaScript files.
+# `/google-app-engine/static/js/README.txt`
 - url: /js
   static_dir: static/js
 
-# ### All of our html files.
+# ### All of our static html files.
+# `/google-app-engine/static/pages/README.txt`
 - url: /pages
   static_dir: static/pages
 
 # ### Mozilla package download files.
-# These must be made secure through https for the Mozilla autoupdate tool to
-# work for browser extentions.
+# Must be made secure through https for the Mozilla browser extention
+# autoupdate tool to work properly .
+# `/google-app-engine/static/mozilla-downloads/README.txt`
 - url: /mozilla-downloads
   static_dir: static/mozilla-downloads
   secure: always 
  
 # ### The robots.txt file is static.
+# `/google-app-engine/static/robots.txt`
 - url: /robots\.txt
   static_files: static/robots.txt
   upload: static/robots.txt
@@ -192,6 +208,7 @@ handlers:
 # ### The sitemap.xml file.
 # Static for now, but we are going to want to auto generate it when the site
 # gets bigger.
+# `/google-app-engine/static/sitemap.xml`
 - url: /sitemap\.xml
   static_files: static/sitemap.xml
   upload: static/sitemap.xml
@@ -199,17 +216,14 @@ handlers:
  
 # ### Google verification file.
 # Hooks this domain into google tools like anylitics and whatnot.
+# `/google-app-engine/static/googlef734612d306d87e6\.html`
 - url: /googlef734612d306d87e6\.html
   static_files: static/googlef734612d306d87e6.html
   upload: static/googlef734612d306d87e6.html
   expiration: 21d
 
-# Insecure! For local dev_appserver only (localhost:8080).
-# To setup a tempory sys admin for testing.
-- url: /testsetup
-  script: testsetup.py
-
 # ### All other requests are dynamic.
+# `/google-app-engine/request.py` is a great place to start hacking on the code.
 - url: .*
   script: request.py
 

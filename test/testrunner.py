@@ -2,42 +2,46 @@
 """
   FWPWebsite test.suites
   ~~~~~~~~~~~~~~~~~~~~~~
-  Command line script to run test suites.
+  Command line script to run automated test suites.
 
   The tests to run are listed in `config.py`. To run all configured tests do
+
     `./testrunner.py`
+
   with no parameters or
+
     `./testrunner.py full`
+
   to do the same thing.
 
-  To run and individual test suite by name run `./testrunner.py NAME` where
+  To run an individual test suite by name do `./testrunner.py NAME` where
   NAME is the suite name in `config.py`.  For example:
 
     `./testrunner.py not_found`
 
-  will run the not_found test suite.
+  to run the not_found test suite.
 
-  If localhost:8080 is available (the local GAE `dev_appserver`) then it will
-  be tested against the `dev_appserver` and no tests will be run on the
+  If localhost:8080 is available (the local GAE `dev_appserver`) then the tests
+  will be run against the `dev_appserver` but no tests will be run against the
   production environment.
 
   Consult the Google documentation for the `dev_appserver`:
   http://code.google.com/appengine/docs/python/tools/devserver.html
   
-  If localhost:8080 is *not* available, `testrunner.py` will attempt to contact
-  the staging domain in the production environment by testing against
+  If localhost:8080 is *not* available, `testrunner.py` will attempt test
+  against the staging domain in the production environment
   'VERSION.latest.APPNAME.appspot.com' where VERSION is the application version
-  number in app.yaml, and APPNAME is the application name in app.yaml. So, a
-  test domain might look like this for example:
+  number, and APPNAME is the application name in app.yaml. So, a host 
+  might look like this for example:
 
     `5.latest.fireworkscomputer.appspot.com`
 
-  !Important: So, if you want to test locally, then make sure the
+  !Important: If you want to test locally, make sure the
   `dev_appserver` is running. If you want to test the remote production staging
-  environment then make sure `dev_appserver` is not running.
+  environment then make sure `dev_appserver` is *not* running.
 
-  It helps to know how GAE makes applications available. From the App Engine
-  Blog on app versioning:
+  It helps to know how GAE makes applications available. This is from the App
+  Engine Blog on app versioning:
 
   "App Engine permits you to deploy multiple versions of your app and have them
   running side-by-side. All the versions share the samedatastore and memcache,

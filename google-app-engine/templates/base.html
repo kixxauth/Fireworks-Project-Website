@@ -1,3 +1,29 @@
+{#
+
+Base Template
+=============
+
+This is the general base template that most all other templates inherit from.
+
+For more information regarding the Django template syntax, have a look at the
+documentation.
+http://docs.djangoproject.com/en/1.2/topics/templates/#topics-templates
+
+License
+-------
+
+All source code in this file is licensed under the MIT license unless
+otherwise noted in the source file itself. See MIT-LICENSE.txt in this
+directory for details.
+
+All text content in this file is (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, is licensed under a Creative Commons Attribution-Share Alike 3.0
+Unported License (http://creativecommons.org/licenses/by-sa/3.0/).
+
+See CC-LICENSE in this folder for more details.
+
+#}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -11,6 +37,7 @@
 <body id="fireworks-project">
   <div id="header">
     <h1 id="heading"><a href="/" title="Back to the home page.">The Fireworks Project</a></h1>
+    {# The subheading is randomly chosen from a list in the request handler function. #}
     <h2 id="subheading">{% block subheading %}{{ taglines|random }}{% endblock %}</h2>
   </div><!-- end #header -->
   {% block body %}{% endblock %}
@@ -30,8 +57,7 @@
       <p>
       Portions of this content are &copy; 2009 - {% now "Y" %} by contributors to
       <a href="http://www.fireworksproject.com">The Fireworks Project Inc.</a>
-      and, unless otherwise indicated, the text of documents in this
-      collection is available under a
+      and, unless otherwise indicated, the content of this website is licensed under a
       <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
         Creative Commons Attribution-Share Alike 3.0 Unported License</a>.
       </p>
