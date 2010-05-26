@@ -2,10 +2,11 @@ TODO:
 =====
 
 A prioritized todo list for The Fireworks Project website.
+----------------------------------------------------------
 
 ### Before version 5 of the website can be moved to the live server:
 
-### Join page posting.
+#### Join page posting.
 
 The join page has a form for new members to agree to the operating agreement.
 We need to store the data for every user that submits this form and, for bonus
@@ -21,14 +22,17 @@ the generated id number. I think the `/members/` URL should only handle JSON
 and the post form on `/join` should use AJAX to POST to `/members/`.  If the
 browser is not using JavaScript then `/members/` will return some simple HTML
 in response to the POST request.
+---
 
 ### Join page styling.
 
 The page at /join also needs to be styled.
+---
 
 ### Projects page styling.
 
 The page at /projects/ simply needs to be styled.
+---
 
 ### About us page.
 
@@ -39,6 +43,7 @@ created one for version 5 yet. The handler needs to be created in
 
 Also sombody should have a look at the content for this page and perhaps do
 some editing.
+---
 
 ### dcube, dcubejs, kixx, and kake pages.
 
@@ -51,12 +56,16 @@ The content for these pages can just be copied and pasted from the project
 pages on GitHub http://github.com/FireworksProject
 
 ### Favicon.
+
 Sombody create a favicon. I have very little icon development knowledge, but
 I'll learn it if nobody else can do this.
+---
 
 ### Site map.
+
 Recreate the sitemap.xml file for search engines by hand. In a future version
 we'll find a way to auto-generate this file.
+---
 
 ### Fix flash of unstyled font from Google Fonts and Typekit.
 
