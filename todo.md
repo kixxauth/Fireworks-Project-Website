@@ -52,4 +52,6 @@ A prioritized todo list for The Fireworks Project website.
   Recreate the sitemap.xml file for search engines by hand. In a future version
   we'll find a way to auto-generate this file.
 
+8. ### Fix flash of unstyled font from Google Fonts and Typekit.
+
 
