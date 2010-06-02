@@ -10,6 +10,10 @@ handlers:
 - url: /img
   static_dir: static/img
 
+- url: /guide
+  static_dir: static/guide
+  mime_type: text/html
+
 - url: /pages
   static_dir: static/pages
 
