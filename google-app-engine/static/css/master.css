@@ -55,7 +55,7 @@ input.custom {
 /* Header
 ------------ */
 #header {
-  margin: 10px 0 0 20px;
+  margin: 2em 0 0 20px;
 }
 
 #heading {
@@ -81,24 +81,20 @@ input.custom {
   color: #ccc;
 }
 
-/* Footer
---------- */
-#footer {
-  border-top: 2px solid #444;
-  margin-top: 100px;
-}
-
 /* Navigation
 ------------- */
 #navigation {
+  position: absolute;
+  top: 0;
+  right: 3em;
   list-style-type: none;
   overflow: hidden;
-  margin: 1em 0 0 2em;
+  margin-top: 1em;
 }
 
 li.navigation {
   float: left;
-  font-size: 1.7em;
+  font-size: 110%;
   line-height: 1;
   margin-left: 2em;
   padding-bottom: .3em;
@@ -107,11 +103,19 @@ li.navigation {
 
 li.navigation a {
   display: block;
-  color: #444;
+  color: #555;
 }
 
 li.navigation a:hover {
   text-decoration: none;
+  color: #000;
+}
+
+/* Footer
+--------- */
+#footer {
+  border-top: 2px solid #444;
+  margin-top: 100px;
 }
 
 /* CC License footer */

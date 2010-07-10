@@ -21,14 +21,13 @@
 */
 
 /*global
-  window: false
-, jQuery: false
+  jQuery: false
 */
 
 // ECMAScript 5 strict mode.
 "use strict";
 
-var HOME = (function (window, undef) {
+var HOME = (function (jQuery) {
   var jq = jQuery.noConflict(true) // Safely acquire the jQuery object.
 
     // The presentation player module.
@@ -42,10 +41,11 @@ var HOME = (function (window, undef) {
   function constructPlayer(viewport, slides, interval) {
     var self = {}
       , frame = 0 // The current frame number.
-      , slide // HTML string of the current slide.
-      , deck = [] // Array of slides as HTML strings.
-      , stop = true // Flag used to stop and start animation.
+      , slide // The interval and HTML string of the current slide.
+      , deck = [] // Array of slides as objects with interval and HTML string.
       , listeners = {} // Listener functions
+      , current_timeout // The id of the current window.setTimeout().
+      , stopped = true
       ;
 
     function makeSlide(element, i) {
@@ -67,16 +67,6 @@ var HOME = (function (window, undef) {
       }
     }
 
-    // Recursive loop that runs the show.
-    function loopy() {
-      if (stop) {
-        return;
-      }
-
-      self.next();
-      setTimeout(loopy, slide.interval);
-    }
-
     // Goto a specific slide.
     self.goto = function (n) {
       if (deck[n -1]) {
@@ -89,6 +79,7 @@ var HOME = (function (window, undef) {
 
     // Play the show from the beginning.
     self.play = function () {
+      stopped = false;
       self.goto(1).start();
       broadcast('playing');
       return self;
@@ -96,23 +87,36 @@ var HOME = (function (window, undef) {
 
     // Stop the show.
     self.stop = function () {
-      stop = true;
+      stopped = true;
+      clearTimeout(current_timeout);
+      return self;
     };
 
     // Start the show.
     self.start = function () {
-      stop = false;
-      setTimeout(loopy, slide.interval);
+      stopped = false;
+      current_timeout = setTimeout(self.next, slide.interval);
+      return self;
     };
 
     // Goto the next slide.
     self.next = function () {
-      return self.goto(frame +1);
+      clearTimeout(current_timeout);
+      self.goto(frame +1);
+      if (!stopped) {
+        current_timeout = setTimeout(self.next, slide.interval);
+      }
+      return self;
     };
 
     // Go back one slide.
     self.back = function () {
-      return self.goto(frame -1);
+      clearTimeout(current_timeout);
+      self.goto(frame -1);
+      if (!stopped) {
+        current_timeout = setTimeout(self.next, slide.interval);
+      }
+      return self;
     };
 
     // Add a named signal listener.
@@ -120,30 +124,12 @@ var HOME = (function (window, undef) {
       if (!listeners[name]) {
         listeners[name] = [];
       }
-      listeners[name].push(cb);
+      if (typeof cb === 'function') {
+        listeners[name].push(cb);
+      }
     };
 
     return self;
-  }
-
-  // Play the page introduction animation.
-  function playIntro(callback) {
-    var i = 1, t = 700;
-
-    function makecb(n) {
-      return function () {
-        jq('#intro-'+ n).fadeTo(400, 1);
-      };
-    }
-
-    for (; i < 5; i += 1) {
-      setTimeout(makecb(i), t);
-      t += 1200;
-    }
-    setTimeout(function () {
-      jq('#home>p.content').fadeTo(500, 1);
-      callback();
-    }, t);
   }
 
   // Start it up on page load.
@@ -154,19 +140,13 @@ var HOME = (function (window, undef) {
       , playerControls // Will be jq object.
       ;
 
-    // Hide the intro content.
-    jq('#home>p').fadeTo(0, 0);
-
     // Inject the presentation player.
     presentationPlayer = jq('<div id="presentation-player"></div>')
-      .insertAfter('#home>p.content')
+      .insertAfter('#intro')
       .css('border', '2px dashed #ccc')
       .html(jq('#presentation-player-template').html())
       ;
     playerControls = jq('#presentation-player-controls').hide();
-
-    // Play the introduction.
-    playIntro(function() {});
 
     // Load the presentation.
     player = constructPlayer(jq('#presentation-viewport'), slides, 3000);
@@ -196,5 +176,5 @@ var HOME = (function (window, undef) {
       .html(jq('#comments-template').html())
       ;
   });
-}(window));
+}(jQuery));
 

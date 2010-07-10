@@ -40,14 +40,14 @@ See CC-LICENSE in this folder for more details.
     {# The subheading is randomly chosen from a list in the request handler function. #}
     <h2 id="subheading">{% block subheading %}{{ taglines|random }}{% endblock %}</h2>
   </div><!-- end #header -->
+  <ul id="navigation">
+    <li class="navigation"><a href="/" title="Back to The Fireworks Project home page.">home</a></li>
+    <li class="navigation"><a href="/projects/" title="Learn more about our software.">projects</a></li>
+    <li class="navigation"><a href="/join" title="Join The Fireworks Project.">join</a></li>
+    <li class="navigation"><a href="/about" title="Learn more about The Fireworks Project.">about</a></li>
+  </ul><!-- end #navigation -->
   {% block body %}{% endblock %}
   <div id="footer">
-    <ul id="navigation">
-      <li class="navigation"><a href="/" title="Back to The Fireworks Project home page.">home</a></li>
-      <li class="navigation"><a href="/projects/" title="Learn more about our software.">projects</a></li>
-      <li class="navigation"><a href="/join" title="Join The Fireworks Project.">join</a></li>
-      <li class="navigation"><a href="/about" title="Learn more about The Fireworks Project.">about</a></li>
-    </ul><!-- end #navigation -->
     <div id="creative-commons-license">
       <a id="creative-commons-image" href="http://creativecommons.org/licenses/by-sa/3.0/">
       <img alt="Creative Commons License" height="31" width="88"
