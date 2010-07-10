@@ -25,6 +25,15 @@ in response to the POST request.
 
 ---
 
+#### E-Magazine subscriptions.
+
+We need a handler to collect ezine subscription submissions from forms on the
+website.
+
+Ezine subscribers should also have its own URL space, just like the members.
+
+---
+
 ### Join page styling.
 
 The page at /join also needs to be styled.
@@ -39,6 +48,8 @@ The page at /projects/ simply needs to be styled.
 
 ### About us page.
 
+(Could we skip this a remove it from the navigation?)
+
 The currently live version of the website has a /about page, but I have not
 created one for version 5 yet. The handler needs to be created in
 `/google-app-engine/request.py` and the template needs to be created in
@@ -50,6 +61,8 @@ some editing.
 ---
 
 ### dcube, dcubejs, kixx, and kake pages.
+
+(Could we skip this a remove it from the navigation?)
 
 These pages should be the home pages for our active projects. Handlers for
 `/projects/dcube`, `/projects/dcubejs`, `/projects/kixx`, and `projects/kake`
@@ -63,8 +76,8 @@ pages on GitHub http://github.com/FireworksProject
 
 ### Favicon.
 
-Sombody create a favicon. I have very little icon development knowledge, but
-I'll learn it if nobody else can do this.
+Sombody needs to create a favicon. I have very little icon development knowledge, but
+I'll learn it if nobody will.
 
 ---
 
@@ -75,6 +88,8 @@ we'll find a way to auto-generate this file.
 
 ---
 
-### Fix flash of unstyled font from Google Fonts and Typekit.
+### Fix flash of unstyled font.
+
+There is an annoying flash of default typeface Typekit and Google Fonts load.
 
 
