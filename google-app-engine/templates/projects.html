@@ -1,0 +1,87 @@
+{% comment %}
+
+Projects Template
+=================
+
+This is the template for the root www.fireworksproject.com/projects/ page.
+
+For more information regarding the Django template syntax, have a look at the
+documentation.
+http://docs.djangoproject.com/en/1.2/topics/templates/#topics-templates
+
+License
+-------
+
+All source code in this file is licensed under the MIT license unless
+otherwise noted in the source file itself.
+
+See MIT-LICENSE in this directory for details.
+
+All text content in this file is (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, is licensed under a Creative Commons Attribution-Share Alike 3.0
+Unported License (http://creativecommons.org/licenses/by-sa/3.0/).
+
+See CC-LICENSE in this folder for more details.
+
+{% endcomment %}{% extends "base.html" %}
+
+{% block title %}Open source software - The Fireworks Project{% endblock %}
+
+{% block subheading %}Open source software.{% endblock %}
+
+{% block body %}<div id="projects" class="content">
+    <div id="description">
+      <p>
+      At The Fireworks Project we like to stay busy building stuff. We invite you
+      to browse through our current projects and let us know what you think.
+      </p>
+    </div><!-- description -->
+    <ul id="project-list">
+      <li>
+        <p class="project-name">DCube</p>
+        <p class="project-description">
+        Distributed descriptive graph data store.
+        </p>
+        <p class="project-url">
+          <a href="http://github.com/FireworksProject/DCube">
+            github.com/FireworksProject/DCube
+          </a>
+        </p>
+      </li>
+      <li>
+        <p class="project-name">kixx</p>
+        <p class="project-description">
+        Modular Web Browser Plug-in Platform
+        </p>
+        <p class="project-url">
+          <a href="http://github.com/FireworksProject/kixx">
+            http://github.com/FireworksProject/kixx
+          </a>
+        </p>
+      </li>
+      <li>
+        <p class="project-name">DCubeJS</p>
+        <p class="project-description">
+        JavaScript library for DCube
+        </p>
+        <p class="project-url">
+          <a href="http://github.com/FireworksProject/DCubeJS">
+            github.com/FireworksProject/DCubeJS
+          </a>
+        </p>
+      </li>
+      <li>
+        <p class="project-name">kake</p>
+        <p class="project-description">
+        A multilanguage build system in JavaScript.
+        </p>
+        <p class="project-url">
+        <a href="http://github.com/FireworksProject/kake">
+          github.com/FireworksProject/kake
+        </a>
+        </p>
+      </li>
+    </ul>
+  </div><!-- projects -->{% endblock %}
+

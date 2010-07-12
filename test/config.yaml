@@ -1,23 +1,187 @@
+#
+# The purpose of this config file is to allow the automatic creation of test
+# suites to run with `./testrunner.py`.
+#
+# config.yaml is a list of possible command line arguments that can be passed
+# when executing `testrunner.py`. For example:
+#
+#   `./testrunner.py full`
+#
+# Will run all the tests listed under `full`
+#
+# Each section is followed by a list of modules, followed by a list of class names,
+# followed by a list of test functions. For example, the module `url.py` contains a class
+# named `RobotsTxt` which contains the test function `get`.
+#
+
 full:
-- module: basic
+- module: urls
   classes:
 
-  - name: Defaults
+  - name: RobotsTxt
     tests:
-    - test_notFound
-    - test_robots
-    - test_sitemap
-    - test_goog_verify
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
 
-  - name: StaticHTML
+  - name: Sitemap
     tests:
-    - test_home
-    - test_about
-    - test_join
-    - test_projects
-    - test_projects_kixx
-    - test_projects_dcube
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
 
-  - name: TestContent
+  - name: GoogleVerify
     tests:
-    - test_testcontent
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+
+  - name: NotFound
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+  - name: Root
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+  - name: Join
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+  - name: Projects
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+robots_txt:
+- module: urls
+  classes:
+
+  - name: RobotsTxt
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+sitemap:
+- module: urls
+  classes:
+
+  - name: Sitemap
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+google_verify:
+- module: urls
+  classes:
+
+  - name: GoogleVerify
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+not_found:
+- module: urls
+  classes:
+
+  - name: NotFound
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+root:
+- module: urls
+  classes:
+
+  - name: Root
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+join:
+- module: urls
+  classes:
+
+  - name: Join
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+projects:
+- module: urls
+  classes:
+
+  - name: Projects
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+

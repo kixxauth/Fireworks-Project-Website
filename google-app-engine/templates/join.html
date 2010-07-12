@@ -1,0 +1,272 @@
+{% comment %}
+
+Join Page Template
+==================
+
+This is the template for the root www.fireworksproject.com/join page.
+
+For more information regarding the Django template syntax, have a look at the
+documentation.
+http://docs.djangoproject.com/en/1.2/topics/templates/#topics-templates
+
+License
+-------
+
+All source code in this file is licensed under the MIT license unless
+otherwise noted in the source file itself.
+
+See MIT-LICENSE in this directory for details.
+
+All text content in this file is (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, is licensed under a Creative Commons Attribution-Share Alike 3.0
+Unported License (http://creativecommons.org/licenses/by-sa/3.0/).
+
+See CC-LICENSE in this folder for more details.
+
+{% endcomment %}{% extends "base.html" %}
+
+{% block title %}Redefine your career - The Fireworks Project{% endblock %}
+
+{% block subheading %}Dream different.{% endblock %}
+
+{% block body %}<div id="join" class="content">
+    <div id="description">
+      <p>
+      A career at The Fireworks Project is not like any other job you have ever
+      had.  Our company was built from the ground up as an employee owned and
+      employee managed corporation.  In fact we call ourselves a member owned
+      corporation because all of us are a unique blend of shareholders and
+      employees.
+      </p>
+      <p>
+      We didn't want venture capitalists and investors dictating our livelihoods,
+      so we cut them out of the picture.  The downside is that we don't get paid
+      for what we do until we make money doing it.  We feel that is a small price
+      to pay for the freedom to have fun doing what we love to do and to have a
+      life away from work to enjoy the stuff that really matters.
+      </p>
+      <p>
+      <em>This is not for everyone, but it might be for you.</em>
+      </p>
+    </div><!-- description -->
+    <div id="instructions">
+      <h1>How to become a member of The Fireworks Project.</h1>
+      <p>
+      Joining The Fireworks Project is simple.  All you have to do to become a
+      member is to make sure you understand our operating agreement below and
+      then sign on using your real name and email address in the form at the
+      bottom.
+      </p>
+    </div><!-- instructions -->
+    <div id="operating-agreement">
+      <h1>LIMITED LIABILITY COMPANY OPERATING AGREEMENT</h1>
+      <h2>Fireworks Technology Projects, LLC (the "Company")</h2>
+      <h3>Member-Managed Limited Liability Company</h3>
+      <h4>Each Member of the Company agrees to be bound by the following provisions:</h4>
+      <h5>Work Product.</h5>
+      <p>
+      All Members irrevocably transfer and assign all right, title and interest
+      to any work product created (now or in the future) in the course of
+      Company projects to the Company. In creating any work product for the
+      Company or otherwise performing services for the Company, Members shall
+      be independent contractors of the Company.
+      </p>
+      <h5>Point Allocation.</h5>
+      <p>
+      At the end of the first full calendar quarter following the creation of
+      the Company (the "Initial Period"), the founding member(s) (the
+      "Founder(s)") shall determine the number of Points to be allocated to
+      each Member of the Company (including the Founder(s)) with respect to
+      contributions made prior and up to the last day of that quarter. At the
+      end of each month thereafter, Active Members, as defined below, or their
+      designated representatives shall determine the number of Points to be
+      allocated for the month then ended.
+      </p>
+      <h5>Point Allocation Cap.</h5>
+      <p>
+      The total number of points allocated from any Active Member to any other
+      member during a one month period may not exceed the total number of
+      points held at the end of the previous month by the allocating member. 
+      </p>
+      <h5>Points Received.</h5>
+      <p>
+      Points received by each Member will be cumulative throughout the life of
+      the Company. Members who have received Points during the most recently
+      completed month shall be deemed "Active Members".
+      </p>
+      <h5>Payment of Revenues.</h5>
+      <p>
+      The Active Members shall decide the amount of revenues to be paid out to
+      Members ("Member Payments") during any month, including upon any sale or
+      dissolution of the Company. Member Payments shall be paid to Members in
+      proportion to the number of Points held by each Member as a percentage of
+      all Points outstanding. From time to time, the Active Members may decide
+      to multiply all Points by a factor designed to adjust the number of
+      Points in light of the size of the membership entitled to receive Points
+      or for other reasons.
+      </p>
+      <p>
+      Unless otherwise decided by the Company, all Member Payments shall be
+      deemed compensation to the Members for their contributions to the Company
+      as independent contractors.
+      </p>
+      <h5>Liability of Members.</h5>
+      <p>
+      The debts, obligations and liabilities of the Company are solely the
+      debts, obligations and liabilities of the Company. A Member will not be
+      personally liable for a debt, obligation or liability of the Company
+      solely by reason of being or acting as a Member or Active Member.
+      </p>
+      <h5>Board of Directors.</h5>
+      <p>
+      The Board of Directors (the "Board") of the Company shall consist of 3
+      Directors with a decision of 2 Directors controlling. The Board shall be
+      appointed and removed by Members holding a majority of the Points held by
+      all Members voting on that decision. The Board shall be elected annually.
+      No Director shall be compensated for his or her services to the Company
+      as such unless agreed by the Active Members. The business and affairs of
+      the Company shall be managed by or under the direction of the Board and
+      the Company may, by decision of the Board, authorize agents to sign
+      documents or otherwise act on its behalf. The Board shall have the power
+      to perform all acts which it may deem necessary or advisable for the
+      Company, but no Director acting alone shall have the power to bind the
+      Company. The Directors and other agents of the Company shall be
+      indemnified and held harmless from and against any and all claims,
+      expenses, costs, and liabilities which such person may incur in
+      connection with his or her duties on behalf of the Company, to the
+      maximum extent permitted by the Vermont Limited Liability Company Act
+      (the "Act").
+      </p>
+      <h5>Decisions by Members.</h5>
+      <p>
+      Other than decisions to be made by the Active Members under other parts
+      of this Agreement, a decision of the Members holding a majority of the
+      Points held by all Members voting on a specific matter shall be a
+      decision of the Members (except as to amendments to this Agreement, as
+      described below). The following decisions need approval by the Members:
+      (i) election of the Board or removal of members of the Board, (ii)
+      amendments to this Agreement or the Articles of Organization of the
+      Company (approval of Members with 2/3 of the Points of all voting Members
+      required), (iii) sale of all or substantially all of the assets of the
+      Company, and (iv) dissolution of the Company. The Board shall adopt such
+      procedures as it considers reasonable to ensure a fair opportunity to
+      vote by Members on specific matters.
+      </p>
+      <h5>Founder(s) Agreement.</h5>
+      <p>
+      During the Initial Period, the Founder(s) may cause the Company to enter
+      into an agreement with the Founders on such terms as are agreed upon by
+      the Founder(s) and are disclosed to the Members.
+      </p>
+      <h5>Tax Election.</h5>
+      <p>
+      The Company shall elect to be treated for federal and state income tax
+      purposes as a "Subchapter C corporation". The Founder(s) or their
+      designee(s) shall be the shareholder(s) (the "Shareholder(s)") of the
+      Company for federal and state income tax purposes.
+      </p>
+      <h5>Choice of Law.</h5>
+      <p>
+      The law of the State of Vermont shall govern this Agreement without
+      reference to its conflicts of law principles.
+      </p>
+      <h5>Arbitration.</h5>
+      <p>
+      The Members agree that any and all disputes related to or arising from
+      this Agreement will be resolved through online arbitration under the
+      rules of and as facilitated by Virtual Mediation and Arbitration System,
+      LLC.
+      </p>
+      <h5>Non-transferability.</h5>
+      <p>
+      Any interest of a Member in the Company created under this Agreement will
+      be non-transferable and shall terminate upon the death of the Member.
+      </p>
+      <h5>Registered Agent.</h5>
+      <p>
+      Gravel and Shea is the Company's registered agent in the State of
+      Vermont. The registered agent's office is located at 76 St. Paul Street,
+      Burlington, VT 05401.
+      </p>
+      <h5>Designated Office.</h5>
+      <p>
+      The location of the principal place of business of the Company will be
+      the office of the Company's registered agent.
+      </p>
+      <h5>Termination of Access and Active Membership.</h5>
+      <p>
+      A Member's status as an Active Member, may be terminated by vote of a
+      majority of the votes cast by voting Active Members within 2 weeks after
+      such termination is proposed by any Active Member.
+      </p>
+      <h5>Contracts With Third Parties.</h5>
+      <p>
+      With the exception of the agreement between the Company and the
+      Founder(s) described above, no Member or any other person may sign a
+      contract on behalf of the Company unless expressly authorized by a
+      decision of the Board to do so, and any contract signed without such
+      express authorization will be invalid.
+      </p>
+      <h5>Duty of Loyalty.</h5>
+      <p>
+      Because it is the expectation that the Members will be free to engage in
+      pursuits outside of the Company, the Members may devote such time to the
+      Company as they deem appropriate and may engage in such activities
+      outside of the Company as they wish to pursue, including those which may
+      compete with the Company.
+      </p>
+      <h5>Integration.</h5>
+      <p>
+      This Agreement constitutes the entire operating agreement among the
+      parties.
+      </p>
+      <h4>ACKNOWLEDGMENT OF ARBITRATION.</h4>
+      <p>
+      This Agreement contains an agreement to arbitrate. After entering into
+      this agreement, I understand that I will not be able to bring a lawsuit
+      concerning any dispute that may arise which is covered by the arbitration
+      agreement, unless it involves a question of constitutional or civil
+      rights. Instead, I agree to submit any such dispute to an impartial
+      arbitrator as described above. 
+      </p>
+    </div><!-- operating-agreement -->
+    <form id="join-form" action="/members/" method="post" enctype="application/x-www-form-urlencoded">
+      <fieldset id="join-forms">
+        <table id="join-form-layout">
+          <tr>
+            <td>
+              <label for="name" accesskey="1">name:</label>
+            </td>
+            <td>
+              <input type="text" id="name" name="name" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="email" accesskey="2">email:</label>
+            </td>
+            <td>
+              <input type="text" id="email" name="email" />
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <input type="submit" value="Join Now" />
+            </td>
+          </tr>
+        </table>
+        <p id="form-disclaimer" class="content">
+        By entering your legal name here you are acknowledging your
+        agreement to the LIMITED LIABILITY COMPANY OPERATING AGREEMENT
+        of Fireworks Technology Projects, LLC (the "Company")
+        </p>
+      </fieldset>
+      <p id="form-annotation" class="content">
+      After submitting the form a welcoming member will attempt to contact you
+      via email and get you set up to start contributing. You'll learn the ins
+      and outs of how we collaborate online and how you can grow your ownership
+      stake in the company. 
+      </p>
+    </form>
+  </div><!-- join -->{% endblock %}

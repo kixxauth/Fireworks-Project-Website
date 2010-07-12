@@ -1,0 +1,68 @@
+{% comment %}
+
+Base Template
+=============
+
+This is the general base template that most all other templates inherit from.
+
+For more information regarding the Django template syntax, have a look at the
+documentation.
+http://docs.djangoproject.com/en/1.2/topics/templates/#topics-templates
+
+License
+-------
+
+All source code in this file is licensed under the MIT license unless
+otherwise noted in the source file itself.
+
+See MIT-LICENSE in this directory for details.
+
+All text content in this file is (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, is licensed under a Creative Commons Attribution-Share Alike 3.0
+Unported License (http://creativecommons.org/licenses/by-sa/3.0/).
+
+See CC-LICENSE in this folder for more details.
+
+{% endcomment %}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>{% block title %}Custom built software - The Fireworks Project{% endblock %}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="{% block decription %}The Fireworks Project is a small software shop that builds incredible productivity tools for your small or medium sized organization.{% endblock %}" />
+<link rel="stylesheet" href="/css/master.css" type="text/css" media="handheld, all" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+{% block styles %}{% endblock %}
+</head>
+<body id="fireworks-project">
+  <div id="header">
+    <h1 id="heading"><a href="/" title="Back to the home page.">The Fireworks Project</a></h1>
+    {# The subheading is randomly chosen from a list in the request handler function. #}
+    <h2 id="subheading">{% block subheading %}{{ taglines|random }}{% endblock %}</h2>
+  </div><!-- end #header -->
+  <ul id="navigation">
+    <li class="navigation"><a href="/" title="Back to The Fireworks Project home page.">home</a></li>
+    <li class="navigation"><a href="/projects/" title="Learn more about our software.">projects</a></li>
+    <li class="navigation"><a href="/join" title="Join The Fireworks Project.">join</a></li>
+    <li class="navigation"><a href="/about" title="Learn more about The Fireworks Project.">about</a></li>
+  </ul><!-- end #navigation -->
+  {% block body %}{% endblock %}
+  <div id="footer">
+    <div id="creative-commons-license">
+      <a id="creative-commons-image" href="http://creativecommons.org/licenses/by-sa/3.0/">
+      <img alt="Creative Commons License" height="31" width="88"
+      style="float: left; padding-right: 1em;"
+      src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" />
+      </a>
+      <p>
+      Portions of this content are &copy; 2009 - {% now "Y" %} by contributors to
+      <a href="http://www.fireworksproject.com">The Fireworks Project Inc.</a>
+      and, unless otherwise indicated, the content of this website is licensed under a
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
+        Creative Commons Attribution-Share Alike 3.0 Unported License</a>.
+      </p>
+    </div><!-- creative-commons-license -->
+  </div><!-- end #footer -->
+</body>
+</html>
+

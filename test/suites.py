@@ -1,11 +1,22 @@
+"""
+  FWPWebsite test.suites
+  ~~~~~~~~~~~~~~~~~~~~~~
+  Create and run a set of unittest suites depending on `test/config.yaml`.
+
+  :copyright: (c) 2010 by The Fireworks Project.
+  :license: MIT, see LICENSE for more details.
+"""
+
 import os
 import unittest
 import yaml
 
 def run_suites(suite_names):
-  """Run the given list of test suite names corresponding to the SUITES
-  configuration global.
+  """Run the given list of test suites.
+
+  `suite_names` should be a list of string names.
   """
+  # Parse config.yaml.
   suites = yaml.load(
       open(
         os.path.join(
@@ -30,3 +41,4 @@ def run_suites(suite_names):
 
   unittest.TextTestRunner().run(unittest.TestSuite(
     map(build_test, reduce(build_names, suite_names, []))))
+

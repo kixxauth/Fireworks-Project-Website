@@ -1,0 +1,522 @@
+{% comment %}
+
+Home Template
+=============
+
+This is the template for the root www.fireworksproject.com page.
+
+For more information regarding the Django template syntax, have a look at the
+documentation.
+http://docs.djangoproject.com/en/1.2/topics/templates/#topics-templates
+
+License
+-------
+
+All source code in this file is licensed under the MIT license unless
+otherwise noted in the source file itself.
+
+See MIT-LICENSE in this directory for details.
+
+All text content in this file is (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, is licensed under a Creative Commons Attribution-Share Alike 3.0
+Unported License (http://creativecommons.org/licenses/by-sa/3.0/).
+
+See CC-LICENSE in this folder for more details.
+
+{% endcomment %}{% extends "base.html" %}
+
+{% block styles %}<script type="text/javascript" src="js/home.js"></script>
+<!-- Load the Typekit font for the presentation -->
+<script type="text/javascript" src="http://use.typekit.com/fcq2zzl.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+<style type="text/css">
+  #home {
+    width: 80%;
+    margin: 4em 0 0 10%;
+  }
+  #subscriptions {
+    width: 60%;
+    margin: 4em 0 0 20%;
+  }
+  #intro {
+    width: 45%;
+    overflow: hidden;
+    margin-top: 3em;
+    float: left;
+  }
+  p.intro {
+    text-align: right;
+    line-height: 1.2;
+    font-size: 180%;
+    font-weight: bold;
+  }
+
+  p.intro.content {
+    font-weight: normal;
+    font-size: 150%;
+    line-height: 1.3;
+    text-align: right;
+    margin-top: 1.3em;
+  }
+
+  /* Presentation
+  ----------------- */
+  #presentation-player {
+    float: right;
+    margin-left: 1em; /* for safety */
+    width: 500px;
+    height: 400px;
+  }
+
+  #presentation-viewport {
+    width: 480px;
+    height: 350px;
+    padding: 10px;
+  }
+
+  #presentation-intro {
+    font-family: "good-dog-1", "good-dog-2", monospace;
+    font-size: 1.7em;
+    height: 200px;
+    width: 200px;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -100px;
+    text-align: center;
+    line-height: 1.3;
+    overflow: hidden;
+  }
+
+  #presentation-start-button {
+    display: block;
+    background: transparent url(img/presentation/play-button.gif) 50% 50% no-repeat;
+    height: 60px;
+    width: 100px;
+    margin-top: 1em;
+    position: relative;
+    left: 50%;
+    margin-left: -50px;
+    text-indent: -9000px;
+  }
+
+  #presentation-player-controls {
+    height: 30px;
+    list-style-type: none;
+    overflow: hidden;
+    border-top: 2px dashed #ccc;
+    font-family: "good-dog-1", "good-dog-2", monospace;
+    font-size: 1.2em;
+  }
+
+  #presentation-player-controls li {
+    float: left;
+    margin: 1% 0 0 1em;
+    width: 4em;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  #presentation {
+    position: relative;
+    left: 50%;
+    margin-left: -250px;
+    margin-top: 3em;
+    width: 500px;
+  }
+  
+  #presentation div.slide {
+    width: 500px;
+    height: 400px;
+  }
+
+  p.slide-content {
+    font-family: "good-dog-1", "good-dog-2", monospace;
+    font-size: 1.5em;
+    line-height: 1.2;
+    color: #555;
+  }
+
+  /* slide 1 */
+  #slide-1-content {
+    width: 70%;
+    text-align: center;
+    margin: 20% 0 0 15%;
+    font-size: 32px;
+  }
+
+  /* slide 2 */
+  #slide-2-content {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 24px;
+  }
+  #thinking-man {
+    margin: 1em 0 10px 35%;
+  }
+  #slide-2-content-2 {
+    text-align: center;
+    font-size: 28px;
+  }
+
+  /* slide 3 */
+  #slide-3-content {
+    margin-top: 20px;
+    text-align: center;
+  }
+  #light-bulb-drawing {
+    margin: 2em 0 40px 18%;
+  }
+  #slide-3-content-2 {
+    text-align: center;
+  }
+
+  /* slide 4 */
+  #slide-4-content {
+    margin-top: 20px;
+    text-align: center;
+  }
+  #factory-drawing {
+    margin: 1em 0 0 20%;
+  }
+
+  /* slide 5 */
+  #slide-5-content {
+    text-align: center;
+  }
+  #components-drawing {
+    margin: 2em 0 2em 25%;
+  }
+  #slide-5-content-2 {
+    text-align: center;
+  }
+
+  /* slide 6 */
+  #slide-6-content {
+    text-align: center;
+  }
+  #choice-drawing {
+    margin: 2em 0 2em 25%;
+  }
+  #slide-6-content-2 {
+    text-align: center;
+  }
+
+  /* slide 7 */
+  #slide-7-content-2 {
+    margin-top: 2em;
+  }
+  #slide-7-content-3 {
+    margin-top: 2em;
+  }
+  #slide-7-content-4 {
+    margin-top: 2em;
+  }
+
+  /* slide 8 */
+  #slide-8-content {
+    width: 60%;
+    text-align: center;
+    margin: 20% 0 0 20%;
+    font-size: 28px;
+  }
+
+  /* slide 9 */
+  #slide-9-content {
+    width: 60%;
+    text-align: center;
+    margin: 10% 0 0 20%;
+    font-size: 28px;
+  }
+  #slide-9-content-2 {
+    width: 60%;
+    text-align: center;
+    margin: 2em 0 0 20%;
+    font-size: 28px;
+  }
+
+  /* slide 10 */
+  #slide-10-content {
+    text-align: center;
+    width: 80%;
+    margin-left: 10%;
+  }
+  #grand-opening-drawing {
+    margin: 2em 0 0 20%;
+  }
+
+  /* slide 11 */
+  #slide-11-content {
+    text-align: center;
+  }
+  #resting-engineer-drawing {
+    margin: 1em 0 0 20%;
+  }
+
+  /* slide 12 -- form */
+  #presentation-subscription {
+    margin-top: 1em;
+  }
+  #presentation-ezine {
+    border: 3px solid #ddd;
+    padding: 1em;
+  }
+  #presentation-ezine p.line {
+    margin-bottom: 1em;
+    font-size: 1.1em;
+  }
+  #presentation-submit-subscription {
+    margin-left: 3em;
+  }
+  #presentation-ezine-description {
+    margin-top: 1.5em;
+    line-height: 1.2;
+  }
+  #presentation-ezine p.privacy-policy {
+    margin-top: 1em;
+    line-height: 1.2;
+  }
+
+  /* Subscriptions
+  ---------------- */
+
+  #subscriptions h3 {
+    background: transparent url(../img/pointer.gif) no-repeat;
+    font-size: 180%;
+    margin-top: 3em;
+    line-height: 1.1;
+    padding-left: 24px;
+  }
+
+  /* fieldset */
+  #ezine-newsletter, #submit-subscription-fieldset {
+    margin-top: 1em;
+    border: none;
+    font-size: 1.2em;
+    line-height: 1.2;
+  }
+
+  #ezine-description {
+    margin-top: 1em;
+  }
+
+  #submit-subscription-fieldset .privacy-policy {
+    margin-top: 1em;
+    font-size: 0.8em;
+  }
+</style>{% endblock %}
+
+{% block body %}<div id="home" class="content">
+    <div id="intro">
+      <p class="intro">
+      You need software that just works,
+      personalized for the way you work,
+      at a price that works <em>for</em> you.
+      </p>
+      <p class="intro content">
+      Is that too much to ask?
+      </p>
+      <p class="intro content">
+      It's time to think differently about your information systems.
+      </p>
+      <p class="intro content last">
+      Dream big and we'll build it.
+      </p>
+    </div>
+    {% comment %}
+    The presentation player is dynamically loaded with JavaScript because it
+    will require JavaScript to work anyway.  Because this is a <script> tag the
+    browser will not render it and because the type="text/html" the browser
+    will not try to parse it either. The .innerHTML of this script is then
+    used as a template to create the live DOM fragment and insert it into the
+    document.
+    {% endcomment %}
+    <script id="presentation-player-template" type="text/html">
+      <div id="presentation-viewport">
+        <div id="presentation-intro">
+        <h3>Press play to find out how.</h3>
+        <a id="presentation-start-button" href="#presentation">Play</a>
+        </div>
+      </div>
+      <ul id="presentation-player-controls">
+        <li id="player-play-pause">Pause</li>
+        <li id="player-back">Back</li>
+        <li id="player-next">Next</li>
+        <li id="player-start">Start</li>
+      </ul>
+    </script><!-- presentation-player -->
+    <div id="presentation">
+      {% comment %}
+      If JavaScript is enabled, these presentation slides will be removed
+      from the DOM tree and used as slides in a presentation controlled via
+      JavaScript. The interval attribute can be set to control the delay of each
+      slide in milliseconds.
+      {% endcomment %}
+      <div id="slide-1" class="slide" interval="5000">
+        <p id="slide-1-content" class="slide-content">
+        Customized software is complicated and expensive. Right?
+        </p>
+      </div>
+      <div id="slide-2" class="slide" interval="10000">
+        <p id="slide-2-content" class="slide-content">
+        But maybe it doesn't have to be.
+        So, we started to think a little differently...
+        </p>
+        <img id="thinking-man" width="30%"
+          src="img/presentation/thinking_man.png" />
+        <p id="slide-2-content-2" class="slide-content">
+        And, hatched a plan.
+        </p>
+      </div>
+      <div id="slide-3" class="slide" interval="12000">
+        <p id="slide-3-content" class="slide-content">
+        What if we created a sort of software bakery?
+        </p>
+        <img id="light-bulb-drawing" width="60%"
+          src="img/presentation/light-bulb.gif" />
+        <p id="slide-3-content-2" class="slide-content">
+        A bakery which would allow us to quickly make simple and affordable
+        software.
+        </p>
+      </div>
+      <div id="slide-4" class="slide" interval="10000">
+        <p id="slide-4-content" class="slide-content">
+        We even borrowed some ideas from the factories and assembly lines
+        that built the first affordable automobiles.
+        </p>
+        <img id="factory-drawing" width="50%"
+          src="img/presentation/factory.png" />
+      </div>
+      <div id="slide-5" class="slide" interval="15000">
+        <p id="slide-5-content" class="slide-content">
+        First, we created the digital nuts and bolts to connect software
+        components together.
+        </p>
+        <img id="components-drawing" width="50%"
+          src="img/presentation/software_components.png" />
+        <p id="slide-5-content-2" class="slide-content">
+        Then, we designed all the components to be interchangeable.
+        So, you can add the parts you want and subtract the parts you don't.
+        </p>
+      </div>
+      <div id="slide-6" class="slide" interval="15000">
+        <p id="slide-6-content" class="slide-content">
+        Most importantly our interchageable parts will allow us to customize
+        your software quickly and easily.
+        </p>
+        <img id="choice-drawing" width="50%"
+          src="img/presentation/custom_software_choice.png" />
+        <p id="slide-6-content-2" class="slide-content">
+        This way, all of us can afford better information systems that were
+        only affordable for large companies.
+        </p>
+      </div>
+      <div id="slide-7" class="slide" interval="15000">
+        <p id="slide-7-content" class="slide-content">
+        Think of all the possibilities!
+        </p>
+        <p id="slide-7-content-2" class="slide-content">
+        You could include components like customer management, inventory,
+        calendars, contact lists, project management, or logistics.
+        </p>
+        <p id="slide-7-content-3" class="slide-content">
+        And, because the components are interchangeable, your custom system
+        will allow you to move your information between other systems as well.
+        </p>
+        <p id="slide-7-content-4" class="slide-content">
+        It will all just work!
+        </p>
+      </div>
+      <div id="slide-8" class="slide" interval="6000">
+        <p id="slide-8-content" class="slide-content">
+        So, why doesn't anyone else build a software bakery like this?
+        </p>
+      </div>
+      <div id="slide-9" class="slide" interval="10000">
+        <p id="slide-9-content" class="slide-content">
+        Frankly, because it is a very hard thing to build.
+        </p>
+        <p id="slide-9-content-2" class="slide-content">
+        But, we believe that nothing worth doing is easy.
+        </p>
+      </div>
+      <div id="slide-10" class="slide" interval="14000">
+        <p id="slide-10-content" class="slide-content" interval="7000">
+        Our software bakery is not quite operational yet, but we're
+        working day and night to get ready for our grand opening.
+        </p>
+        <img id="grand-opening-drawing" width="60%"
+          src="img/presentation/software_factory_grand_opening.png" />
+      </div>
+      <div id="slide-11" class="slide" interval="15000">
+        <p id="slide-11-content" class="slide-content">
+        In fact, we've been working so hard that, regretfully, one of us forgot
+        to call his mom on Mother's day. We apologize to moms everwhere and
+        promise to get more sleep and eat healthier as soon as we're done.
+        </p>
+        <img id="resting-engineer-drawing" width="60%"
+          src="img/presentation/resting_software_engineer.png" />
+      </div>
+      <div id="slide-12" class="slide">
+        <p class="slide-content">
+        If you would like to stay informed about our software bakery,
+        you should subscribe to our e-magazine.
+        </p>
+        <form id="presentation-subscription" action="/subscriptions/subscribers/" method="post">
+          <fieldset id="presentation-ezine">
+            <p class="line get-feed">
+            Get the <a href="#">RSS feed</a> or
+            </p>
+            <p class="line get-email">
+            <label for="presentation-ezine-email" accesskey="1">Subscribe by email* </label>
+            <input id="presentation-ezine-email" class="custom" name="email" type="text" />
+            </p>
+            <p class="container">
+            <input id="presentation-submit-subscription" type="submit" value="Subscribe" />
+            </p>
+            <p id="presentation-ezine-description">
+            <em class="title">Making it Work</em>, our e-magazine, will not
+            arrive more than once per week, but usually less frequently unless
+            we have something really important to tell you about.
+            </p>
+            <p class="privacy-policy">
+            * Our privacy policy is to never share, rent, or sell your
+            information to anyone, EVER.
+            </p>
+          </fieldset>
+        </form>
+      </div>
+    </div><!-- presentation -->
+  </div><!-- home -->
+  <form id="subscriptions" action="/subscriptions/subscribers/" method="post">
+    <h3 id="subscriptions-header">
+    Don't leave without subscribing to our free newsletter and journal.
+    </h3>
+    <fieldset id="ezine-newsletter">
+      <p id="ezine-description" class="content">
+            <em class="title">Making it Work</em>, our e-magazine, will not
+            arrive more than once per week, but usually less frequently unless
+            we have something really important to tell you about.
+            </p>
+      <p class="line get-feed">
+      Get the <a href="#"><em class="title">Making it Work</em> RSS feed</a>
+      </p>
+      <p class="line get-email">
+      <label for="ezine-email" accesskey="1">or subscribe by email: </label>
+      <input id="ezine-email" class="custom" name="ezine-email" type="checkbox" />
+      </p>
+    </fieldset><!-- ezine -->
+    <fieldset id="submit-subscription-fieldset">
+      <p class="container">
+      Email address* <input id="email" class="custom" type="text" />
+      <input id="submit-subscription" type="submit" value="Subscribe" />
+      </p>
+      <p class="privacy-policy">
+      * Our privacy policy is to never share, rent, or sell your
+      information to anyone, EVER.
+      </p>
+    </fieldset>
+  </form>{% endblock %}
+

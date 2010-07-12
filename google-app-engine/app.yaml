@@ -1,37 +1,236 @@
+#
+# App Configuration (app.yaml)
+# ============================
+#
+# A Python App Engine application must have a configuration file named
+# `app.yaml`.  It specifies how URL paths correspond to request handlers and
+# static files among other things such as the application ID and the latest
+# version identifier. The `app.yaml` file is not actually uploaded to the GAE
+# servers, but it is used by the local configuration script, `appconfig.py` to
+# know how to upate the GAE servers.
+#
+# For the impatient who just want to get hacking on the code, go have a look at
+# `/google-app-engine/request.py`.
+#
+# The syntax of app.yaml is the YAML format. For more information about this
+# syntax, see the [YAML website][2].
+#
+# It also helps to know how GAE makes applications available. From the App
+# Engine Blog on app versioning:
+#
+# "App Engine permits you to deploy multiple versions of your app and have them
+# running side-by-side. All the versions share the samedatastore and memcache,
+# but they run in separate instances and have different URLs. Your 'live'
+# version always serves off yourapp.appspot.com as well as any domains you have
+# mapped, but all your app's versions are accessible at
+# version.latest.yourapp.appspot.com. Multiple versions are particularly useful
+# for testing a new release in a production environment, on real data, before
+# making it available to all your users.
+#
+# Something that's less known is that the different app versions don't even
+# have to have the same runtime! It's perfectly fine to have one version of an
+# app using the Java runtime and another version of the same app using the
+# Python runtime."
+#
+# http://googleappengine.blogspot.com/2009/06/10-things-you-probably-didnt-know-about.html
+#
+
+# Meta
+# ----
+# The Meta section contains all the metadata for the application.
+
+# ### The Google App Engine identifier for this app.
+#
+# Everything else is relative to this identifier. For example, when you run the
+# `appconfig.py` script to configure the application it uses this identifier to
+# know which GAE application to remotely configure. The URL for the application
+# is also created from the identifier like this: http://myappid.appspot.com/
+#
 application: fireworkscomputer 
-version: 4
+
+# ### The version number for the application code.
+#
+# App Engine retains a copy of the web app for each version used. An
+# administrator can change which major version of the application is default by
+# using the Administration Console. The version specifier can contain letters,
+# digits, and hyphens.
+#
+# Each version of an application retains its own copy of app.yaml. When an
+# application is uploaded, the version mentioned in the app.yaml file being
+# uploaded is the version that gets created or replaced by the upload.
+#
+# It is possible to access each version of this application by using the host name
+#
+#   `VERSION.latest.fireworkscomputer.appspot.com`
+#
+# where `VERSION` refers to this version string.
+#
+version: 5
+
+# ### The name of the App Engine runtime environment.
+#
+# The only useful value for this directive is `python`
+#
 runtime: python
+
+# ### The version of the API in the given runtime environment used by this application.
+#
+# When Google releases a new version of a runtime environment's API, your
+# application will continue to use the one for which it was written. To upgrade
+# your application to the new API, you change this value and upload the
+# upgraded code.
+#
+# At this time, App Engine has one version of the python runtime environment: 1
+#
 api_version: 1
 
+# Handlers
+# --------
+# The handlers section contains a list of URL patterns and descriptions of how
+# they should be handled. App Engine can handle URLs by executing application
+# code, or by serving static files uploaded with the code, such as images, CSS
+# or JavaScript.
+#
+# URL and file path patterns use [POSIX extended regular expression syntax][3],
+# excluding collating elements and collation classes. Back-references to
+# grouped matches (e.g. \1) are supported, as are these Perl extensions: \w \W
+# \s \S \d \D  (This is similar to [Codesite search][4], plus back-reference
+# support.)
+#
+# For more info see the [appconfig documentation][1].
+#
+# Patterns are evaluated in the order they appear in the app.yaml, from top to
+# bottom. The first mapping whose pattern matches the URL is the one used to
+# handle the request.
+#
+# There are two kinds of handlers: script handlers, and static file handlers. A
+# script handler runs a Python script the application to determine the
+# response for the given URL. A static file handler returns the contents of a
+# file, such as an image, as the response.
+#
+# There are some interesting points to remember regarding the HTTP headers that
+# are served with different configurations.
+#
+# ### Static URL headers.
+# 
+# On the dev_appserver a header for a static html file will look like this:
+#
+#   HTTP/1.0 200 
+#   Server: Development/1.0
+#   Date: Mon, 17 May 2010 07:37:56 GMT
+#   Content-type: text/html
+#   Cache-Control: no-cache
+#   Expires: Fri, 01 Jan 1990 00:00:00 GMT
+#   Content-Length: 9462
+#
+# On the production GAE server the header for the same URL looks like this:
+#
+#   HTTP/1.1 200 OK
+#   ETag: "MuYD9Q"
+#   Date: Mon, 17 May 2010 07:52:38 GMT
+#   Expires: Mon, 17 May 2010 08:02:38 GMT
+#   Cache-Control: public, max-age=600
+#   Content-Type: text/html
+#   Server: Google Frontend
+#   X-XSS-Protection: 0
+#   Transfer-Encoding: chunked
+#
+# Notice that the ETag and X-XSS-Protection headers have been added and the
+# Expires header has been given a useful default value as well as the
+# Cache-Control header.
+#
+# The Transfer-Encoding has also been set to `chunked`. This is because the
+# request was made with Curl, the command line program. If it had been made
+# with a web browser Transfer-Encoding would not have been set but
+# Content-Encoding would have been set to `gzip` instead.
+#
+# ! The ETag is the same for all resources?! Could the ETag be based on a
+# timestamp?
+#
+# For dynamic URL handlers the App Engine default header on the dev_appserver
+# with no WSGI middleware (only a single print statement) is:
+#
+#   HTTP/1.0 200 Good to go
+#   Server: Development/1.0
+#   Date: Mon, 17 May 2010 08:44:18 GMT
+#   Cache-Control: no-cache
+#   Expires: Fri, 01 Jan 1990 00:00:00 GMT
+#   Content-Length: 12
+#
+# On the production server the same URL produces a header like this:
+#
+#   HTTP/1.1 200 OK
+#   Date: Mon, 17 May 2010 08:54:13 GMT
+#   Content-Type: text/html
+#   Server: Google Frontend
+#   Content-Length: 0
+#
+# ! On the production server the Content-Length header must be explicity set by
+# the handler script or no content will be output.
+#
 handlers:
+
+# ### All of our static CSS files.
+# `/google-app-engine/static/css/README.txt`
 - url: /css
   static_dir: static/css
 
+# ### All of our static image files.
+# `/google-app-engine/static/img/README.txt`
 - url: /img
   static_dir: static/img
 
-- url: /guide
-  static_dir: static/guide
-  mime_type: text/html
+# ### All of our static JavaScript files.
+# `/google-app-engine/static/js/README.txt`
+- url: /js
+  static_dir: static/js
 
+# ### All of our static html files.
+# `/google-app-engine/static/pages/README.txt`
 - url: /pages
   static_dir: static/pages
 
+# ### Mozilla package download files.
+# Must be made secure through https for the Mozilla browser extention
+# autoupdate tool to work properly .
+# `/google-app-engine/static/mozilla-downloads/README.txt`
 - url: /mozilla-downloads
   static_dir: static/mozilla-downloads
   secure: always 
  
+# ### The robots.txt file is static.
+# `/google-app-engine/static/robots.txt`
 - url: /robots\.txt
   static_files: static/robots.txt
   upload: static/robots.txt
+  expiration: 21d
  
+# ### The sitemap.xml file.
+# Static for now, but we are going to want to auto generate it when the site
+# gets bigger.
+# `/google-app-engine/static/sitemap.xml`
 - url: /sitemap\.xml
   static_files: static/sitemap.xml
   upload: static/sitemap.xml
+  expiration: 1d
  
+# ### Google verification file.
+# Hooks this domain into google tools like anylitics and whatnot.
+# `/google-app-engine/static/googlef734612d306d87e6\.html`
 - url: /googlef734612d306d87e6\.html
   static_files: static/googlef734612d306d87e6.html
   upload: static/googlef734612d306d87e6.html
+  expiration: 21d
 
-- url: /.*
+# ### All other requests are dynamic.
+# `/google-app-engine/request.py` is a great place to start hacking on the code.
+- url: .*
   script: request.py
+
+#
+#   [1]: http://code.google.com/appengine/docs/python/config/appconfig.html
+#   [2]: http://www.yaml.org/
+#   [3]: http://en.wikipedia.org/wiki/Regular_expression%23Syntax&usg=__mBDvPGMNbDvCnmh1oLFnVOCuNwI=
+#   [4]: http://www.google.com/intl/en/help/faq_codesearch.html#regexp
+#
+
