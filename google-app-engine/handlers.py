@@ -18,10 +18,14 @@
 import os
 import time
 import logging
+from django.utils import simplejson
 
 from fwerks import Handler
 import utils
 from werkzeug.exceptions import NotFound, InternalServerError
+from werkzeug.utils import http_date
+
+import dstore
 
 # Standard 'Do not cache this!' declaration for the cache-control header.
 NO_CACHE_HEADER = 'no-cache, no-store, must-revalidate, pre-check=0, post-check=0'
@@ -76,6 +80,17 @@ def not_found(request, out):
   response.headers['Pragma'] = 'no-cache'
   response.headers['Cache-Control'] = NO_CACHE_HEADER
   response.headers['Content-Type'] = 'text/html; charset=utf-8'
+  response.headers['Connection'] = 'close'
+  return response
+
+def request_redirect(response):
+  # There is no need to format a nice redirect response, since
+  # browsers will automatically redirect
+  response = set_default_headers(response)
+
+  # Expire in 4 weeks.
+  response.headers['Expires'] = http_date(time.time() + (86400 * 28))
+  response.headers['Cache-Control'] = 'public, max-age=%d' % (86400 * 28)
   response.headers['Connection'] = 'close'
   return response
 
@@ -143,6 +158,88 @@ class ProjectsHandler(SimpleHandler):
   """Handler class for '/projects' URL."""
   template = 'projects'
 
+class DatastoreHandler(Handler):
+  """Base class for datastore handlers.
+
+  This class is designed and written to be used by the fwerks module.  It
+  handles typical GET, PUT, and HEAD requests for the datastore URL space.
+
+  Two objects are bound to all instances of this class by FWerks. The first,
+  referenced by 'self.request' is a Werkzeug request object. The second,
+  'self.out' is a callable object that will return a Werkzeug response object
+  when invoked.
+
+  Consult the Werkzeug reference documentation at
+  http://werkzeug.pocoo.org/documentation/0.6.2/wrappers.html or in
+  `werkzeug/wrappers.py` for more information about the request and response
+  objects.
+  """
+
+  # Prepare and send the response.
+  def respond(self, status, data=None):
+    if data is None:
+      response = self.out()
+    else:
+      response = self.out(simplejson.dumps(data))
+
+    response.status_code = status
+    response = set_default_headers(response)
+    response.mimetype = 'application/json'
+    response.add_etag()
+
+    # No caching.
+    response.headers['Expires'] = '-1'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Cache-Control'] = NO_CACHE_HEADER
+
+    return response.make_conditional(self.request)
+
+  def response_error(self, name, message):
+    return {'name': name, 'message': message}
+
+  def head(self):
+    """Accept the HTTP HEAD method."""
+    return self.respond(200, None)
+
+class DatastoreMembers(DatastoreHandler):
+  """Handler for /datastore/members/ URL."""
+
+  def get(self):
+    """Accept the HTTP GET method."""
+    # Querying the member list is not yet implemented.
+    return self.respond(200, {})
+
+  def post(self):
+    """Accept the HTTP POST method.
+
+    This method checks to see if a member with the same uid as was passed in
+    with the POST data already exists, and if not, creates it.
+    """
+    data = self.request.form
+    name = data.get('name')
+    if not name:
+      e = self.response_error('ValidationError', 'missing "name" property')
+      return self.respond(400, e)
+    email = data.get('email')
+    if not email:
+      e = self.response_error('ValidationError', 'missing "email" property')
+      return self.respond(400, e)
+
+    q = dstore.Member.all(keys_only=True)
+    if q.filter('uid =', email).count(1):
+      e = self.response_error('ConflictError', 'member exists')
+      return self.respond(409, e)
+
+    new_member = dstore.Member(member_name=name
+                             , uid=email
+                             , init_date=int(time.time()));
+    new_member.put()
+    return self.respond(201, {
+          'member_name': new_member.member_name
+        , 'uid'        : new_member.uid
+        , 'init_date'  : new_member.init_date
+        })
+
 class TestException(Handler):
   """Handler class for '/exception' URL.
 
@@ -152,10 +249,9 @@ class TestException(Handler):
   def get(self):
     assert False, 'Test Exception Raised!'
 
-
 # Create the handler map for export to the request handling script.  As you can
 # see, the map is a list of tuples. The first item in each tuple is the URL
-# rule for Werkzeug to match. The second item in each tuple is the name if the
+# rule for Werkzeug to match. The second item in each tuple is the name of the
 # endpoint for Werkzeug. The third item in each tuple is a reference to the
 # handler class for the fwerks module to use.
 #
@@ -163,10 +259,12 @@ class TestException(Handler):
 # constructing rules:
 # http://werkzeug.pocoo.org/documentation/0.6.2/routing.html#rule-format
 #
-handler_map = [('/', 'index', IndexHandler)
+handler_map = [
+      ('/', 'index', IndexHandler)
     , ('/projects', 'projects', ProjectsHandler)
     , ('/projects/', 'projects', ProjectsHandler)
     , ('/join', 'join', JoinHandler)
+    , ('/datastore/members/', 'datastore_members', DatastoreMembers)
     , ('/exception', 'exception', TestException)
     ]
 

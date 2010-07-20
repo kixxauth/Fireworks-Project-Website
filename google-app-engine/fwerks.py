@@ -9,7 +9,7 @@
   :license: MIT, see LICENSE for more details.
 """
 
-from werkzeug.routing import Map, Rule
+from werkzeug.routing import Map, Rule, RequestRedirect
 from werkzeug.exceptions import HTTPException, MethodNotAllowed
 from werkzeug.exceptions import NotFound, InternalServerError
 from werkzeug import BaseRequest, BaseResponse, CommonResponseDescriptorsMixin, ETagResponseMixin
@@ -61,10 +61,14 @@ class App(object):
   application:  http://werkzeug.pocoo.org/
 
   """
-  def __init__(self, mapping, exception_handler, not_found):
+  def __init__(self, mapping
+      , exception_handler=None
+      , not_found=None
+      , request_redirect=None):
     self.handlers = {}
     self.exception_handler = exception_handler
     self.not_found = not_found
+    self.request_redirect = request_redirect
 
     def combiner(x):
       string, ep, handler_class = x
@@ -73,7 +77,7 @@ class App(object):
 
     # Use a list comprehension and combiner function to create both the handler
     # dict and Werkzeug url_map list at the same time.
-    self.url_map = Map([combiner(x) for x in mapping])
+    self.url_map = Map([combiner(x) for x in mapping], redirect_defaults=False)
 
   def __call__(self, env, start_response):
     # Construct a Werkzeug request object.
@@ -99,6 +103,11 @@ class App(object):
     except NotFound, e:
       if callable(self.not_found):
         response = self.not_found(request, Response)
+      else:
+        response = e
+    except RequestRedirect, e:
+      if callable(self.request_redirect):
+        response = self.request_redirect(e.get_response(request.environ))
       else:
         response = e
     except HTTPException, e:

@@ -62,11 +62,14 @@
 
 from fwerks import App
 from google.appengine.ext.webapp.util import run_bare_wsgi_app
-from handlers import handler_map, exception_handler, not_found
+from handlers import handler_map, exception_handler, not_found, request_redirect
 
 # Create a fwerks WSGI application object. Fwerks is our quick and dirty WSGI
 # framework built with Werkzeug.
-fireworks_project_website = App(handler_map, exception_handler, not_found)
+fireworks_project_website = App(handler_map
+                              , exception_handler=exception_handler
+                              , not_found=not_found
+                              , request_redirect=request_redirect)
 
 def main():
   """Called by App Engine for incoming requests.

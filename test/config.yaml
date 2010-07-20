@@ -97,7 +97,7 @@ full:
     - options
     - trace
 
-  - name: DatastoreMembersNotFound
+  - name: DatastoreMembersInvalid
     tests:
     - get 
     - put
@@ -219,7 +219,7 @@ datastore:
     - options
     - trace
 
-  - name: DatastoreMembersNotFound
+  - name: DatastoreMembersInvalid
     tests:
     - get 
     - put

@@ -939,13 +939,13 @@ class DatastoreMembers(unittest.TestCase):
             ('etag', 'regex', re.compile('"[0-9a-f]{32}"')),
             ('server', 'eq', 'Development/1.0'),
             ('date', 'regex', test_utils.HTTP_DATE_RX),
-            ('expires', 'regex', test_utils.HTTP_DATE_RX),
-            ('pragma', 'eq', None),
+            ('expires', 'eq', '-1'),
+            ('pragma', 'eq', 'no-cache'),
             # Expire in 4 days.
-            ('cache-control', 'eq', 'public, max-age=345600'),
+            ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
             ('content-encoding', 'eq', None),
             ('content-length', 'regex', re.compile('[0-9]+')),
-            ('content-type', 'eq', 'text/html; charset=utf-8'),
+            ('content-type', 'eq', 'application/json'),
             ('x-xss-protection', 'eq', '0')
           ]
 
@@ -954,13 +954,13 @@ class DatastoreMembers(unittest.TestCase):
             ('etag', 'regex', re.compile('"[0-9a-f]{32}"')),
             ('server', 'eq', 'Google Frontend'),
             ('date', 'regex', test_utils.HTTP_DATE_RX),
-            ('expires', 'regex', test_utils.HTTP_DATE_RX),
-            ('pragma', 'eq', None),
+            ('expires', 'eq', '-1'),
+            ('pragma', 'eq', 'no-cache'),
             # Expire in 4 days.
-            ('cache-control', 'eq', 'public, max-age=345600'),
+            ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
             ('content-encoding', 'eq', 'gzip'),
             ('content-length', 'regex', re.compile('[0-9]+')),
-            ('content-type', 'eq', 'text/html; charset=utf-8'),
+            ('content-type', 'eq', 'application/json'),
             ('x-xss-protection', 'eq', '0')
           ]
 
@@ -970,6 +970,7 @@ class DatastoreMembers(unittest.TestCase):
 
     # The error page is served in simple text/html.
     self.firefox36_not_allowed.response_body = True
+    self.firefox36_not_allowed.response_headers[4] = ('pragma', 'eq', None)
     self.firefox36_not_allowed.response_headers[8] = ('content-type', 'eq', 'text/html')
     self.firefox36_not_allowed.response_headers[9] = ('x-xss-protection', 'eq', None)
     self.firefox36_not_allowed.response_headers.append(
@@ -1102,7 +1103,7 @@ class DatastoreMembers(unittest.TestCase):
     configs.update('firefox36', self.firefox36_not_allowed)
     return configs.items()
 
-class DatastoreMembersNotFound(unittest.TestCase):
+class DatastoreMembersInvalid(unittest.TestCase):
   """The /datastore/members/ URL must have a '/' on the end of it."""
 
   url = '/datastore/members'
@@ -1115,41 +1116,42 @@ class DatastoreMembersNotFound(unittest.TestCase):
     function is called.
     """
     self.firefox36 = test_utils.TestRequest(firefox36_config)
-    self.firefox36.response_status = 404
+    self.firefox36.response_status = 301
+    self.firefox36.response_body = True
 
     if test_utils.LOCAL:
       self.firefox36.response_headers = [
             ('etag', 'eq', None),
             ('server', 'eq', 'Development/1.0'),
             ('date', 'regex', test_utils.HTTP_DATE_RX),
-            ('expires', 'eq', '-1'),
-            ('pragma', 'eq', 'no-cache'),
-            ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
+            ('expires', 'regex', test_utils.HTTP_DATE_RX),
+            ('pragma', 'eq', None),
+            # Expire in 4 weeks.
+            ('cache-control', 'eq', 'public, max-age=2419200'),
             ('content-encoding', 'eq', None),
-            ('content-length', 'eq', '238'),
+            ('content-length', 'eq', '287'),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
             ('x-xss-protection', 'eq', '0')
           ]
-      self.firefox36.response_body = 238
 
     else:
       self.firefox36.response_headers = [
             ('etag', 'eq', None),
             ('server', 'eq', 'Google Frontend'),
             ('date', 'regex', test_utils.HTTP_DATE_RX),
-            ('expires', 'eq', '-1'),
-            ('pragma', 'eq', 'no-cache'),
-            ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
+            ('expires', 'regex', test_utils.HTTP_DATE_RX),
+            ('pragma', 'eq', None),
+            # Expire in 4 weeks.
+            ('cache-control', 'eq', 'public, max-age=2419200'),
             ('content-encoding', 'eq', 'gzip'),
-            ('content-length', 'eq', '200'),
+            ('content-length', 'eq', '229'),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
             ('x-xss-protection', 'eq', '0')
           ]
-      self.firefox36.response_body = 200
 
   @test_function
   def get(self):
-    """GET request for Not Found
+    """GET request for /datastore/members Invalid
     """
     configs = test_utils.TestConfig()
     configs.update('firefox36', self.firefox36)
@@ -1157,7 +1159,7 @@ class DatastoreMembersNotFound(unittest.TestCase):
 
   @test_function
   def put(self):
-    """PUT request for Not Found
+    """PUT request for /datastore/members Invalid
     """
     ff36 = test_utils.TestRequest(self.firefox36)
     ff36.body = 'User-agent: *\nAllow: /\n'
@@ -1169,7 +1171,7 @@ class DatastoreMembersNotFound(unittest.TestCase):
 
   @test_function
   def post(self):
-    """POST request for Not Found
+    """POST request for /datastore/members Invalid
     """
     ff36 = test_utils.TestRequest(self.firefox36)
     ff36.body = 's=foo&num=44'
@@ -1181,7 +1183,7 @@ class DatastoreMembersNotFound(unittest.TestCase):
 
   @test_function
   def delete(self):
-    """DELETE request for Not Found
+    """DELETE request for /datastore/members Invalid
     """
     configs = test_utils.TestConfig()
     configs.update('firefox36', self.firefox36)
@@ -1189,7 +1191,7 @@ class DatastoreMembersNotFound(unittest.TestCase):
 
   @test_function
   def head(self):
-    """HEAD request for Not Found
+    """HEAD request for /datastore/members Invalid
     """
     ff36 = test_utils.TestRequest(self.firefox36)
     ff36.response_headers[6] = ('content-encoding', 'eq', None)
@@ -1201,7 +1203,7 @@ class DatastoreMembersNotFound(unittest.TestCase):
 
   @test_function
   def options(self):
-    """OPTIONS request for Not Found
+    """OPTIONS request for /datastore/members Invalid
     """
     configs = test_utils.TestConfig()
     configs.update('firefox36', self.firefox36)
@@ -1209,7 +1211,7 @@ class DatastoreMembersNotFound(unittest.TestCase):
 
   @test_function
   def trace(self):
-    """TRACE request for Not Found
+    """TRACE request for /datastore/members Invalid
     """
     configs = test_utils.TestConfig()
     configs.update('firefox36', self.firefox36)
