@@ -87,6 +87,26 @@ full:
     - options
     - trace
 
+  - name: DatastoreMembers
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+  - name: DatastoreMembersNotFound
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
 robots_txt:
 - module: urls
   classes:
@@ -176,6 +196,30 @@ projects:
   classes:
 
   - name: Projects
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+datastore:
+- module: urls
+  classes:
+
+  - name: DatastoreMembers
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+  - name: DatastoreMembersNotFound
     tests:
     - get 
     - put
