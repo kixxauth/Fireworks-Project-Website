@@ -97,7 +97,7 @@ full:
     - options
     - trace
 
-  - name: DatastoreMembersInvalid
+  - name: DatastoreSubscribers
     tests:
     - get 
     - put
@@ -220,6 +220,26 @@ datastore:
     - trace
 
   - name: DatastoreMembersInvalid
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+  - name: DatastoreSubscribers
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+  - name: DatastoreSubscribersInvalid
     tests:
     - get 
     - put

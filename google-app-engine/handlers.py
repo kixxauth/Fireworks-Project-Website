@@ -240,6 +240,50 @@ class DatastoreMembers(DatastoreHandler):
         , 'init_date'  : new_member.init_date
         })
 
+class DatastoreSubscribers(DatastoreHandler):
+  """Handler for /datastore/members/ URL."""
+
+  def get(self):
+    """Accept the HTTP GET method."""
+    # Querying the subscriber list is not yet implemented.
+    return self.respond(200, {})
+
+  def post(self):
+    """Accept the HTTP POST method.
+
+    """
+    data = self.request.form
+    email = data.get('email')
+    new_sub = data.get('new_subscription')
+    if not email:
+      e = self.response_error('ValidationError', 'missing "email" property')
+      return self.respond(400, e)
+
+    q = dstore.Subscriber.all()
+    subscriber = q.filter('email =', email).fetch(1)
+    subscriber = len(subscriber) is 1 and subscriber[0] or None
+    if subscriber:
+      if new_sub and new_sub not in subscriber.subscriptions:
+        subscriber.subscriptions.append(new_sub)
+        subscriber.put()
+
+      return self.respond(200, {
+            'email'        : subscriber.email
+          , 'subscriptions': subscriber.subscriptions
+          , 'init_date'    : subscriber.init_date
+          })
+
+    subs = new_sub and [new_sub] or []
+    new_subscriber = dstore.Subscriber(email=email
+                                     , subscriptions=subs
+                                     , init_date=int(time.time()));
+    new_subscriber.put()
+    return self.respond(201, {
+          'email'        : new_subscriber.email
+        , 'subscriptions': new_subscriber.subscriptions
+        , 'init_date'    : new_subscriber.init_date
+        })
+
 class TestException(Handler):
   """Handler class for '/exception' URL.
 
@@ -265,6 +309,7 @@ handler_map = [
     , ('/projects/', 'projects', ProjectsHandler)
     , ('/join', 'join', JoinHandler)
     , ('/datastore/members/', 'datastore_members', DatastoreMembers)
+    , ('/datastore/subscribers/', 'datastore_subscribers', DatastoreSubscribers)
     , ('/exception', 'exception', TestException)
     ]
 
