@@ -102,7 +102,7 @@ class App(object):
       response = handler(arguments)
     except NotFound, e:
       if callable(self.not_found):
-        response = self.not_found(request, Response)
+        response = self.not_found(e.get_response(request.environ))
       else:
         response = e
     except RequestRedirect, e:

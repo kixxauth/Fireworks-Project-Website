@@ -22,7 +22,7 @@ from django.utils import simplejson
 
 from fwerks import Handler
 import utils
-from werkzeug.exceptions import NotFound, InternalServerError
+from werkzeug.exceptions import InternalServerError
 from werkzeug.utils import http_date
 
 import dstore
@@ -61,7 +61,7 @@ def exception_handler(exception, request, out):
     response = InternalServerError()
   return response
 
-def not_found(request, out):
+def not_found(response):
   """To be passed into the fwerks module to handle unmatched paths.
 
   We define the general 'not found' handler here for easy access to other tools
@@ -72,7 +72,7 @@ def not_found(request, out):
   `out` is a callable used to create a Werkzeug response object.
   """
   # TODO: A nice 404 response.
-  response = set_default_headers(NotFound().get_response(request.environ))
+  response = set_default_headers(response)
 
   # We have to set all the headers using the header dictionary on the response
   # because the NotFound class does not have utility wrappers for them.
