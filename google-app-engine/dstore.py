@@ -10,3 +10,8 @@ class Subscriber(db.Model):
   subscriptions = db.StringListProperty()
   init_date = db.IntegerProperty()
 
+class Browser(db.Model):
+  user_agent = db.StringProperty()
+  requests = db.StringProperty(indexed=False)
+  actions = db.StringListProperty(indexed=False)
+

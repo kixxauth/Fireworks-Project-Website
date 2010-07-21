@@ -941,7 +941,6 @@ class DatastoreMembers(unittest.TestCase):
             ('date', 'regex', test_utils.HTTP_DATE_RX),
             ('expires', 'eq', '-1'),
             ('pragma', 'eq', 'no-cache'),
-            # Expire in 4 days.
             ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
             ('content-encoding', 'eq', None),
             ('content-length', 'regex', re.compile('[0-9]+')),
@@ -956,7 +955,6 @@ class DatastoreMembers(unittest.TestCase):
             ('date', 'regex', test_utils.HTTP_DATE_RX),
             ('expires', 'eq', '-1'),
             ('pragma', 'eq', 'no-cache'),
-            # Expire in 4 days.
             ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
             ('content-encoding', 'eq', 'gzip'),
             ('content-length', 'regex', re.compile('[0-9]+')),
@@ -1239,7 +1237,6 @@ class DatastoreSubscribers(unittest.TestCase):
             ('date', 'regex', test_utils.HTTP_DATE_RX),
             ('expires', 'eq', '-1'),
             ('pragma', 'eq', 'no-cache'),
-            # Expire in 4 days.
             ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
             ('content-encoding', 'eq', None),
             ('content-length', 'regex', re.compile('[0-9]+')),
@@ -1254,7 +1251,6 @@ class DatastoreSubscribers(unittest.TestCase):
             ('date', 'regex', test_utils.HTTP_DATE_RX),
             ('expires', 'eq', '-1'),
             ('pragma', 'eq', 'no-cache'),
-            # Expire in 4 days.
             ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
             ('content-encoding', 'eq', 'gzip'),
             ('content-length', 'regex', re.compile('[0-9]+')),
@@ -1323,7 +1319,7 @@ class DatastoreSubscribers(unittest.TestCase):
     Complete /datastore/ testing should be put into a dedicated module.
     """
     # Create a random email address, since that is how we distinguish unique
-    # members.
+    # subscribers.
     random_email = hmac.new(
         str(datetime.datetime.utcnow()).encode('ascii'),
         str(random.randint(0, 9999)).encode('ascii'),
@@ -1510,6 +1506,290 @@ class DatastoreSubscribersInvalid(unittest.TestCase):
   @test_function
   def trace(self):
     """TRACE request for /datastore/subscribers Invalid
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36)
+    return configs.items()
+
+class DatastoreActions(unittest.TestCase):
+  url = '/datastore/actions/'
+
+  def configure(self):
+    """Set up the request/response data.
+
+    The test_utils.test_function decorator will cause this method
+    to be called once for this test class, but NOT each time a test
+    function is called.
+    """
+    # Make a copy of the configs.
+    self.firefox36 = test_utils.TestRequest(firefox36_config)
+    self.firefox36.response_status = 200
+    self.firefox36.response_body = True
+
+    if test_utils.LOCAL:
+      self.firefox36.response_headers = [
+            ('etag', 'regex', re.compile('"[0-9a-f]{32}"')),
+            ('server', 'eq', 'Development/1.0'),
+            ('date', 'regex', test_utils.HTTP_DATE_RX),
+            ('expires', 'eq', '-1'),
+            ('pragma', 'eq', 'no-cache'),
+            ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
+            ('content-encoding', 'eq', None),
+            ('content-length', 'regex', re.compile('[0-9]+')),
+            ('content-type', 'eq', 'application/json'),
+            ('x-xss-protection', 'eq', '0')
+          ]
+
+    else:
+      self.firefox36.response_headers = [
+            ('etag', 'regex', re.compile('"[0-9a-f]{32}"')),
+            ('server', 'eq', 'Google Frontend'),
+            ('date', 'regex', test_utils.HTTP_DATE_RX),
+            ('expires', 'eq', '-1'),
+            ('pragma', 'eq', 'no-cache'),
+            ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
+            ('content-encoding', 'eq', 'gzip'),
+            ('content-length', 'regex', re.compile('[0-9]+')),
+            ('content-type', 'eq', 'application/json'),
+            ('x-xss-protection', 'eq', '0')
+          ]
+
+    # Make a special request for the not allowed method tests.
+    self.firefox36_not_allowed = test_utils.TestRequest(self.firefox36)
+    self.firefox36_not_allowed.response_status = 405
+
+    # The error page is served in simple text/html.
+    self.firefox36_not_allowed.response_body = True
+    self.firefox36_not_allowed.response_headers[4] = ('pragma', 'eq', None)
+    self.firefox36_not_allowed.response_headers[8] = ('content-type', 'eq', 'text/html')
+    self.firefox36_not_allowed.response_headers[9] = ('x-xss-protection', 'eq', None)
+    self.firefox36_not_allowed.response_headers.append(
+        ('allow', 'eq', 'GET, POST, HEAD'))
+    self.firefox36_not_allowed.response_headers[0] = ('etag', 'eq', None)
+
+    if test_utils.LOCAL:
+      # The dev_appserver autimatically sets the Expires and Cache-Control
+      # headers -- annoying.
+      self.firefox36_not_allowed.response_headers[3] = (
+          'expires', 'eq', 'Fri, 01 Jan 1990 00:00:00 GMT')
+      self.firefox36_not_allowed.response_headers[5] = (
+          'cache-control', 'eq', 'no-cache')
+    else:
+      self.firefox36_not_allowed.response_headers[3] = (
+          'expires', 'eq', None)
+      # And the production server automatically sets the Cache-Control header,
+      # but I'm assuming this is because we don't set it in our 405 handler.
+      # See issue #28
+      self.firefox36_not_allowed.response_headers[5] = (
+          'cache-control', 'eq', 'private, x-gzip-ok=""')
+
+  @test_function
+  def get(self):
+    """GET request for /datastore/actions/
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36)
+    return configs.items()
+
+  @test_function
+  def put(self):
+    """PUT request for /datastore/actions/
+    """
+    ff36 = test_utils.TestRequest(self.firefox36_not_allowed)
+    ff36.body = '<html>Some HTML</html>'
+    ff36.headers['Content-Length'] = str(len(ff36.body))
+    ff36.headers['Content-Type'] = 'text/html'
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', ff36)
+    return configs.items()
+
+  @test_function
+  def post(self):
+    """POST request for /datastore/actions/
+
+    #### TODO
+    So far, this is only testing for a response. For complete testing we need
+    to finish the functionality of the /datastore/ service and test the data
+    integrity issues - read, write, delete, and permissions.
+
+    Complete /datastore/ testing should be put into a dedicated module.
+    """
+    # Make a copy of the generic test configs.
+    ff36 = test_utils.TestRequest(self.firefox36)
+
+    # Record some page actions.
+    ff36.body = urllib.urlencode({'browser_id': 'testing', 'actions': [
+        'clicked on something'
+      , 'scrolled somewhere'
+      ]})
+    ff36.headers['Content-Length'] = str(len(ff36.body))
+    ff36.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+
+    ff36.response_status = 200
+
+    # Make another copy of the generic test configs.
+    ff36_sansbid = test_utils.TestRequest(ff36)
+
+    # Try to record some page actions.
+    ff36.body = urllib.urlencode({'actions': [
+        'clicked on something'
+      , 'scrolled somewhere'
+      ]})
+    ff36.headers['Content-Length'] = str(len(ff36.body))
+    ff36.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+
+    ff36.response_status = 400
+
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', ff36)
+    configs.update('firefox36_sansbid', ff36_sansbid)
+    return configs.items()
+
+  @test_function
+  def delete(self):
+    """DELETE request for /datastore/actions/
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36_not_allowed)
+    return configs.items()
+
+  @test_function
+  def head(self):
+    """HEAD request for /datastore/actions/
+    """
+    ff36 = test_utils.TestRequest(self.firefox36)
+    ff36.response_headers[6] = ('content-encoding', 'eq', None)
+    ff36.response_headers[7] = ('content-length', 'eq', '0')
+    ff36.response_body = None
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', ff36)
+    return configs.items()
+
+  @test_function
+  def options(self):
+    """OPTIONS request for /datastore/actions/
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36_not_allowed)
+    return configs.items()
+
+  @test_function
+  def trace(self):
+    """TRACE request for /datastore/actions/
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36_not_allowed)
+    return configs.items()
+
+class DatastoreActionsInvalid(unittest.TestCase):
+  """The /datastore/actions/ URL must have a '/' on the end of it."""
+
+  url = '/datastore/actions'
+
+  def configure(self):
+    """Set up the request/response data.
+
+    The test_utils.test_function decorator will cause this method
+    to be called once for this test class, but NOT each time a test
+    function is called.
+    """
+    self.firefox36 = test_utils.TestRequest(firefox36_config)
+    self.firefox36.response_status = 301
+    self.firefox36.response_body = True
+
+    if test_utils.LOCAL:
+      self.firefox36.response_headers = [
+            ('etag', 'eq', None),
+            ('server', 'eq', 'Development/1.0'),
+            ('date', 'regex', test_utils.HTTP_DATE_RX),
+            ('expires', 'regex', test_utils.HTTP_DATE_RX),
+            ('pragma', 'eq', None),
+            # Expire in 4 weeks.
+            ('cache-control', 'eq', 'public, max-age=2419200'),
+            ('content-encoding', 'eq', None),
+            ('content-length', 'eq', '287'),
+            ('content-type', 'eq', 'text/html; charset=utf-8'),
+            ('x-xss-protection', 'eq', '0')
+          ]
+
+    else:
+      self.firefox36.response_headers = [
+            ('etag', 'eq', None),
+            ('server', 'eq', 'Google Frontend'),
+            ('date', 'regex', test_utils.HTTP_DATE_RX),
+            ('expires', 'regex', test_utils.HTTP_DATE_RX),
+            ('pragma', 'eq', None),
+            # Expire in 4 weeks.
+            ('cache-control', 'eq', 'public, max-age=2419200'),
+            ('content-encoding', 'eq', 'gzip'),
+            ('content-length', 'eq', '229'),
+            ('content-type', 'eq', 'text/html; charset=utf-8'),
+            ('x-xss-protection', 'eq', '0')
+          ]
+
+  @test_function
+  def get(self):
+    """GET request for /datastore/actions Invalid
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36)
+    return configs.items()
+
+  @test_function
+  def put(self):
+    """PUT request for /datastore/actions Invalid
+    """
+    ff36 = test_utils.TestRequest(self.firefox36)
+    ff36.body = 'User-agent: *\nAllow: /\n'
+    ff36.headers['Content-Length'] = str(len(ff36.body))
+    ff36.headers['Content-Type'] = 'text/plain'
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', ff36)
+    return configs.items()
+
+  @test_function
+  def post(self):
+    """POST request for /datastore/actions Invalid
+    """
+    ff36 = test_utils.TestRequest(self.firefox36)
+    ff36.body = 's=foo&num=44'
+    ff36.headers['Content-Length'] = str(len(ff36.body))
+    ff36.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', ff36)
+    return configs.items()
+
+  @test_function
+  def delete(self):
+    """DELETE request for /datastore/actions Invalid
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36)
+    return configs.items()
+
+  @test_function
+  def head(self):
+    """HEAD request for /datastore/actions Invalid
+    """
+    ff36 = test_utils.TestRequest(self.firefox36)
+    ff36.response_headers[6] = ('content-encoding', 'eq', None)
+    ff36.response_headers[7] = ('content-length', 'eq', '0')
+    ff36.response_body = None
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', ff36)
+    return configs.items()
+
+  @test_function
+  def options(self):
+    """OPTIONS request for /datastore/actions Invalid
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36)
+    return configs.items()
+
+  @test_function
+  def trace(self):
+    """TRACE request for /datastore/actions Invalid
     """
     configs = test_utils.TestConfig()
     configs.update('firefox36', self.firefox36)

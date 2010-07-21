@@ -107,6 +107,16 @@ full:
     - options
     - trace
 
+  - name: DatastoreActions
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
 robots_txt:
 - module: urls
   classes:
@@ -240,6 +250,26 @@ datastore:
     - trace
 
   - name: DatastoreSubscribersInvalid
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+  - name: DatastoreActions
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+  - name: DatastoreActionsInvalid
     tests:
     - get 
     - put

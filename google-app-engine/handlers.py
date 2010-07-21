@@ -18,13 +18,15 @@
 import os
 import time
 import logging
-from django.utils import simplejson
 
-from fwerks import Handler
 import utils
+from fwerks import Handler
 from werkzeug.exceptions import InternalServerError
 from werkzeug.utils import http_date
 
+from django.utils import simplejson
+
+from google.appengine.ext import db
 import dstore
 
 # Standard 'Do not cache this!' declaration for the cache-control header.
@@ -251,18 +253,27 @@ class DatastoreSubscribers(DatastoreHandler):
   def post(self):
     """Accept the HTTP POST method.
 
+    If a subscriber with the provided email address already exists, the new
+    subscription is added to the subscribers list if it is not already
+    subscribed.  If a subscriber cannot be found with a matching email, a new
+    subscriber is created before adding the subscription.
     """
     data = self.request.form
     email = data.get('email')
     new_sub = data.get('new_subscription')
+
+    # Email is a required data field.
     if not email:
       e = self.response_error('ValidationError', 'missing "email" property')
       return self.respond(400, e)
 
+    # Check for subscriber with the same email.
     q = dstore.Subscriber.all()
     subscriber = q.filter('email =', email).fetch(1)
     subscriber = len(subscriber) is 1 and subscriber[0] or None
     if subscriber:
+
+      # Add new subscription.
       if new_sub and new_sub not in subscriber.subscriptions:
         subscriber.subscriptions.append(new_sub)
         subscriber.put()
@@ -273,6 +284,7 @@ class DatastoreSubscribers(DatastoreHandler):
           , 'init_date'    : subscriber.init_date
           })
 
+    # If a subscriber with the given email did not exist, create it.
     subs = new_sub and [new_sub] or []
     new_subscriber = dstore.Subscriber(email=email
                                      , subscriptions=subs
@@ -282,6 +294,56 @@ class DatastoreSubscribers(DatastoreHandler):
           'email'        : new_subscriber.email
         , 'subscriptions': new_subscriber.subscriptions
         , 'init_date'    : new_subscriber.init_date
+        })
+
+class DatastoreActions(DatastoreHandler):
+  """Handler for /datastore/actions/ URL."""
+
+  def get(self):
+    """Accept the HTTP GET method."""
+    # Querying the subscriber list is not yet implemented.
+    return self.respond(200, {})
+
+  def post(self):
+    """Accept the HTTP POST method.
+
+    The request must send an attribute identifying the browser (not a browser
+    session) which could be automatically generated in the datastore on the
+    page request, or generated in client side code.  Either way, if a browser
+    entity with the given key does not exist, we create it here and append the
+    passed actions.
+    """
+    data = self.request.form
+
+    browser_id = data.get('browser_id')
+    if not browser_id:
+      e = self.response_error('ValidationError', 'missing "browser_id" property')
+      return self.respond(400, e)
+
+    actions = data.get('actions')
+    actions = isinstance(actions, list) and actions or [actions]
+
+    try:
+      # In most cases the browser_id is a datastore key.
+      browser = db.get(browser_id)
+    except db.BadKeyError:
+      # But, sometimes it may be a key_name instead.
+      browser = dstore.Browser.get_by_key_name(browser_id)
+
+    # If the browser entity does not exist, create it.
+    if not browser:
+      user_agent, user_agent_str = utils.format_user_agent(self.request)
+      if not user_agent.browser:
+        user_agent_str = user_agent.string
+      browser = dstore.Browser(user_agent=user_agent_str)
+
+    # Append the actions.
+    browser.actions = browser.actions + actions
+
+    return self.respond(200, {
+          'user_agent': browser.user_agent
+        , 'actions': len(browser.actions or [])
+        , 'requests': len(browser.requests or [])
         })
 
 class TestException(Handler):
@@ -310,6 +372,7 @@ handler_map = [
     , ('/join', 'join', JoinHandler)
     , ('/datastore/members/', 'datastore_members', DatastoreMembers)
     , ('/datastore/subscribers/', 'datastore_subscribers', DatastoreSubscribers)
+    , ('/datastore/actions/', 'datastore_actions', DatastoreActions)
     , ('/exception', 'exception', TestException)
     ]
 

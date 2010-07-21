@@ -14,6 +14,7 @@ import traceback
 import hashlib
 
 from google.appengine.ext.webapp import template
+from werkzeug.useragents import UserAgent
 
 def get_template_path(name):
   """Return the full path of a template given its name.
@@ -42,4 +43,17 @@ def trace_out():
   """
   lines = ''.join(traceback.format_exception(*sys.exc_info()))
   return cgi.escape(lines, quote=True)
+
+def format_user_agent(request):
+  """Parse and format the HTTP_USER_AGENT environ.
+
+  Returns a tuple where the first element is a UserAgent object and the second
+  element is the formatted string.
+  """
+  user_agent = UserAgent(request.environ)
+  platform = user_agent.platform or ''
+  browser = user_agent.browser or ''
+  version = user_agent.version or ''
+  lang = user_agent.language or ''
+  return (user_agent, '%s;%s;%s;%s'% (platform, browser, version, lang))
 
