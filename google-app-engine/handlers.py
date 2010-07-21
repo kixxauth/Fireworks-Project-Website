@@ -323,27 +323,34 @@ class DatastoreActions(DatastoreHandler):
     actions = data.get('actions')
     actions = isinstance(actions, list) and actions or [actions]
 
+    key_name = None
     try:
       # In most cases the browser_id is a datastore key.
       browser = db.get(browser_id)
     except db.BadKeyError:
       # But, sometimes it may be a key_name instead.
-      browser = dstore.Browser.get_by_key_name(browser_id)
+      key_name = 'bid_'+ browser_id
+      browser = dstore.Browser.get_by_key_name(key_name)
 
     # If the browser entity does not exist, create it.
     if not browser:
       user_agent, user_agent_str = utils.format_user_agent(self.request)
-      if not user_agent.browser:
-        user_agent_str = user_agent.string
-      browser = dstore.Browser(user_agent=user_agent_str)
+      user_agent_str = (user_agent.browser and
+                        user_agent_str or user_agent.string)
+      if key_name:
+        browser = dstore.Browser(key_name=key_name, user_agent=user_agent_str)
+      else:
+        browser = dstore.Browser(user_agent=user_agent_str)
 
-    # Append the actions.
+    # Append the actions and persist the entity.
     browser.actions = browser.actions + actions
+    k = browser.put()
 
     return self.respond(200, {
-          'user_agent': browser.user_agent
-        , 'actions': len(browser.actions or [])
-        , 'requests': len(browser.requests or [])
+          'browser_id': key_name and key_name[3:] or str(k)
+        , 'user_agent': browser.user_agent
+        , 'actions'   : len(browser.actions or [])
+        , 'requests'  : len(browser.requests or [])
         })
 
 class TestException(Handler):
