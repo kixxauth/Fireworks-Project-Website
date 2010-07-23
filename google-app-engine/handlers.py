@@ -166,8 +166,9 @@ class DatastoreHandler(Handler):
   objects.
   """
   templates = {
-      'post' : 'datastore_default'
-    , 'get'  : 'datastore_default'
+      'post': 'datastore_default'
+    , 'get' : 'datastore_default'
+    , 'err' : 'datastore_default'
     }
 
   # Prepare and send the response.
@@ -182,9 +183,16 @@ class DatastoreHandler(Handler):
       if data is None:
         response = self.out()
       else:
-        response = self.out(
-            utils.render_template(
-              self.templates[self.request.method.lower()]))
+        if status > 299:
+          tpl = self.templates['err']
+          context = {
+              'message': data['name'] +': '+ data['message']
+            , 'referrer': self.request.referrer
+            }
+        else:
+          context = {'referrer': self.request.referrer}
+          tpl = self.templates[self.request.method.lower()]
+        response = self.out(utils.render_template(tpl, context))
       response.mimetype = 'text/html'
 
     response = set_default_headers(response)
@@ -209,8 +217,9 @@ class DatastoreMembers(DatastoreHandler):
   """Handler for /datastore/members/ URL."""
 
   templates = {
-      'post' : 'datastore_members_post'
-    , 'get'  : 'datastore_default'
+      'post': 'datastore_members_post'
+    , 'get' : 'datastore_default'
+    , 'err' : 'datastore_members_err'
     }
 
   def get(self):
@@ -236,7 +245,7 @@ class DatastoreMembers(DatastoreHandler):
 
     q = dstore.Member.all(keys_only=True)
     if q.filter('uid =', email).count(1):
-      e = self.response_error('ConflictError', 'member exists')
+      e = self.response_error('ConflictError', 'member already exists')
       return self.respond(409, e)
 
     new_member = dstore.Member(member_name=name
@@ -253,8 +262,9 @@ class DatastoreSubscribers(DatastoreHandler):
   """Handler for /datastore/subscribers/ URL."""
 
   templates = {
-      'post' : 'datastore_subscribers_post'
-    , 'get'  : 'datastore_default'
+      'post': 'datastore_subscribers_post'
+    , 'get' : 'datastore_default'
+    , 'err' : 'datastore_subscribers_err'
     }
 
   def get(self):

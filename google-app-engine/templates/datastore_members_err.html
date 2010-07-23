@@ -28,8 +28,11 @@ See CC-LICENSE in this folder for more details.
 
 {% block body %}<div id="member-response">
       <h3 class="member response">
-        Your membership request has been received and will be processed shortly.
+        There was an error processing your membership request:
       </h3>
+      <p class="member response warning">
+      {{ message }}
+      </p>
       <p class="member response">
       <a href="{{ referrer }}" class="member response">Continue...</a>
       </p>

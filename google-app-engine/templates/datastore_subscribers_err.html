@@ -26,11 +26,14 @@ See CC-LICENSE in this folder for more details.
 
 {% endcomment %}{% extends "base.html" %}
 
-{% block body %}<div id="member-response">
-      <h3 class="member response">
-        Your membership request has been received and will be processed shortly.
+{% block body %}<div id="subscriber-response">
+      <h3 class="subscriber response">
+        There was an error processing your subscription request:
       </h3>
-      <p class="member response">
+      <p class="subscriber response warning">
+      {{ message }}
+      </p>
+      <p class="subscriber response">
       <a href="{{ referrer }}" class="member response">Continue...</a>
       </p>
     </div>{% endblock %}

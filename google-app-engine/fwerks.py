@@ -12,11 +12,12 @@
 from werkzeug.routing import Map, Rule, RequestRedirect
 from werkzeug.exceptions import HTTPException, MethodNotAllowed
 from werkzeug.exceptions import NotFound, InternalServerError
-from werkzeug import BaseRequest, BaseResponse, AcceptMixin, CommonResponseDescriptorsMixin, ETagResponseMixin
+from werkzeug import BaseRequest, CommonRequestDescriptorsMixin, BaseResponse, AcceptMixin, CommonResponseDescriptorsMixin,ETagResponseMixin
 
-class Request(BaseRequest, AcceptMixin):
+class Request(BaseRequest, CommonRequestDescriptorsMixin, AcceptMixin):
   """Request class implementing the following Werkzeug mixins:
 
+      - :class:`CommonRequestDescriptorsMixin` for various HTTP descriptors.
       - :class:`AcceptMixin` for the HTTP Accept header.
   """
 
