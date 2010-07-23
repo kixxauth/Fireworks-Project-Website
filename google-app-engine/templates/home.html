@@ -32,26 +32,94 @@ See CC-LICENSE in this folder for more details.
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script type="text/javascript" src="js/home.js"></script>
 <style type="text/css">
+  #about {
+    margin: 7em 3em 0;
+    height: 300px;
+  }
+  #about-introduction {
+    float: left;
+    width: 40em;
+  }
+  #about-introduction h3.intro {
+    font-size: 170%;
+    font-weight: bold;
+  }
+  #about-introduction p.intro {
+    font-size: 130%;
+  }
+  #about-introduction p.intro.first {
+    margin-top: 1em;
+  }
+  #journal-form {
+    overflow: hidden;
+    clear: both;
+    margin: 3em 3em 0;
+  }
+  #journal-form-header {
+    font-size: 180%;
+    text-indent: 24px;
+    background: transparent url(css/img/pointer.gif) no-repeat;
+    line-height: 1;
+    padding: .2em 0 .2em;
+    margin-bottom: 1.2em;
+  }
+  #journal-description {
+    width: 40%;
+    float: left;
+    margin-left: 24px; /* match text-indent on form header */
+  }
+  #journal-description p.journal {
+    margin-bottom: 1em;
+  }
+  em.title.journal {
+    font-weight: bold;
+    font-style: italic;
+  }
+  #journal-form-fields {
+    margin-left: 48%;
+  }
+  #journal-form-fields label.journal {
+    margin: 1em 1em 0 0;
+  }
+  #journal-form-fields input.custom {
+    margin: 1em 1em 0 0;
+    border: none;
+    border-bottom: 2px solid #ccc;
+  }
+  #journal-submit {
+    background: #f90 url(css/img/ff9900-fade-30.gif) repeat-x;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    color: #fff;
+    font-size: 120%;
+    font-weight: bold;
+    padding: .2em .5em .2em .5em;
+    -moz-border-radius: 0.3em;
+    -webkit-border-radius: 0.3em;
+    border-radius: 0.3em;
+    margin-top: 1em; /* in case of auto-wrapping */
+  }
+  #journal-privacy {
+    margin-top: 1.5em;
+    color: #000;
+  }
 </style>{% endblock %}
 
 {% block body %}<div id="home-page">
-      <div id="about-ctn">
-        <p id="about">
-        The Fireworks Project is a small software firm that builds incredible
-        productivity tools for your small or medium sized organization.
-        </p>
-      </div>
-      <div id="intro-ctn">
-        <h3 class="intro">Software that just works.</h3>
-        <h3 class="intro">Personalized for the way you work.</h3>
-        <h3 class="intro">At a price that works.</h3>
-        <p class="intro">
-        It&#39;s time to think differently about your information systems.
-        </p>
-        <p class="intro">
-        Dream big and we&#39;ll build it.
-        </p>
-      </div><!-- end #intro-ctn -->
+      <div id="about">
+        <div id="about-introduction">
+          <h3 class="intro">Software that just works.</h3>
+          <h3 class="intro">Personalized for the way you work.</h3>
+          <h3 class="intro">At a price that works.</h3>
+          <p class="intro first">
+          It&#39;s time to think differently about your information systems.
+          </p>
+          <p class="intro">
+          Dream big and we&#39;ll build it.
+          </p>
+        </div><!-- end #about-introduction -->
+        <div id="about-presentation"></div>
+      </div><!-- end #about -->
       <form id="journal-form" class="journal" action="./datastore/subscribers/" method="post">
         <h3 id="journal-form-header" class="journal">
           Don&#39;t leave without subscribing to our free organizational
@@ -60,15 +128,12 @@ See CC-LICENSE in this folder for more details.
         <div id="journal-description" class="journal">
           <p id="journal-intro" class="journal">
             <em class="title journal">Making it Work</em> is our e-journal for
-            people like you -- People who dream big to make your organization
-            more productive and a better place to work.
+            people like you -- People who dream big to make organizations
+            more effective and better places to work at the same time.
           </p>
           <p id="journal-about" class="journal">
-            The Fireworks Project publishes
-            <em class="title journal">Making it Work</em>
-            because our software has everything to do with organizational
-            development. Our ideal customer is one who cares about creating a
-            better organization and
+            Our ideal customer is one who cares about creating a
+            better organization, so
             <em class="title journal">Making it Work</em>
             covers topics that are important to you.
           </p>

@@ -96,9 +96,9 @@ a {
   line-height: 1;
   font-weight: bold;
   color: #ccc;
-  margin-left: 290px; /* logo width + 30px */
+  margin-left: 310px; /* logo width + 50px */
   border-left: 7px solid #f90;
-  padding: .2em 0 .05em 30px;
+  padding: .2em 0 .05em 50px;
 }
 
 /* Global navigation.
