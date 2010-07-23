@@ -115,22 +115,11 @@ class SimpleHandler(Handler):
   # Default template name.
   template = 'home'
 
-  # Default template context object.
-  context = {
-      'taglines': [
-        'For big ideas.',
-        'Dream big.',
-        'Dream different.',
-        'Simply more productive.',
-        'Simply uncomplicated.',
-        'Sheer simplicity.']
-      }
-
   # Prepare and send the response.
   def respond(self):
     response = set_default_headers(
         self.out(
-          utils.render_template(self.template, self.context)))
+          utils.render_template(self.template)))
     response.mimetype = 'text/html'
     response.add_etag()
 
