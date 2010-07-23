@@ -71,3 +71,56 @@ a {
   outline: none;
   color: #f90;
 }
+
+/* Global header.
+ * --------------
+ */
+#header {
+  margin: 3em 3em 0;
+}
+#heading {
+  width: 260px; /* logo width */
+  height: 100px; /* logo height + font size */
+  overflow: hidden;
+  float: left;
+  /* fix the font line height */
+  font-size: 1em;
+  line-height: 1;
+  color: #fff; /* hide the text */
+}
+#heading-logo {
+  margin-top: -1em; /* cover the text */
+}
+#subheading {
+  font-size: 90px;
+  line-height: 1;
+  font-weight: bold;
+  color: #ccc;
+  margin-left: 290px; /* logo width + 30px */
+  border-left: 7px solid #f90;
+  padding: .2em 0 .05em 30px;
+}
+
+/* Global navigation.
+ * ------------------
+ */
+#navigation {
+  position: absolute;
+  top: 0;
+  right: 3em;
+  list-style: none;
+  margin-top: 1em;
+}
+
+#navigation li.navigation {
+  float: left;
+  font-size: 120%;
+  margin-left: 1.5em;
+  border-bottom: 2px solid #f90;
+  line-height: 1;
+  padding: .2em 0 .3em;
+}
+#navigation li.navigation a.navigation {
+  display: block;
+  color: #777;
+}

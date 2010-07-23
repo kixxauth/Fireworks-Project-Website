@@ -36,14 +36,28 @@ See CC-LICENSE in this folder for more details.
 <body id="fireworks-project">
   <div id="container">
     <div id="header">
-      <h1 id="heading"><a href="/" title="Back to the home page.">The Fireworks Project</a></h1>
+      <h1 id="heading">
+         The Fireworks Project
+        <a id="heading-link" href="/" title="Back to the home page.">
+          <img id="heading-logo" src="img/the_fireworks_project_logo.gif"
+            width="260" height="100" title="The Fireworks Project logo." />
+        </a>
+      </h1>
       <h2 id="subheading">{% block subheading %}Dream big.{% endblock %}</h2>
     </div><!-- end #header -->
     <ul id="navigation">
-      <li class="navigation"><a href="/" title="Back to The Fireworks Project home page.">home</a></li>
-      <li class="navigation"><a href="/projects/" title="Learn more about our software.">projects</a></li>
-      <li class="navigation"><a href="/about" title="Learn more about The Fireworks Project.">about</a></li>
-      <li class="navigation"><a href="/join" title="Join The Fireworks Project.">join</a></li>
+      <li class="navigation">
+        <a href="/" title="The Fireworks Project home page." class="navigation">home</a>
+      </li>
+      <li class="navigation">
+        <a href="/projects/" title="Learn more about our software." class="navigation">projects</a>
+      </li>
+      <li class="navigation">
+        <a href="/about" title="Learn more about The Fireworks Project." class="navigation">about</a>
+      </li>
+      <li class="navigation">
+        <a href="/join" title="Join The Fireworks Project." class="navigation">join</a>
+      </li>
     </ul><!-- end #navigation -->
     {% block body %}{% endblock %}
     <div id="footer">
