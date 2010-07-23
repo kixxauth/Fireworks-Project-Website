@@ -35,11 +35,26 @@ See CC-LICENSE in this folder for more details.
 </style>{% endblock %}
 
 {% block body %}<div id="home-page">
+      <div id="about-ctn">
+        <p id="about">
+        The Fireworks Project is a small software firm that builds incredible
+        productivity tools for your small or medium sized organization.
+        </p>
+      </div>
       <div id="intro-ctn">
+        <h3 class="intro">Software that just works.</h3>
+        <h3 class="intro">Personalized for the way you work.</h3>
+        <h3 class="intro">At a price that works.</h3>
+        <p class="intro">
+        It&#39;s time to think differently about your information systems.
+        </p>
+        <p class="intro">
+        Dream big and we&#39;ll build it.
+        </p>
       </div><!-- end #intro-ctn -->
-      <form id="journal-form" class="journal">
+      <form id="journal-form" class="journal" action="./datastore/subscribers/" method="post">
         <h3 id="journal-form-header" class="journal">
-          Don&apos;t leave without subscribing to our free organizational
+          Don&#39;t leave without subscribing to our free organizational
           development newsletter.
         </h2>
         <div id="journal-description" class="journal">
@@ -49,11 +64,13 @@ See CC-LICENSE in this folder for more details.
             more productive and a better place to work.
           </p>
           <p id="journal-about" class="journal">
-            The Fireworks Project publishes <em class="title journal">Making it
-            Work</em> because our software has everything to do with
-            organizational development. Our ideal customer is one who cares
-            about creating a better organization, and we think it is a topic
-            that is important to you.
+            The Fireworks Project publishes
+            <em class="title journal">Making it Work</em>
+            because our software has everything to do with organizational
+            development. Our ideal customer is one who cares about creating a
+            better organization and
+            <em class="title journal">Making it Work</em>
+            covers topics that are important to you.
           </p>
         </div>
         <fieldset id="journal-form-fields">

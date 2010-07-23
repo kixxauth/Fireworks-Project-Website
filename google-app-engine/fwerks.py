@@ -12,14 +12,20 @@
 from werkzeug.routing import Map, Rule, RequestRedirect
 from werkzeug.exceptions import HTTPException, MethodNotAllowed
 from werkzeug.exceptions import NotFound, InternalServerError
-from werkzeug import BaseRequest, BaseResponse, CommonResponseDescriptorsMixin, ETagResponseMixin
+from werkzeug import BaseRequest, BaseResponse, AcceptMixin, CommonResponseDescriptorsMixin, ETagResponseMixin
+
+class Request(BaseRequest, AcceptMixin):
+  """Request class implementing the following Werkzeug mixins:
+
+      - :class:`AcceptMixin` for the HTTP Accept header.
+  """
 
 class Response(BaseResponse, CommonResponseDescriptorsMixin, ETagResponseMixin):
-    """Response class implementing the following Werkzeug mixins:
+  """Response class implementing the following Werkzeug mixins:
 
-        - :class:`CommonResponseDescriptorsMixin` for various HTTP descriptors.
-        - :class:`ETagResponseMixin` ETag and conditional response utilities.
-    """
+      - :class:`CommonResponseDescriptorsMixin` for various HTTP descriptors.
+      - :class:`ETagResponseMixin` ETag and conditional response utilities.
+  """
 
 class App(object):
   """Create a WSGI conforming callable application.
@@ -81,7 +87,7 @@ class App(object):
 
   def __call__(self, env, start_response):
     # Construct a Werkzeug request object.
-    request = BaseRequest(env)
+    request = Request(env)
 
     # Construct a Werkzeug adapter object.
     url_adapter = self.url_map.bind_to_environ(env)

@@ -165,17 +165,30 @@ class DatastoreHandler(Handler):
   `werkzeug/wrappers.py` for more information about the request and response
   objects.
   """
+  templates = {
+      'post' : 'datastore_default'
+    , 'get'  : 'datastore_default'
+    }
 
   # Prepare and send the response.
   def respond(self, status, data=None):
-    if data is None:
-      response = self.out()
+    if self.request.accept_mimetypes.best == 'application/json':
+      if data is None:
+        response = self.out()
+      else:
+        response = self.out(simplejson.dumps(data))
+      response.mimetype = 'application/json'
     else:
-      response = self.out(simplejson.dumps(data))
+      if data is None:
+        response = self.out()
+      else:
+        response = self.out(
+            utils.render_template(
+              self.templates[self.request.method.lower()]))
+      response.mimetype = 'text/html'
 
-    response.status_code = status
     response = set_default_headers(response)
-    response.mimetype = 'application/json'
+    response.status_code = status
     response.add_etag()
 
     # No caching.
@@ -195,6 +208,11 @@ class DatastoreHandler(Handler):
 class DatastoreMembers(DatastoreHandler):
   """Handler for /datastore/members/ URL."""
 
+  templates = {
+      'post' : 'datastore_members_post'
+    , 'get'  : 'datastore_default'
+    }
+
   def get(self):
     """Accept the HTTP GET method."""
     # Querying the member list is not yet implemented.
@@ -210,11 +228,11 @@ class DatastoreMembers(DatastoreHandler):
     name = data.get('name')
     if not name:
       e = self.response_error('ValidationError', 'missing "name" property')
-      return self.respond(400, e)
+      return self.respond(409, e)
     email = data.get('email')
     if not email:
       e = self.response_error('ValidationError', 'missing "email" property')
-      return self.respond(400, e)
+      return self.respond(409, e)
 
     q = dstore.Member.all(keys_only=True)
     if q.filter('uid =', email).count(1):
@@ -232,7 +250,12 @@ class DatastoreMembers(DatastoreHandler):
         })
 
 class DatastoreSubscribers(DatastoreHandler):
-  """Handler for /datastore/members/ URL."""
+  """Handler for /datastore/subscribers/ URL."""
+
+  templates = {
+      'post' : 'datastore_subscribers_post'
+    , 'get'  : 'datastore_default'
+    }
 
   def get(self):
     """Accept the HTTP GET method."""
@@ -254,7 +277,7 @@ class DatastoreSubscribers(DatastoreHandler):
     # Email is a required data field.
     if not email:
       e = self.response_error('ValidationError', 'missing "email" property')
-      return self.respond(400, e)
+      return self.respond(409, e)
 
     # Check for subscriber with the same email.
     q = dstore.Subscriber.all()

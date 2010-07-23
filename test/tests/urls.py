@@ -944,7 +944,7 @@ class DatastoreMembers(unittest.TestCase):
             ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
             ('content-encoding', 'eq', None),
             ('content-length', 'regex', re.compile('[0-9]+')),
-            ('content-type', 'eq', 'application/json'),
+            ('content-type', 'eq', 'text/html; charset=utf-8'),
             ('x-xss-protection', 'eq', '0')
           ]
 
@@ -958,7 +958,7 @@ class DatastoreMembers(unittest.TestCase):
             ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
             ('content-encoding', 'eq', 'gzip'),
             ('content-length', 'regex', re.compile('[0-9]+')),
-            ('content-type', 'eq', 'application/json'),
+            ('content-type', 'eq', 'text/html; charset=utf-8'),
             ('x-xss-protection', 'eq', '0')
           ]
 
@@ -1024,31 +1024,57 @@ class DatastoreMembers(unittest.TestCase):
     """
     # Create a random email address, since that is how we distinguish unique
     # members.
-    random_email = hmac.new(
-        str(datetime.datetime.utcnow()).encode('ascii'),
-        str(random.randint(0, 9999)).encode('ascii'),
-        hashlib.sha1).hexdigest()
+    def random_email():
+      return hmac.new(
+          str(datetime.datetime.utcnow()).encode('ascii'),
+          str(random.randint(0, 9999)).encode('ascii'),
+          hashlib.sha1).hexdigest()
 
-    # Make a copy of the generic test configs.
+    # Make a copy of the generic test configs for standard HTML.
     ff36 = test_utils.TestRequest(self.firefox36)
+    ff36.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+
+    # Make a copy of the generic test configs for AJAX.
+    ff36_ajax = test_utils.TestRequest(ff36)
+    ff36_ajax.headers['Accept'] = 'application/json'
+    ff36_ajax.headers['X-Requested-With'] = 'XMLHttpRequest'
+    ff36_ajax.response_headers[8] = ('content-type', 'eq', 'application/json')
+
     # Create the new member entity.
     ff36.body = urllib.urlencode({
         'name': 'Delete Me',
-        'email': '%s@example.com'% random_email
+        'email': '%s@example.com'% random_email()
       })
     ff36.headers['Content-Length'] = str(len(ff36.body))
-    ff36.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     ff36.response_status = 201
+
+    # Repeat for AJAX
+    ff36_ajax.body = urllib.urlencode({
+        'name': 'Delete Me',
+        'email': '%s@example.com'% random_email()
+      })
+    ff36_ajax.headers['Content-Length'] = str(len(ff36_ajax.body))
+    ff36_ajax.response_status = 201
 
     # Make another copy of the test configs to test a form submission with no
     # 'name' data field.
     ff36_noname = test_utils.TestRequest(ff36)
     ff36_noname.body = urllib.urlencode({
         'name': '',
-        'email': '%s@example.com'% random_email
+        'email': '%s@example.com'% random_email()
       })
     ff36_noname.headers['Content-Length'] = str(len(ff36_noname.body))
-    ff36_noname.response_status = 400
+    ff36_noname.response_status = 409
+
+    # Repeat for AJAX
+    ff36_noname_ajax = test_utils.TestRequest(ff36_ajax)
+    ff36_noname_ajax.body = urllib.urlencode({
+        'name': '',
+        'email': '%s@example.com'% random_email()
+      })
+    ff36_noname_ajax.headers['Content-Length'] = \
+        str(len(ff36_noname_ajax.body))
+    ff36_noname_ajax.response_status = 409
 
     # Make one more copy of the test configs to test a form submission that is
     # missing the 'email' data field.
@@ -1057,12 +1083,24 @@ class DatastoreMembers(unittest.TestCase):
         'name': 'Delete Me'
       })
     ff36_noemail.headers['Content-Length'] = str(len(ff36_noemail.body))
-    ff36_noemail.response_status = 400
+    ff36_noemail.response_status = 409
+
+    # Repeat for AJAX
+    ff36_noemail_ajax = test_utils.TestRequest(ff36_ajax)
+    ff36_noemail_ajax.body = urllib.urlencode({
+        'name': 'Delete Me'
+      })
+    ff36_noemail_ajax.headers['Content-Length'] = \
+        str(len(ff36_noemail_ajax.body))
+    ff36_noemail_ajax.response_status = 409
 
     configs = test_utils.TestConfig()
     configs.update('firefox36', ff36)
+    configs.update('firefox36_ajax', ff36_ajax)
     configs.update('firefox36_noname', ff36_noname)
+    configs.update('firefox36_noname_ajax', ff36_noname_ajax)
     configs.update('firefox36_noemail', ff36_noemail)
+    configs.update('firefox36_noemail_ajax', ff36_noemail_ajax)
     return configs.items()
 
   @test_function
@@ -1240,7 +1278,7 @@ class DatastoreSubscribers(unittest.TestCase):
             ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
             ('content-encoding', 'eq', None),
             ('content-length', 'regex', re.compile('[0-9]+')),
-            ('content-type', 'eq', 'application/json'),
+            ('content-type', 'eq', 'text/html; charset=utf-8'),
             ('x-xss-protection', 'eq', '0')
           ]
 
@@ -1254,7 +1292,7 @@ class DatastoreSubscribers(unittest.TestCase):
             ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
             ('content-encoding', 'eq', 'gzip'),
             ('content-length', 'regex', re.compile('[0-9]+')),
-            ('content-type', 'eq', 'application/json'),
+            ('content-type', 'eq', 'text/html; charset=utf-8'),
             ('x-xss-protection', 'eq', '0')
           ]
 
@@ -1320,31 +1358,56 @@ class DatastoreSubscribers(unittest.TestCase):
     """
     # Create a random email address, since that is how we distinguish unique
     # subscribers.
-    random_email = hmac.new(
-        str(datetime.datetime.utcnow()).encode('ascii'),
-        str(random.randint(0, 9999)).encode('ascii'),
-        hashlib.sha1).hexdigest()
+    def random_email():
+      return hmac.new(
+          str(datetime.datetime.utcnow()).encode('ascii'),
+          str(random.randint(0, 9999)).encode('ascii'),
+          hashlib.sha1).hexdigest()
 
     # Make a copy of the generic test configs.
     ff36 = test_utils.TestRequest(self.firefox36)
+    ff36.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+
+    # Make a copy of the generic test configs for AJAX.
+    ff36_ajax = test_utils.TestRequest(ff36)
+    ff36_ajax.headers['Accept'] = 'application/json'
+    ff36_ajax.headers['X-Requested-With'] = 'XMLHttpRequest'
+    ff36_ajax.response_headers[8] = ('content-type', 'eq', 'application/json')
+
     # Create the new member entity.
     ff36.body = urllib.urlencode({
         'new_subscription': 'Delete Me',
-        'email': '%s@example.com'% random_email
+        'email': '%s@example.com'% random_email()
       })
     ff36.headers['Content-Length'] = str(len(ff36.body))
-    ff36.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     ff36.response_status = 201
+
+    # Repeat for AJAX
+    ff36_ajax.body = urllib.urlencode({
+        'new_subscription': 'Delete Me',
+        'email': '%s@example.com'% random_email()
+      })
+    ff36_ajax.headers['Content-Length'] = str(len(ff36_ajax.body))
+    ff36_ajax.response_status = 201
 
     # Make another copy of the test configs to test a form submission with no
     # 'name' data field.
     ff36_nosub = test_utils.TestRequest(ff36)
     ff36_nosub.body = urllib.urlencode({
         'new_subscription': '',
-        'email': '%s@example.com'% random_email
+        'email': '%s@example.com'% random_email()
       })
     ff36_nosub.headers['Content-Length'] = str(len(ff36_nosub.body))
-    ff36_nosub.response_status = 200
+    ff36_nosub.response_status = 201
+
+    # Repeat for AJAX
+    ff36_nosub_ajax = test_utils.TestRequest(ff36_ajax)
+    ff36_nosub_ajax.body = urllib.urlencode({
+        'new_subscription': '',
+        'email': '%s@example.com'% random_email()
+      })
+    ff36_nosub_ajax.headers['Content-Length'] = str(len(ff36_nosub_ajax.body))
+    ff36_nosub_ajax.response_status = 201
 
     # Make one more copy of the test configs to test a form submission that is
     # missing the 'email' data field.
@@ -1353,12 +1416,24 @@ class DatastoreSubscribers(unittest.TestCase):
         'name': 'Delete Me'
       })
     ff36_noemail.headers['Content-Length'] = str(len(ff36_noemail.body))
-    ff36_noemail.response_status = 400
+    ff36_noemail.response_status = 409
+
+    # Repeat for AJAX
+    ff36_noemail_ajax = test_utils.TestRequest(ff36_ajax)
+    ff36_noemail_ajax.body = urllib.urlencode({
+        'name': 'Delete Me'
+      })
+    ff36_noemail_ajax.headers['Content-Length'] = \
+        str(len(ff36_noemail_ajax.body))
+    ff36_noemail_ajax.response_status = 409
 
     configs = test_utils.TestConfig()
     configs.update('firefox36', ff36)
+    configs.update('firefox36_ajax', ff36_ajax)
     configs.update('firefox36_nosub', ff36_nosub)
+    configs.update('firefox36_nosub_ajax', ff36_nosub_ajax)
     configs.update('firefox36_noemail', ff36_noemail)
+    configs.update('firefox36_noemail_ajax', ff36_noemail_ajax)
     return configs.items()
 
   @test_function
@@ -1536,7 +1611,7 @@ class DatastoreActions(unittest.TestCase):
             ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
             ('content-encoding', 'eq', None),
             ('content-length', 'regex', re.compile('[0-9]+')),
-            ('content-type', 'eq', 'application/json'),
+            ('content-type', 'eq', 'text/html; charset=utf-8'),
             ('x-xss-protection', 'eq', '0')
           ]
 
@@ -1550,7 +1625,7 @@ class DatastoreActions(unittest.TestCase):
             ('cache-control', 'eq', test_utils.NO_CACHE_HEADER),
             ('content-encoding', 'eq', 'gzip'),
             ('content-length', 'regex', re.compile('[0-9]+')),
-            ('content-type', 'eq', 'application/json'),
+            ('content-type', 'eq', 'text/html; charset=utf-8'),
             ('x-xss-protection', 'eq', '0')
           ]
 
@@ -1616,6 +1691,9 @@ class DatastoreActions(unittest.TestCase):
     """
     # Make a copy of the generic test configs.
     ff36 = test_utils.TestRequest(self.firefox36)
+    ff36.headers['Accept'] = 'application/json'
+    ff36.headers['X-Requested-With'] = 'XMLHttpRequest'
+    ff36.response_headers[8] = ('content-type', 'eq', 'application/json')
 
     # Record some page actions.
     ff36.body = urllib.urlencode({'browser_id': 'testing', 'actions': [
