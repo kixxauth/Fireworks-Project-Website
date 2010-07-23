@@ -1,132 +1,73 @@
-/* Import font from Google.
------------------------------ */
+/* Import font from Google Fonts. */
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold);
 
-/* Globals
----------- */
+/* Reset
+ * -----
+ */
 
-* {
+/* ### Reset block elements. */
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, code,
+del, dfn, em, img, q, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, dialog, figure, footer, header,
+hgroup, nav, section {
   margin: 0;
   padding: 0;
+  border: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: 100%;
+  font-family: inherit;
+  vertical-align: baseline;
 }
 
+/* ### HTML5 block elements. */
+article, aside, dialog, figure, footer, header,
+hgroup, nav, section { display:block; }
+
+/* ### Reset tables
+ *
+ * Tables still need 'cellspacing="0"' in the markup.
+ */
+table { border-collapse: separate; border-spacing: 0; }
+caption, th, td { text-align: left; font-weight: normal; }
+table, td, th { vertical-align: middle; }
+
+/* ### Reset blockquote.
+ *
+ * Remove possible quote marks (") from <q>, <blockquote>.
+ */
+blockquote:before, blockquote:after, q:before, q:after { content: ""; }
+blockquote, q { quotes: "" ""; }
+
+/* ### Reset img.
+ *
+ * Remove annoying border on linked images.
+ */
+a img { border: none; }
+
+/* ### Div containers.
+ *
+ * Force our divs to contain any floated elements that might be inside.
+ * http://www.sitepoint.com/blogs/2005/02/26/simple-clearing-of-floats/
+ */
+div { overflow: hidden; }
+
+/* Global master styles.
+ * ---------------------
+ */
 body {
   font-family: "Droid Sans","lucida grande","Segoe UI",arial,verdana,"lucida sans unicode",tahoma,sans-serif;
   font-size: .9em;
   color: #222;
-  line-height: 0;
+  line-height: 1.5;
 }
 
-/* Global styles for links. */
 a {
   text-decoration: none;
   outline: none;
   color: #f90;
 }
-
-a:hover {
-  text-decoration: underline;
-}
-
-/* Remove ugly borders from images. */
-img {
-  border: none;
-}
-
-/* Force our divs to contain any floated elements that might be inside. */
-/* http://www.sitepoint.com/blogs/2005/02/26/simple-clearing-of-floats/ */
-div {
-  overflow: hidden;
-}
-
-/* Helper for a line feed. */
-.line {
-  display: block;
-  margin-top: 1em;
-}
-
-/* Helper for custom input fields */
-input.custom {
-  border: 2px solid #ddd;
-  padding: .3em .1em .2em .1em;
-  font-weight: bold;
-}
-
-/* Header
------------- */
-#header {
-  margin: 2em 0 0 20px;
-}
-
-#heading {
-  /* The bg gif is 260 x 100 */
-  background: transparent url(../img/the_fireworks_project_logo.gif) no-repeat;
-  height: 105px;
-  width: 280px;
-  float: left;
-  border-right: 4px solid #f90;
-}
-
-#heading a {
-  display: block;
-  height: 100%;
-  width: 100%;
-  text-indent: -9000px;
-}
-
-#subheading {
-  margin: .48em 0 0 304px; /* right-margin: 304px to match the header + desired margin */
-  line-height: 1;
-  font-size: 70px;
-  color: #ccc;
-}
-
-/* Navigation
-------------- */
-#navigation {
-  position: absolute;
-  top: 0;
-  right: 3em;
-  list-style-type: none;
-  overflow: hidden;
-  margin-top: 1em;
-}
-
-li.navigation {
-  float: left;
-  font-size: 110%;
-  line-height: 1;
-  margin-left: 2em;
-  padding-bottom: .3em;
-  border-bottom: 3px solid #f90;
-}
-
-li.navigation a {
-  display: block;
-  color: #555;
-}
-
-li.navigation a:hover {
-  text-decoration: none;
-  color: #000;
-}
-
-/* Footer
---------- */
-#footer {
-  border-top: 2px solid #444;
-  margin-top: 100px;
-}
-
-/* CC License footer */
-#creative-commons-license {
-  margin-top: 3em;
-  line-height: 1.2;
-  padding: 0 0 1em 1em;
-  width: 80%;
-}
-
-#creative-commons-image {
-  float: left;
-}
-
