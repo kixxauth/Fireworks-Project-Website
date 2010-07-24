@@ -33,12 +33,13 @@ See CC-LICENSE in this folder for more details.
 <script type="text/javascript" src="js/home.js"></script>
 <style type="text/css">
   #about {
-    margin: 7em 3em 0;
-    height: 300px;
+    margin: 3em 5% 0; /* right and left margin matches header */
+    height: 370px;
   }
   #about-introduction {
     float: left;
-    width: 40em;
+    width: 38em;
+    margin-top: 5em;
   }
   #about-introduction h3.intro {
     font-size: 170%;
@@ -53,7 +54,7 @@ See CC-LICENSE in this folder for more details.
   #journal-form {
     overflow: hidden;
     clear: both;
-    margin: 3em 3em 0;
+    margin: 3em 5% 0; /* right and left margin matches header */
   }
   #journal-form-header {
     font-size: 180%;
@@ -102,6 +103,106 @@ See CC-LICENSE in this folder for more details.
   #journal-privacy {
     margin-top: 1.5em;
     color: #000;
+  }
+  /* ---
+   * Presentation *
+   * ---
+   */
+  #presentation {
+    margin-top: 2em;
+  }
+  div.presentation.slide {
+    width: 350px;
+    height: 320px;
+    float: left;
+    border: 2px dashed #aaa;
+    margin-left: 2em;
+    margin-top: 2em;
+    font-family: "good-dog-1", "good-dog-2", monospace;
+    font-size: 160%;
+    line-height: 1.2;
+    color: #555;
+  }
+  #slide-1-content-1 {
+    font-size: 150%;
+    text-align: center;
+    margin-top: 1.5em;
+    width: 90%;
+    margin-left: 5%;
+  }
+  #slide-2-content-1 {
+    margin: 1em;
+  }
+  #slide-2-image {
+    margin-left: 30%;
+  }
+  #slide-2-content-2 {
+    margin: .7em 1em;
+  }
+  #slide-3-content-1 {
+    margin: 1em 1em 1.3em;
+  }
+  #slide-3-image {
+    margin-left: 18%;
+  }
+  #slide-3-content-2 {
+    margin: 1em;
+  }
+  #slide-4-content-1 {
+    margin: .5em 1em;
+  }
+  #slide-4-image {
+    margin-left: 14%;
+  }
+  #slide-5-content-1 {
+    margin-top: 2em;
+    width: 90%;
+    text-align: center;
+    margin-left: 4%;
+    font-size: 120%;
+  }
+  #slide-55-content-1 {
+    margin: .5em;
+  }
+  #slide-55-image {
+    margin-left: 25%;
+  }
+  #slide-7-content-1 {
+    margin: .5em;
+  }
+  #slide-7-image {
+    margin-left: 18%;
+  }
+  #slide-6-content-1 {
+    margin: 1em;
+  }
+  #slide-6-image {
+    margin-left: 18%;
+  }
+  #slide-8-content-1 {
+    margin: 1em 1em 0;
+  }
+  #slide-8-content-2 {
+    margin: 1em 0 0 1.7em;
+  }
+  #slide-9-content-1 {
+    margin: 1em 1em 0;
+  }
+  #slide-9-content-2 {
+    font-size: 130%;
+    margin: 1.5em 0 0 1em;
+  }
+  #slide-10-content-1 {
+    margin: .5em;
+  }
+  #slide-10-image {
+    margin-left: 14%;
+  }
+  #slide-12-content-1 {
+    margin: .5em;
+  }
+  #slide-12-image {
+    margin-left: 18%;
   }
 </style>{% endblock %}
 
@@ -159,51 +260,43 @@ See CC-LICENSE in this folder for more details.
           <p id="slide-2-content-1" class="presentation slide content">
           But maybe it doesn&#39;t have to be.
           </p>
-          <img src="img/presentation/thinking_man.png" width="60%"
+          <img id="slide-2-image" src="img/presentation/thinking_man.png" width="30%"
             title="Thinking man illustration." class="presentation slide content" />
           <p id="slide-2-content-2" class="presentation slide content">
-          So, we started to think a little differently.
+          What if we started to think out of the box?
           </p>
         </div>
         <div id="slide-3" class="presentation slide">
           <p id="slide-3-content-1" class="presentation slide content">
-          What if we could create a software bakery that would bake software?
+          Imagine a software bakery.
           </p>
-          <img src="img/presentation/light-bulb.gif" width="60%"
+          <img id="slide-3-image" src="img/presentation/light-bulb.gif" width="60%"
             title="Light bulb idea illustration." class="presentation slide content" />
           <p id="slide-3-content-2" class="presentation slide content">
-          Each loaf of software could be personalized to the individual needs
-          and tastes of our patrons.
+          Each loaf of software could be personalized to our individual tastes.
           </p>
         </div>
         <div id="slide-4" class="presentation slide">
           <p id="slide-4-content-1" class="presentation slide content">
-          When we stretched our imaginations even further, we found more ideas
-          in the assembly lines that created the first affordable automobiles.
+          Stretching our imaginations, we even found ideas in the assembly
+          lines that created the first affordable automobiles.
           </p>
-          <img src="img/presentation/assembly_line.png" width="60%"
+          <img id="slide-4-image" src="img/presentation/assembly_line.png" width="70%"
             title="Automobile assembly line illustration." class="presentation slide content" />
         </div>
         <div id="slide-5" class="presentation slide">
           <p id="slide-5-content-1" class="presentation slide content">
-          So, we designed our own set of digital nuts and bolts to build
-          interchangeable software components with.
-          </p>
-          <img src="img/presentation/factory.png" width="60%"
-            title="Factory illustration." class="presentation slide content" />
-          <p id="slide-5-content-2" class="presentation slide content">
-          As it turns out, having interchangeable parts has been the key to
-          making affordable goods since the industrial revolution.
+          Inspired as only geeks can be, we designed our own digital nuts and
+          bolts for building interchangeable software components.
           </p>
         </div>
-        <div id="slide-6" class="presentation slide">
-          <p id="slide-6-content-1" class="presentation slide content">
-          The best part is that interchangeable components will allow you to
-          add only the components you need, without getting stuck with the ones
-          you don&#39;t.
+        <div id="slide-55" class="presentation slide">
+          <p id="slide-55-content-1" class="presentation slide content">
+          As it turns out, interchangeable parts have been the key to
+          making affordable goods since the industrial revolution.
           </p>
-          <img src="img/presentation/software_components.png" width="60%"
-            title="Software components illustration." class="presentation slide content" />
+          <img id="slide-55-image" src="img/presentation/factory.png" width="50%"
+            title="Factory illustration." class="presentation slide content" />
         </div>
         <div id="slide-7" class="presentation slide">
           <p id="slide-7-content-1" class="presentation slide content">
@@ -211,12 +304,23 @@ See CC-LICENSE in this folder for more details.
           customized information systems that were once only affordable to very
           large companies.
           </p>
+          <img id="slide-7-image" src="img/presentation/custom_software_choice.png" width="60%"
+            title="Illustration of waiter with choice of dishes." class="presentation slide content" />
+        </div>
+        <!-- yes, slide 6 comes after slide 7 -->
+        <div id="slide-6" class="presentation slide">
+          <p id="slide-6-content-1" class="presentation slide content">
+          You&#39;ll also be able to add only the software components you
+          need, without getting stuck with the ones you don&#39;t.
+          </p>
+          <img id="slide-6-image"src="img/presentation/software_components.png" width="60%"
+            title="Software components illustration." class="presentation slide content" />
         </div>
         <div id="slide-8" class="presentation slide">
           <h4 id="slide-8-content-1" class="presentation slide content">
             Think of all the possibilities!
           </h4>
-          <ul id="slide-8-content-1" class="presentation slide content">
+          <ul id="slide-8-content-2" class="presentation slide content">
             <li class="presentation slide content">
             Customer service management.
             </li>
@@ -249,26 +353,18 @@ See CC-LICENSE in this folder for more details.
         <div id="slide-10" class="presentation slide">
           <p id="slide-10-content-1" class="presentation slide content">
           Our artisan software bakery is not quite operational yet, but
-          we&#39;re working day and night to get it done for you.
+          we&#39;re working day and night to get to our grand opening.
           </p>
-          <img src="img/presentation/software_factory_grand_opening.png" width="60%"
+          <img id="slide-10-image" src="img/presentation/software_factory_grand_opening.png" width="70%"
             title="Software bakery grand opening illustration." class="presentation slide content" />
-          <p id="slide-10-content-2" class="presentation slide content">
-          Every day is one day closer to the grand opening.
-          </p>
-        </div>
-        <div id="slide-11" class="presentation slide">
-          <p id="slide-11-content-1" class="presentation slide content">
-          It&#39;s not easy, but we believe that nothing worth doing is easy.
-          </p>
         </div>
         <div id="slide-12" class="presentation slide">
           <p id="slide-12-content-1" class="presentation slide content">
-          While we&#39;re working, you should kick back with a copy of our
-          e-journal. Just scroll on over to our subscription form and you can
-          get on board with one click.
+          Until then you should kick back with a copy of our e-journal. Just
+          scroll on over to our subscription form and you can get on board with
+          one click.
           </p>
-          <img src="img/presentation/resting_software_engineer.png" width="60%"
+          <img id="slide-12-image" src="img/presentation/resting_software_engineer.png" width="60%"
             title="Resting on the beach illustration." class="presentation slide content" />
         </div>
       </div><!-- end #presentation -->
