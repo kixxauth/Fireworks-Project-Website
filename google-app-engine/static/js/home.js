@@ -21,12 +21,30 @@
 */
 
 /*global
-  jQuery: false
+  window: false
 */
 
 // ECMAScript 5 strict mode.
 "use strict";
 
 (function (window) {
+  var j;
+
+  function setup_slideshow() {
+    j('#presentation').impression();
+
+    j('#about-presentation')
+      .css({
+          'width': '350px'
+        , 'height': '356px'
+        })
+      .html(j('#presentation-player-template').html())
+      ;
+  }
+
+  window.jQuery(function (jq) {
+    j = jq;
+    setup_slideshow();
+  });
 }(window));
 

@@ -30,6 +30,7 @@ See CC-LICENSE in this folder for more details.
 <script type="text/javascript" src="http://use.typekit.com/fcq2zzl.js"></script>
 <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.fireworks-impression.js"></script>
 <script type="text/javascript" src="js/home.js"></script>
 <style type="text/css">
   #about {
@@ -122,6 +123,18 @@ See CC-LICENSE in this folder for more details.
     font-size: 160%;
     line-height: 1.2;
     color: #555;
+  }
+  #presentation-controls {
+    font-family: "good-dog-1", "good-dog-2", monospace;
+    font-size: 24px;
+    padding: 4px 20px;
+  }
+  .presentation.control {
+    float: left;
+  }
+  #player-controls-notice {
+    text-align: center;
+    width: 250px;
   }
   #slide-1-content-1 {
     font-size: 150%;
@@ -220,6 +233,15 @@ See CC-LICENSE in this folder for more details.
           </p>
         </div><!-- end #about-introduction -->
         <div id="about-presentation"></div>
+        <script id="presentation-player-template" type="text/html">
+          <div id="presentation-controls">
+            <img id="player-controls-back" src="/img/presentation/left-arrow-30.gif"
+              title="Left arrow control." class="presentation control" width="30" height="30"/>
+            <p id="player-controls-notice" class="presentation control">Paused</p>
+            <img id="player-controls-next" src="/img/presentation/right-arrow-30.gif"
+              title="Right arrow control." class="presentation control" width="30" height="30"/>
+          </div>
+        </script>
       </div><!-- end #about -->
       <form id="journal-form" class="journal" action="./datastore/subscribers/" method="post">
         <h3 id="journal-form-header" class="journal">
@@ -251,6 +273,11 @@ See CC-LICENSE in this folder for more details.
         </fieldset>
       </form>
       <div id="presentation">
+        <div id="slide-a" class="presentation slide" style="display:none">
+          <p id="slide-a-content-1" class="presentation slide content">
+          Click in here any time to pause or play the slide show.
+          </p>
+        </div>
         <div id="slide-1" class="presentation slide">
           <p id="slide-1-content-1" class="presentation slide content">
           Customized software is complicated and expensive.
