@@ -107,7 +107,9 @@
 
   Presentation.prototype.back = function () {
     var index = this.current_index -1;
-    index = index < 0 ? (this.slides.length -1) : index;
+    if (index < 0) {
+      return;
+    }
     this.goto(index);
   };
 

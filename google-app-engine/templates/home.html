@@ -29,18 +29,20 @@ See CC-LICENSE in this folder for more details.
 {% block head %}<!-- Load the Typekit font for the presentation -->
 <script type="text/javascript" src="http://use.typekit.com/fcq2zzl.js"></script>
 <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+<!--
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+-->
+<script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.fireworks-impression.js"></script>
 <script type="text/javascript" src="js/home.js"></script>
 <style type="text/css">
   #about {
     margin: 3em 5% 0; /* right and left margin matches header */
-    height: 370px;
   }
   #about-introduction {
     float: left;
-    width: 38em;
-    margin-top: 5em;
+    width: 42em; /* this is big to wrap slide show on small screens */
+    margin: 5em 0; /* bottom margin is in case of auto-wrap slide show */
   }
   #about-introduction h3.intro {
     font-size: 170%;
@@ -52,6 +54,42 @@ See CC-LICENSE in this folder for more details.
   #about-introduction p.intro.first {
     margin-top: 1em;
   }
+  #about-presentation {
+    font-family: "good-dog-1", "good-dog-2", monospace;
+  }
+  #presentation-player-intro {
+    text-align: center;
+    font-size: 32px;
+    width: 250px;
+    height: 182px; /*Flow height calculated with Firebug with 7px of contingency. */
+    position: relative;
+    left: 50%;
+    top: 40%;
+    margin-left: -125px;
+    margin-top: -91px;
+  }
+  #player-intro-content {
+    margin-bottom: 1em;
+  }
+  #presentation-controls {
+    font-size: 24px;
+    padding: 4px 0;
+    height: 30px;
+  }
+  #player-controls-back {
+    float: left;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  #player-controls-notice {
+    float: left;
+    text-align: center;
+  }
+  #player-controls-next {
+    float: right;
+    margin-right: 10px;
+    cursor: pointer;
+  }
   #journal-form {
     overflow: hidden;
     clear: both;
@@ -59,10 +97,9 @@ See CC-LICENSE in this folder for more details.
   }
   #journal-form-header {
     font-size: 180%;
-    text-indent: 24px;
     background: transparent url(css/img/pointer.gif) no-repeat;
     line-height: 1;
-    padding: .2em 0 .2em;
+    padding: .2em 0 .2em 24px; /* left padding for arrow image */
     margin-bottom: 1.2em;
   }
   #journal-description {
@@ -113,44 +150,38 @@ See CC-LICENSE in this folder for more details.
     margin-top: 2em;
   }
   div.presentation.slide {
-    width: 350px;
+    width: 400px;
     height: 320px;
     float: left;
     border: 2px dashed #aaa;
     margin-left: 2em;
     margin-top: 2em;
     font-family: "good-dog-1", "good-dog-2", monospace;
-    font-size: 160%;
+    font-size: 20px;
     line-height: 1.2;
     color: #555;
   }
-  #presentation-controls {
-    font-family: "good-dog-1", "good-dog-2", monospace;
-    font-size: 24px;
-    padding: 4px 20px;
-  }
-  .presentation.control {
-    float: left;
-  }
-  #player-controls-notice {
+  #slide-a-content-1, #slide-a-content-2 {
     text-align: center;
-    width: 250px;
+    margin-top: 1.5em;
+    width: 90%;
+    margin-left: 5%;
   }
-  #slide-1-content-1 {
-    font-size: 150%;
+  #slide-1-content-1, #slide-1-content-2 {
+    font-size: 130%;
     text-align: center;
     margin-top: 1.5em;
     width: 90%;
     margin-left: 5%;
   }
   #slide-2-content-1 {
-    margin: 1em;
+    margin: 1em 1em 0;
   }
   #slide-2-image {
     margin-left: 30%;
   }
   #slide-2-content-2 {
-    margin: .7em 1em;
+    margin: 0 1em 1em;
   }
   #slide-3-content-1 {
     margin: 1em 1em 1.3em;
@@ -209,7 +240,7 @@ See CC-LICENSE in this folder for more details.
     margin: .5em;
   }
   #slide-10-image {
-    margin-left: 14%;
+    margin-left: 18%;
   }
   #slide-12-content-1 {
     margin: .5em;
@@ -234,7 +265,13 @@ See CC-LICENSE in this folder for more details.
         </div><!-- end #about-introduction -->
         <div id="about-presentation"></div>
         <script id="presentation-player-template" type="text/html">
-          <div id="presentation-controls">
+          <div id="presentation-player-intro">
+            <p id="player-intro-content">Press play to find out how.</p>
+            <a id="presentation-play-button" href="#">
+            <img src="/img/presentation/play-button-30.gif" />
+            </a>
+          </div>
+          <div id="presentation-controls" style="display:none">
             <img id="player-controls-back" src="/img/presentation/left-arrow-30.gif"
               title="Left arrow control." class="presentation control" width="30" height="30"/>
             <p id="player-controls-notice" class="presentation control">Paused</p>
@@ -246,19 +283,19 @@ See CC-LICENSE in this folder for more details.
       <form id="journal-form" class="journal" action="./datastore/subscribers/" method="post">
         <h3 id="journal-form-header" class="journal">
           Don&#39;t leave without subscribing to our free organizational
-          development newsletter.
+          development e-journal.
         </h2>
         <div id="journal-description" class="journal">
           <p id="journal-intro" class="journal">
-            <em class="title journal">Making it Work</em> is our e-journal for
-            people like you -- People who dream big to make organizations
-            more effective and better places to work at the same time.
+            Our ideal customer is one who cares about building a more effective
+            organization and a better place to work. So, we created
+            <em class="title journal">Making it Work</em>
+            , an e-journal all about organizational development.
           </p>
           <p id="journal-about" class="journal">
-            Our ideal customer is one who cares about creating a
-            better organization, so
             <em class="title journal">Making it Work</em>
-            covers topics that are important to you.
+            is for people like you -- People who dream big to create innovative
+            organizations.
           </p>
         </div>
         <fieldset id="journal-form-fields">
@@ -275,12 +312,19 @@ See CC-LICENSE in this folder for more details.
       <div id="presentation">
         <div id="slide-a" class="presentation slide" style="display:none">
           <p id="slide-a-content-1" class="presentation slide content">
-          Click in here any time to pause or play the slide show.
+          Click in here any time to pause the slide show, then just click again
+          to start playing.
+          </p>
+          <p id="slide-a-content-2" class="presentation slide content">
+          Use the arrow buttons below to go forward or back.
           </p>
         </div>
         <div id="slide-1" class="presentation slide">
           <p id="slide-1-content-1" class="presentation slide content">
           Customized software is complicated and expensive.
+          </p>
+          <p id="slide-1-content-2" class="presentation slide content">
+          Right?
           </p>
         </div>
         <div id="slide-2" class="presentation slide">
@@ -290,23 +334,23 @@ See CC-LICENSE in this folder for more details.
           <img id="slide-2-image" src="img/presentation/thinking_man.png" width="30%"
             title="Thinking man illustration." class="presentation slide content" />
           <p id="slide-2-content-2" class="presentation slide content">
-          What if we started to think out of the box?
+          So, we've been thinking outside the box.
           </p>
         </div>
         <div id="slide-3" class="presentation slide">
           <p id="slide-3-content-1" class="presentation slide content">
-          Imagine a software bakery.
+          What if we started an artisan software bakery?
           </p>
           <img id="slide-3-image" src="img/presentation/light-bulb.gif" width="60%"
             title="Light bulb idea illustration." class="presentation slide content" />
           <p id="slide-3-content-2" class="presentation slide content">
-          Each loaf of software could be personalized to our individual tastes.
+          Each batch of software could be crafted with personal attention.
           </p>
         </div>
         <div id="slide-4" class="presentation slide">
           <p id="slide-4-content-1" class="presentation slide content">
           Stretching our imaginations, we even found ideas in the assembly
-          lines that created the first affordable automobiles.
+          lines which created the first affordable automobiles.
           </p>
           <img id="slide-4-image" src="img/presentation/assembly_line.png" width="70%"
             title="Automobile assembly line illustration." class="presentation slide content" />
@@ -327,7 +371,7 @@ See CC-LICENSE in this folder for more details.
         </div>
         <div id="slide-7" class="presentation slide">
           <p id="slide-7-content-1" class="presentation slide content">
-          This new way of building software will enable you to afford
+          Software made from interchangeable parts will enable you to afford
           customized information systems that were once only affordable to very
           large companies.
           </p>
@@ -337,7 +381,7 @@ See CC-LICENSE in this folder for more details.
         <!-- yes, slide 6 comes after slide 7 -->
         <div id="slide-6" class="presentation slide">
           <p id="slide-6-content-1" class="presentation slide content">
-          You&#39;ll also be able to add only the software components you
+          You&#39;ll be able to add only the software components you
           need, without getting stuck with the ones you don&#39;t.
           </p>
           <img id="slide-6-image"src="img/presentation/software_components.png" width="60%"
@@ -371,18 +415,18 @@ See CC-LICENSE in this folder for more details.
         <div id="slide-9" class="presentation slide">
           <p id="slide-9-content-1" class="presentation slide content">
           And, because the system is designed to be interchangeable, it will
-          allow you to move your information between other systems seamlessly.
+          allow you to move your information between other systems as well.
           </p>
           <p id="slide-9-content-2" class="presentation slide content">
-          It will all just work.
+          It will all just work!
           </p>
         </div>
         <div id="slide-10" class="presentation slide">
           <p id="slide-10-content-1" class="presentation slide content">
           Our artisan software bakery is not quite operational yet, but
-          we&#39;re working day and night to get to our grand opening.
+          we&#39;re working day and night until we arrive at our grand opening.
           </p>
-          <img id="slide-10-image" src="img/presentation/software_factory_grand_opening.png" width="70%"
+          <img id="slide-10-image" src="img/presentation/software_factory_grand_opening.png" width="60%"
             title="Software bakery grand opening illustration." class="presentation slide content" />
         </div>
         <div id="slide-12" class="presentation slide">
