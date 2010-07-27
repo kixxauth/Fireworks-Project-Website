@@ -162,6 +162,8 @@ See CC-LICENSE in this folder for more details.
     color: #555;
   }
   #slide-a-content-1, #slide-a-content-2 {
+    font-family: sans-serif;
+    font-size: 16px;
     text-align: center;
     margin-top: 1.5em;
     width: 90%;
@@ -178,13 +180,13 @@ See CC-LICENSE in this folder for more details.
     margin: 1em 1em 0;
   }
   #slide-2-image {
-    margin-left: 30%;
+    margin-left: 35%;
   }
   #slide-2-content-2 {
     margin: 0 1em 1em;
   }
   #slide-3-content-1 {
-    margin: 1em 1em 1.3em;
+    margin: 1em 1em 0;
   }
   #slide-3-image {
     margin-left: 18%;
@@ -228,6 +230,9 @@ See CC-LICENSE in this folder for more details.
   }
   #slide-8-content-2 {
     margin: 1em 0 0 1.7em;
+  }
+  #slide-8-content-3 {
+    margin: .5em 1em;
   }
   #slide-9-content-1 {
     margin: 1em 1em 0;
@@ -274,7 +279,12 @@ See CC-LICENSE in this folder for more details.
           <div id="presentation-controls" style="display:none">
             <img id="player-controls-back" src="/img/presentation/left-arrow-30.gif"
               title="Left arrow control." class="presentation control" width="30" height="30"/>
-            <p id="player-controls-notice" class="presentation control">Paused</p>
+            <p id="player-controls-notice" class="presentation control">
+            <span id="controls-notice-action"></span>
+            <span id="controls-notice-index"></span>
+            of
+            <span id="controls-notice-length"></span>
+            </p>
             <img id="player-controls-next" src="/img/presentation/right-arrow-30.gif"
               title="Right arrow control." class="presentation control" width="30" height="30"/>
           </div>
@@ -312,11 +322,11 @@ See CC-LICENSE in this folder for more details.
       <div id="presentation">
         <div id="slide-a" class="presentation slide" style="display:none">
           <p id="slide-a-content-1" class="presentation slide content">
-          Click in here any time to pause the slide show, then just click again
-          to start playing.
+          Click in here any time to pause the slide show, and click again
+          to continue playing.
           </p>
           <p id="slide-a-content-2" class="presentation slide content">
-          Use the arrow buttons below to go forward or back.
+          Use the arrow buttons below to move back and forward.
           </p>
         </div>
         <div id="slide-1" class="presentation slide">
@@ -331,26 +341,27 @@ See CC-LICENSE in this folder for more details.
           <p id="slide-2-content-1" class="presentation slide content">
           But maybe it doesn&#39;t have to be.
           </p>
-          <img id="slide-2-image" src="img/presentation/thinking_man.png" width="30%"
+          <img id="slide-2-image" src="img/presentation/thinking_man.png" width="25%"
             title="Thinking man illustration." class="presentation slide content" />
           <p id="slide-2-content-2" class="presentation slide content">
-          So, we've been thinking outside the box.
+          We've found a way to make it simple and affordable by thinking
+          a little differently.
           </p>
         </div>
         <div id="slide-3" class="presentation slide">
           <p id="slide-3-content-1" class="presentation slide content">
-          What if we started an artisan software bakery?
+          We imagined an artisan software bakery,
           </p>
           <img id="slide-3-image" src="img/presentation/light-bulb.gif" width="60%"
             title="Light bulb idea illustration." class="presentation slide content" />
           <p id="slide-3-content-2" class="presentation slide content">
-          Each batch of software could be crafted with personal attention.
+          where each batch of software could be crafted with personal attention.
           </p>
         </div>
         <div id="slide-4" class="presentation slide">
           <p id="slide-4-content-1" class="presentation slide content">
-          Stretching our imaginations, we even found ideas in the assembly
-          lines which created the first affordable automobiles.
+          Then we borrowed some ideas from the assembly
+          lines used to build the first affordable automobiles.
           </p>
           <img id="slide-4-image" src="img/presentation/assembly_line.png" width="70%"
             title="Automobile assembly line illustration." class="presentation slide content" />
@@ -372,7 +383,7 @@ See CC-LICENSE in this folder for more details.
         <div id="slide-7" class="presentation slide">
           <p id="slide-7-content-1" class="presentation slide content">
           Software made from interchangeable parts will enable you to afford
-          customized information systems that were once only affordable to very
+          customized information systems that were once only available to very
           large companies.
           </p>
           <img id="slide-7-image" src="img/presentation/custom_software_choice.png" width="60%"
@@ -381,7 +392,7 @@ See CC-LICENSE in this folder for more details.
         <!-- yes, slide 6 comes after slide 7 -->
         <div id="slide-6" class="presentation slide">
           <p id="slide-6-content-1" class="presentation slide content">
-          You&#39;ll be able to add only the software components you
+          You&#39;ll be able to add the software components you
           need, without getting stuck with the ones you don&#39;t.
           </p>
           <img id="slide-6-image"src="img/presentation/software_components.png" width="60%"
@@ -411,20 +422,25 @@ See CC-LICENSE in this folder for more details.
             Logistics.
             </li>
           </ul>
+          <p id="slide-8-content-3">
+          Your imagination is the limit.
+          </p>
         </div>
         <div id="slide-9" class="presentation slide">
           <p id="slide-9-content-1" class="presentation slide content">
-          And, because the system is designed to be interchangeable, it will
-          allow you to move your information between other systems as well.
+          Because your new system will be designed with interchangeable parts,
+          it will allow you to move information between your other systems
+          as well.
           </p>
           <p id="slide-9-content-2" class="presentation slide content">
-          It will all just work!
+          It will just work!
           </p>
         </div>
         <div id="slide-10" class="presentation slide">
           <p id="slide-10-content-1" class="presentation slide content">
           Our artisan software bakery is not quite operational yet, but
-          we&#39;re working day and night until we arrive at our grand opening.
+          we&#39;re working night and day to get it ready for the grand
+          opening.
           </p>
           <img id="slide-10-image" src="img/presentation/software_factory_grand_opening.png" width="60%"
             title="Software bakery grand opening illustration." class="presentation slide content" />

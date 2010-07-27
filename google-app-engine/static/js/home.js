@@ -27,35 +27,59 @@
 // ECMAScript 5 strict mode.
 "use strict";
 
+var SPEC = {};
+
+SPEC.slideShowIntervals = [
+  7000
+, 5500
+, 9000
+, 7000
+, 6500
+, 7000
+, 8000
+, 10500
+, 7500
+, 9500
+, 8500
+, 7500
+];
+
+SPEC.slideStyles = {
+  'margin-top'   : '0'
+, 'margin-right' : '0'
+, 'margin-left'  : '0'
+, 'margin-bottom': '0'
+, 'float'        : 'none'
+, 'border-top'   : 'none'
+, 'border-left'  : 'none'
+, 'border-right' : 'none'
+, 'position'     : 'absolute'
+, 'font-size'    : '24px'
+, 'cursor'       : 'pointer'
+};
+
 (function (window) {
-  var j;
+  var j
+    , spec = window.SPEC || {}
+    , presentation_intervals = spec.slideShowIntervals || []
+    , slide_styles = spec.slideStyles || {}
+    ;
 
   function setup_slideshow() {
     var presentation = j('#presentation').impression({
-          intervals: {
-            'slide-a': 7000
-          , 'slide-1': 5000
-          , 'slide-2': 5000
-          , 'slide-3': 6500
-          , 'slide-4': 6000
-          , 'slide-5': 6000
-          , 'slide-55': 7000
-          , 'slide-7': 10000
-          , 'slide-6': 7000
-          , 'slide-8': 8000
-          , 'slide-9': 8000
-          , 'slide-10': 7000
-          }
+          intervals: presentation_intervals
         })
 
-      , slide = j(j('div.presentation.slide')[0])
+      , slides = j('div.presentation.slide')
+      , slide = j(slides[0])
       , slide_width = slide.width()
       , player = j('#about-presentation')
                    .html(j('#presentation-player-template').html())
       , controls = j('#presentation-controls')
       , back = j('#player-controls-back')
       , next = j('#player-controls-next')
-      , controls_notice = j('#player-controls-notice')
+      , notice_action = j('#controls-notice-action')
+      , notice_index = j('#controls-notice-index')
 
       , player_offset = player.offset()
       , controls_height, slide_border_width
@@ -63,12 +87,22 @@
 
     function pause() {
       presentation.impression('stop');
-      controls_notice.text('paused');
+      notice_action.text('paused');
     }
 
     function play() {
       presentation.impression('play');
-      controls_notice.text('playing');
+      notice_action.text('playing');
+    }
+
+    function last_slide() {
+      presentation
+        .unbind('click', pause)
+        .unbind('click', play)
+        ;
+
+      notice_action.text('done');
+      slides.css('cursor', 'default');
     }
 
     controls_height = (+controls.css('height').replace(/px/, '') +
@@ -98,24 +132,22 @@
       .offset({top: player_offset.top + player.height() - controls_height})
       ;
 
-    j('div.presentation.slide')
-      .css({
-          'margin-top'   : '0'
-        , 'margin-right' : '0'
-        , 'margin-left'  : '0'
-        , 'margin-bottom': '0'
-        , 'float'        : 'none'
-        , 'border-top'   : 'none'
-        , 'border-left'  : 'none'
-        , 'border-right' : 'none'
-        , 'position'     : 'absolute'
-        , 'font-size'    : '24px'
-        , 'cursor'       : 'pointer'
-        })
+    slides 
+      .css(slide_styles)
       .offset(player_offset)
       ;
 
-    presentation.toggle(pause, play);
+    presentation
+      .toggle(pause, play)
+      .bind('impressShowing', function (ev, index) {
+        notice_index.text(index +1);
+
+        // Playing the last slide.
+        if (index === presentation_intervals.length) {
+          last_slide();
+        }
+      })
+      ;
 
     back.click(function () {
       presentation.impression('back');
@@ -126,9 +158,12 @@
 
     j('#presentation-player-intro').click(function () {
       j('#presentation-player-intro').hide();
-      controls_notice.text('playing');
-      controls.show();
-      controls_notice.width((function () {
+
+      j('#controls-notice-length')
+        .text(presentation_intervals.length +1);
+
+      controls.show(); // Must show here to calculate width next.
+      j('#player-controls-notice').width((function () {
         var left_margin = +back.css('margin-left').replace(/px/, '')
           , right_margin = +next.css('margin-right').replace(/px/, '')
           ;
@@ -139,7 +174,8 @@
                 left_margin -
                 right_margin);
       }()));
-      presentation.impression('play');
+      play();
+      notice_index.text(1);
       return false;
     });
   }

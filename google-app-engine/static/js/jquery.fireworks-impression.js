@@ -38,15 +38,18 @@
 
     var self = this
       , intervals = spec.intervals || {}
+      , intervals_array = jq.isArray(intervals)
       , default_interval = spec.defaultInterval || 1000
       ;
 
     this.slides = [];
-    child_nodes.each(function () {
+    child_nodes.each(function (i) {
       var me = jq(this);
       self.slides.push({
           jq      : me
-        , interval: intervals[me[0].id] || default_interval
+        , interval: (intervals_array ?
+                     intervals[i] : intervals[this.id]) ||
+                     default_interval
         });
     });
 
@@ -90,18 +93,22 @@
     }
     this.cancel_timer();
     this.slides[this.current_index].jq.hide();
-    slide.jq.show();
     this.current_index = index;
+    slide.jq
+      .show()
+      .trigger('impressShowing', [this.current_index])
+      ;
     this.elapsed = 0;
+    if (index === (this.slides.length -1) && !this.auto_loop) {
+      this.stop();
+      return;
+    }
     this.set_timer(slide.interval);
   };
 
   Presentation.prototype.advance = function () {
     var index = this.current_index +1;
     index = index === this.slides.length ? 0 : index;
-    if (index === 0 && !this.auto_loop) {
-      return;
-    }
     this.goto(index);
   };
 
@@ -117,13 +124,8 @@
     if (!this.stopped) {
       return;
     }
-    var slide = this.slides[this.current_index];
-    if (!slide) {
-      return;
-    }
-    this.slides[this.current_index].jq.show();
     this.stopped = false;
-    this.set_timer(slide.interval - this.elapsed);
+    this.goto(this.current_index);
   };
 
   Presentation.prototype.stop = function () {
