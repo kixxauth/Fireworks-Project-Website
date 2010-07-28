@@ -29,7 +29,7 @@ See CC-LICENSE in this folder for more details.
 {% block title %}Redefine your job - The Fireworks Project{% endblock %}
 
 {% block head %}<style type="text/css">
-  #description, #instructions, #join-form {
+  #description, #instructions, #join-form, #response-page {
     margin: 5em 5% 0;
   }
   h2.description.content, h2.instructions.content {
@@ -88,6 +88,9 @@ See CC-LICENSE in this folder for more details.
     margin: 0 5% 2em 0;
     width: 40%;
   }
+  #join-inputs {
+    position: relative;
+  }
   p.form.content.input {
     margin-top: 1em;
   }
@@ -115,7 +118,194 @@ See CC-LICENSE in this folder for more details.
     -webkit-border-radius: 0.3em;
     border-radius: 0.3em;
   }
-</style>{% endblock %}
+  #submit-warning {
+    position: absolute;
+    background: #333;
+    color: #fff;
+    font-family: sans-serif;
+    font-weight: bold;
+    border: 3px solid #f90;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
+    padding: 1em;
+  }
+  #ajax-error {
+    width: 400px;
+    position: absolute;
+    right: 50%;
+    margin-right: -200px;
+    background: #333;
+    color: #fff;
+    font-family: sans-serif;
+    font-weight: bold;
+    border: 3px solid #f90;
+    -moz-border-radius: 1em;
+    -webkit-border-radius: 1em;
+    border-radius: 1em;
+    padding: 1em;
+  }
+  #ajax-error-actions {
+    text-align: center;
+    margin-top: 1em;
+  }
+  button.ajax.error {
+    background: #f90 url(css/img/ff9900-fade-30.gif) repeat-x;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    color: #fff;
+    font-size: 120%;
+    font-weight: bold;
+    padding: .2em .5em .3em .5em;
+    -moz-border-radius: 0.3em;
+    -webkit-border-radius: 0.3em;
+    border-radius: 0.3em;
+  }
+  h1.response.header {
+    font-weight: bold;
+    font-size: 200%;
+    margin-bottom: 1em;
+  }
+  h2.response.header {
+    font-weight: bold;
+    font-size: 150%;
+    margin-bottom: 1em;
+  }
+</style>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<!--
+<script type="text/javascript" src="/js/jquery.js"></script>
+-->
+<script type="text/javascript">
+  jQuery(function (jq) {
+    var j = jq.noConflict(true)
+      , showing_warning = false
+      , ajax_error_msg = {}
+      ;
+
+    ajax_error_msg
+      .unexpected = 'Awww darn! There was some kind of unexpected error '+
+                    'while processing your submission. Try refreshing '+
+                    'the page and submit it again.';
+    ajax_error_msg
+      .member_exists = 'Hmmmm... It seems a member with that email address '+
+                     'already exists. Try again with a different '+
+                     'email address.';
+
+    j.ajaxSetup({'beforeSend': function (xhr) {
+      xhr.setRequestHeader('accept', 'application/json');
+    }});
+
+    j('#ajax-error').ajaxError(function (ev, xhr, options, err) {
+      var data, win = j(window);
+      try {
+        data = j.parseJSON(xhr.responseText);
+      } catch (e) {
+        j('#ajax-error-content').text(ajax_error_msg.unexpected);
+      }
+      if (data.message === 'member already exists') {
+        j('#ajax-error-content').text(ajax_error_msg.member_exists);
+      }
+      else {
+        j('#ajax-error-content').text(ajax_error_msg.unexpected);
+      }
+
+      j(this)
+        .css('top', ((win.height() /2) + win.scrollTop()) +'px')
+        .show()
+        ;
+    });
+
+    j('#ajax-error-dismiss').click(function () {
+      j('#ajax-error').hide();
+    });
+
+    function ajax_success(data, status, xhr) {
+      if (xhr.status !== 201) {
+        j('#ajax-error-content').text(ajax_error_msg.unexpected);
+        j('#ajax-error')
+          .css('top', ((win.height() /2) + win.scrollTop()) +'px')
+          .show()
+          ;
+        return;
+      }
+      j('#join-page').hide();
+      j('#response-page').show();
+    }
+
+    function show_submit_warning(message) {
+      j('#submit-warning-content').text(message);
+      if (showing_warning) {
+        return;
+      }
+      var ctn = j('#submit-warning')
+        , fieldset = j('#join-inputs')
+        , fieldset_width = fieldset.width()
+        ;
+
+      ctn 
+        .css({
+            'width': fieldset_width +'px'
+          , 'top': (Math.floor(fieldset.height() /3) - ctn.height()) +'px'
+          , 'left': (fieldset_width +28) +'px'
+          })
+        .fadeIn(400)
+        ;
+      showing_warning = true;
+    }
+
+    function hide_submit_warning() {
+      if (!showing_warning) {
+        return;
+      }
+      j('#submit-warning').fadeOut(400);
+      showing_warning = false;
+    }
+
+    j('#join-form').submit(function () {
+      var ack = j('#acknowledgement')[0].checked
+        , name = j('#name').val()
+        , email = j('#email').val()
+        ;
+
+      hide_submit_warning();
+
+      if (!ack) {
+        show_submit_warning("Don't forget to check the acknowledgement box.");
+        j('#acknowledgement')
+          .focus()
+          .change(hide_submit_warning)
+          ;
+        return false;
+      }
+      if (!name) {
+        show_submit_warning("Don't forget to include your full name.");
+        j('#name')
+          .focus()
+          .change(hide_submit_warning)
+          .keydown(hide_submit_warning)
+          ;
+        return false;
+      }
+      if (!email) {
+        show_submit_warning("Don't forget to include your email address.");
+        j('#email')
+          .focus()
+          .change(hide_submit_warning)
+          .keydown(hide_submit_warning)
+          ;
+        return false;
+      }
+
+      j.post(
+            '/datastore/members/'
+          , j(this).serialize()
+          , ajax_success
+          , 'json');
+      return false;
+    });
+  });
+</script>{% endblock %}
 
 {% block subheading %}Dream different.{% endblock %}
 
@@ -131,7 +321,7 @@ See CC-LICENSE in this folder for more details.
       </p>
       <p class="description content">
       We didn&#39;t want venture capitalists and other investors dictating our
-      livelihoods, and our unique corporate struction put control of the
+      livelihoods, and our unique corporate structure put control of the
       company into the hands of the people who are building it. The downside is
       that we don&#39;t get paid for our efforts until the company is making
       money.  We feel that is a small price to pay for the freedom to have fun
@@ -325,6 +515,9 @@ See CC-LICENSE in this folder for more details.
     </div><!-- operating-agreement -->
     <form id="join-form" action="/datastore/members/" method="post">
       <fieldset id="join-inputs">
+        <div id="submit-warning" style="display:none">
+          <p id="submit-warning-content"></p>
+        </div>
         <p class="form content">
           <input type="checkbox" id="acknowledgement" name="acknowledgement" value="true" />
           <label for="acknowledge" accesskey="1">
@@ -354,4 +547,17 @@ See CC-LICENSE in this folder for more details.
         you via email and get you set up to start contributing.
       </p>
     </form>
-  </div><!-- end #join-page -->{% endblock %}
+    <div id="ajax-error" style="display:none">
+      <p id="ajax-error-content"></p>
+      <p id="ajax-error-actions">
+        <button id="ajax-error-dismiss" class="ajax error">OK</button>
+      </p>
+    </div>
+  </div><!-- end #join-page -->
+  <div id="response-page" style="display:none">
+    <h1 class="response header">Contratulations!</h1>
+    <h2 class="response header">You&#39;re now an official member of The Fireworks Project.</h2>
+    <p class="response message">
+      Another member will contact you by email within 48 hours to help you get started.
+    </p>
+  </div><!-- end #response -->{% endblock %}
