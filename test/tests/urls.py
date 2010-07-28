@@ -1042,6 +1042,7 @@ class DatastoreMembers(unittest.TestCase):
 
     # Create the new member entity.
     ff36.body = urllib.urlencode({
+        'acknowledgement': 'true',
         'name': 'Delete Me',
         'email': '%s@example.com'% random_email()
       })
@@ -1050,6 +1051,7 @@ class DatastoreMembers(unittest.TestCase):
 
     # Repeat for AJAX
     ff36_ajax.body = urllib.urlencode({
+        'acknowledgement': 'true',
         'name': 'Delete Me',
         'email': '%s@example.com'% random_email()
       })
@@ -1057,9 +1059,30 @@ class DatastoreMembers(unittest.TestCase):
     ff36_ajax.response_status = 201
 
     # Make another copy of the test configs to test a form submission with no
+    # 'acknowledgement' data field.
+    ff36_noack = test_utils.TestRequest(ff36)
+    ff36_noack.body = urllib.urlencode({
+        'name': 'Delete Me',
+        'email': '%s@example.com'% random_email()
+      })
+    ff36_noack.headers['Content-Length'] = str(len(ff36_noack.body))
+    ff36_noack.response_status = 409
+
+    # Repeat for AJAX
+    ff36_noack_ajax = test_utils.TestRequest(ff36_ajax)
+    ff36_noack_ajax.body = urllib.urlencode({
+        'name': 'Delete Me',
+        'email': '%s@example.com'% random_email()
+      })
+    ff36_noack_ajax.headers['Content-Length'] = \
+        str(len(ff36_noack_ajax.body))
+    ff36_noack_ajax.response_status = 409
+
+    # Make another copy of the test configs to test a form submission with no
     # 'name' data field.
     ff36_noname = test_utils.TestRequest(ff36)
     ff36_noname.body = urllib.urlencode({
+        'acknowledgement': 'true',
         'name': '',
         'email': '%s@example.com'% random_email()
       })
@@ -1069,6 +1092,7 @@ class DatastoreMembers(unittest.TestCase):
     # Repeat for AJAX
     ff36_noname_ajax = test_utils.TestRequest(ff36_ajax)
     ff36_noname_ajax.body = urllib.urlencode({
+        'acknowledgement': 'true',
         'name': '',
         'email': '%s@example.com'% random_email()
       })
@@ -1080,6 +1104,7 @@ class DatastoreMembers(unittest.TestCase):
     # missing the 'email' data field.
     ff36_noemail = test_utils.TestRequest(ff36)
     ff36_noemail.body = urllib.urlencode({
+        'acknowledgement': 'true',
         'name': 'Delete Me'
       })
     ff36_noemail.headers['Content-Length'] = str(len(ff36_noemail.body))
@@ -1088,6 +1113,7 @@ class DatastoreMembers(unittest.TestCase):
     # Repeat for AJAX
     ff36_noemail_ajax = test_utils.TestRequest(ff36_ajax)
     ff36_noemail_ajax.body = urllib.urlencode({
+        'acknowledgement': 'true',
         'name': 'Delete Me'
       })
     ff36_noemail_ajax.headers['Content-Length'] = \
@@ -1097,6 +1123,8 @@ class DatastoreMembers(unittest.TestCase):
     configs = test_utils.TestConfig()
     configs.update('firefox36', ff36)
     configs.update('firefox36_ajax', ff36_ajax)
+    configs.update('firefox36_noack', ff36_noack)
+    configs.update('firefox36_noack_ajax', ff36_noack_ajax)
     configs.update('firefox36_noname', ff36_noname)
     configs.update('firefox36_noname_ajax', ff36_noname_ajax)
     configs.update('firefox36_noemail', ff36_noemail)
