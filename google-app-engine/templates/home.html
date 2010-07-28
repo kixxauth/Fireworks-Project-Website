@@ -26,16 +26,7 @@ See CC-LICENSE in this folder for more details.
 
 {% endcomment %}{% extends "base.html" %}
 
-{% block head %}<!-- Load the Typekit font for the presentation -->
-<script type="text/javascript" src="http://use.typekit.com/fcq2zzl.js"></script>
-<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-<!--
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
--->
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/jquery.fireworks-impression.js"></script>
-<script type="text/javascript" src="js/home.js"></script>
-<style type="text/css">
+{% block head %}<style type="text/css">
   #about {
     margin: 3em 5% 0; /* right and left margin matches header */
   }
@@ -56,13 +47,14 @@ See CC-LICENSE in this folder for more details.
   }
   #about-presentation {
     font-family: "good-dog-1", "good-dog-2", monospace;
+    position: relative;
   }
   #presentation-player-intro {
     text-align: center;
     font-size: 32px;
     width: 250px;
     height: 182px; /*Flow height calculated with Firebug with 7px of contingency. */
-    position: relative;
+    position: absolute;
     left: 50%;
     top: 40%;
     margin-left: -125px;
@@ -72,9 +64,9 @@ See CC-LICENSE in this folder for more details.
     margin-bottom: 1em;
   }
   #presentation-controls {
+    position: absolute;
     font-size: 24px;
-    padding: 4px 0;
-    height: 30px;
+    padding: 6px 0;
   }
   #player-controls-back {
     float: left;
@@ -93,7 +85,7 @@ See CC-LICENSE in this folder for more details.
   #journal-form {
     overflow: hidden;
     clear: both;
-    margin: 3em 5% 0; /* right and left margin matches header */
+    margin: 3em 5%; /* right and left margin matches header */
   }
   #journal-form-header {
     font-size: 180%;
@@ -144,9 +136,6 @@ See CC-LICENSE in this folder for more details.
    * Presentation *
    * ---
    */
-  #presentation {
-    margin-top: 2em;
-  }
   div.presentation.slide {
     width: 400px;
     height: 320px;
@@ -251,7 +240,16 @@ See CC-LICENSE in this folder for more details.
   #slide-12-image {
     margin-left: 18%;
   }
-</style>{% endblock %}
+</style>
+<!-- Load the Typekit font for the presentation -->
+<script type="text/javascript" src="http://use.typekit.com/fcq2zzl.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<!--
+<script type="text/javascript" src="js/jquery.js"></script>
+-->
+<script type="text/javascript" src="js/jquery.fireworks-impression.js"></script>
+<script type="text/javascript" src="js/home.js"></script>{% endblock %}
 
 {% block body %}<div id="home-page">
       <div id="about">
@@ -268,23 +266,27 @@ See CC-LICENSE in this folder for more details.
         </div><!-- end #about-introduction -->
         <div id="about-presentation"></div>
         <script id="presentation-player-template" type="text/html">
-          <div id="presentation-player-intro">
-            <p id="player-intro-content">Press play to find out how.</p>
-            <a id="presentation-play-button" href="#">
-            <img src="/img/presentation/play-button-30.gif" />
-            </a>
-          </div>
           <div id="presentation-controls" style="display:none">
-            <img id="player-controls-back" src="/img/presentation/left-arrow-30.gif"
-              title="Left arrow control." class="presentation control" width="30" height="30"/>
+            <a id="player-back-control" href="#" title="Go back one slide.">
+              <img id="player-controls-back" src="/img/presentation/left-arrow-30.gif"
+                title="Left arrow control." class="presentation control" width="30" height="30" />
+            </a>
             <p id="player-controls-notice" class="presentation control">
             <span id="controls-notice-action"></span>
             <span id="controls-notice-index"></span>
             of
             <span id="controls-notice-length"></span>
             </p>
-            <img id="player-controls-next" src="/img/presentation/right-arrow-30.gif"
-              title="Right arrow control." class="presentation control" width="30" height="30"/>
+            <a id="player-forward-control" href="#" title="Go forward one slide.">
+              <img id="player-controls-next" src="/img/presentation/right-arrow-30.gif"
+                title="Right arrow control." class="presentation control" width="30" height="30" />
+            </a>
+          </div>
+          <div id="presentation-player-intro" style="display:none">
+            <p id="player-intro-content">Press play to find out how.</p>
+            <a id="presentation-play-button" href="#">
+            <img src="/img/presentation/play-button-30.gif" />
+            </a>
           </div>
         </script>
       </div><!-- end #about -->

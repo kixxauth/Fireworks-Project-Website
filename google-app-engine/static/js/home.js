@@ -53,9 +53,7 @@ SPEC.slideStyles = {
 , 'border-top'   : 'none'
 , 'border-left'  : 'none'
 , 'border-right' : 'none'
-, 'position'     : 'absolute'
 , 'font-size'    : '24px'
-, 'cursor'       : 'pointer'
 };
 
 (function (window) {
@@ -70,114 +68,111 @@ SPEC.slideStyles = {
           intervals: presentation_intervals
         })
 
-      , slides = j('div.presentation.slide')
-      , slide = j(slides[0])
+      , slide = j(j('div.presentation.slide').css(slide_styles)[0])
       , slide_width = slide.width()
+      , slide_height = slide.height()
       , player = j('#about-presentation')
-                   .html(j('#presentation-player-template').html())
-      , controls = j('#presentation-controls')
-      , back = j('#player-controls-back')
-      , next = j('#player-controls-next')
-      , notice_action = j('#controls-notice-action')
-      , notice_index = j('#controls-notice-index')
-
-      , player_offset = player.offset()
-      , controls_height, slide_border_width
+      , controls, back, next, notice_action, notice_index
+      , intro, slide_border_width
       ;
 
+    // Create and insert the player controls.
+    player.html(j('#presentation-player-template').html());
+    controls = j('#presentation-controls')
+    back = j('#player-controls-back');
+    next = j('#player-controls-next');
+    intro = j('#presentation-player-intro');
+    notice_action = j('#controls-notice-action');
+    notice_index = j('#controls-notice-index');
+
     function pause() {
+      notice_action.text('paused:');
       presentation.impression('stop');
-      notice_action.text('paused');
     }
 
     function play() {
+      notice_action.text('playing:');
       presentation.impression('play');
-      notice_action.text('playing');
     }
 
-    function last_slide() {
-      presentation
-        .unbind('click', pause)
-        .unbind('click', play)
-        ;
-
-      notice_action.text('done');
-      slides.css('cursor', 'default');
-    }
-
-    controls_height = (+controls.css('height').replace(/px/, '') +
-                       +controls.css('padding-top').replace(/px/, '') +
-                       +controls.css('padding-bottom').replace(/px/, ''));
-    slide_border_width = +slide.css('border-top-width').replace(/px/, '');
-
-    player
-      .css({
-          'width': slide_width +'px'
-
-        , 'height': (slide.height()+
-                     controls_height+
-                     (slide_border_width *2) +'px')
-
-        , 'border-width': slide_border_width
-
-        , 'border-style': slide.css('border-top-style')
-        , 'border-color': slide.css('border-top-color')
-
-        , 'cursor': 'pointer'
-        })
-      ;
-
-    controls
-      .css({'position': 'absolute'})
-      .offset({top: player_offset.top + player.height() - controls_height})
-      ;
-
-    slides 
-      .css(slide_styles)
-      .offset(player_offset)
-      ;
-
+    // Move the presentation slides into position.
     presentation
-      .toggle(pause, play)
+      .detach()
+      .appendTo(player)
       .bind('impressShowing', function (ev, index) {
         notice_index.text(index +1);
 
         // Playing the last slide.
         if (index === presentation_intervals.length) {
-          last_slide();
+          player
+            .unbind('click', pause)
+            .unbind('click', play)
+            .css('cursor', 'default')
+            ;
+          notice_action.text('done:');
         }
       })
       ;
 
-    back.click(function () {
-      presentation.impression('back');
-    });
-    next.click(function () {
-      presentation.impression('next');
-    });
+    slide_border_width = +slide.css('border-bottom-width').replace(/px/, '');
 
-    j('#presentation-player-intro').click(function () {
-      j('#presentation-player-intro').hide();
+    // Apply styles and event handlers.
+    player
+      .css({
+          'border-width': slide_border_width
+        , 'border-style': slide.css('border-bottom-style')
+        , 'border-color': slide.css('border-bottom-color')
+        , 'cursor': 'pointer'
+        })
+      .width(slide_width)
+      .height(slide_height+
+              controls.height()+
+              (+controls.css('padding-top').replace(/px/, ''))+
+              (+controls.css('padding-bottom').replace(/px/, ''))+
+              slide_border_width)
+      .click(function player_click() {
+        var self = j(this);
+        self.unbind('click', player_click);
+        intro.hide();
 
-      j('#controls-notice-length')
-        .text(presentation_intervals.length +1);
-
-      controls.show(); // Must show here to calculate width next.
-      j('#player-controls-notice').width((function () {
-        var left_margin = +back.css('margin-left').replace(/px/, '')
-          , right_margin = +next.css('margin-right').replace(/px/, '')
+        // Position and show the player controls.
+        controls
+          .css('top', (slide_height + slide_border_width) +'px')
+          // Must show controls now to calculate position and width.
+          .show()
           ;
 
-        return (slide_width -
-                back.width() -
-                next.width() -
-                left_margin -
-                right_margin);
-      }()));
-      play();
-      notice_index.text(1);
-      return false;
-    });
+        j('#player-controls-notice').width((function () {
+          var left_margin = +back.css('margin-left').replace(/px/, '')
+            , right_margin = +next.css('margin-right').replace(/px/, '')
+            ;
+
+          return (slide_width -
+                  back.width() -
+                  next.width() -
+                  left_margin -
+                  right_margin);
+        }()));
+        j('#controls-notice-length')
+          .text(presentation_intervals.length +1);
+
+        play();
+
+        j('#player-back-control').click(function () {
+          presentation.impression('back');
+          return false;
+        });
+        j('#player-forward-control').click(function () {
+          presentation.impression('next');
+          return false;
+        });
+        self.toggle(pause, play);
+
+        return false;
+      })
+      ;
+
+    intro.show();
   }
 
   window.jQuery(function (jq) {
