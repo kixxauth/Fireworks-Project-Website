@@ -26,37 +26,126 @@ See CC-LICENSE in this folder for more details.
 
 {% endcomment %}{% extends "base.html" %}
 
-{% block title %}Redefine your career - The Fireworks Project{% endblock %}
+{% block title %}Redefine your job - The Fireworks Project{% endblock %}
+
+{% block head %}<style type="text/css">
+  #description, #instructions, #join-form {
+    margin: 5em 5% 0;
+  }
+  h2.description.content, h2.instructions.content {
+    font-weight: bold;
+    font-size: 200%;
+    background: transparent url(css/img/pointer.gif) no-repeat;
+    line-height: 1;
+    padding: .2em 0 .2em 24px; /* left padding for arrow image */
+    margin-bottom: 1em;
+  }
+  p.description.content {
+    float: left;
+    margin: 0 5% 2em 24px;
+    width: 40%;
+  }
+  h4.description.content {
+    clear: both;
+    font-weight: bold;
+    font-size: 130%;
+    margin-left: 24px;
+  }
+  p.instructions.content {
+    margin-left: 24px;
+  }
+  #operating-agreement {
+    margin: 4em 20% 0 15%;
+    border: 3px solid #ccc;
+    padding: 0 2em 3em;
+    font-family: sans-serif;
+  }
+  #operating-agreement h1, #operating-agreement h2, #operating-agreement h3, #operating-agreement h4, #operating-agreement h5 {
+    margin-top: 1em;
+    font-weight: bold;
+  }
+  #operating-agreement h1, #operating-agreement h2, #operating-agreement h3 {
+    text-align: center;
+  }
+  #operating-agreement h1 {
+    font-size: 150%;
+  }
+  #operating-agreement h2 {
+    font-size: 130%;
+  }
+  #operating-agreement h3 {
+    font-size: 120%;
+  }
+  #operating-agreement h4 {
+    font-size: 110%;
+  }
+  #operating-agreement p {
+    margin-top: .3em;
+  }
+  #join-inputs, #form-disclaimer, #form-annotation {
+    float: left;
+    margin: 0 5% 2em 0;
+    width: 40%;
+  }
+  p.form.content.input {
+    margin-top: 1em;
+  }
+  label.form.content {
+    margin-right: 1em;
+  }
+  #name, #email {
+    width: 20em;
+    margin-top: .3em; /* in case of wrapping */
+    border: none;
+    border-bottom: 2px solid #ccc;
+  }
+  #submit-container {
+    margin-top: 2em;
+  }
+  #member-submit {
+    background: #f90 url(css/img/ff9900-fade-30.gif) repeat-x;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    color: #fff;
+    font-size: 120%;
+    font-weight: bold;
+    padding: .2em .5em .3em .5em;
+    -moz-border-radius: 0.3em;
+    -webkit-border-radius: 0.3em;
+    border-radius: 0.3em;
+  }
+</style>{% endblock %}
 
 {% block subheading %}Dream different.{% endblock %}
 
-{% block body %}<div id="join" class="content">
+{% block body %}<div id="join-page" class="content">
     <div id="description">
-      <p>
+      <h2 class="description content">Redefine your job.</h2>
+      <p class="description content">
       A career at The Fireworks Project is not like any other job you have ever
       had.  Our company was built from the ground up as an employee owned and
       employee managed corporation.  In fact we call ourselves a member owned
       corporation because all of us are a unique blend of shareholders and
       employees.
       </p>
-      <p>
+      <p class="description content">
       We didn't want venture capitalists and investors dictating our livelihoods,
       so we cut them out of the picture.  The downside is that we don't get paid
       for what we do until we make money doing it.  We feel that is a small price
       to pay for the freedom to have fun doing what we love to do and to have a
       life away from work to enjoy the stuff that really matters.
       </p>
-      <p>
-      <em>This is not for everyone, but it might be for you.</em>
-      </p>
+      <h4 class="description content">
+      This opportunity is not for everyone, but it might be for you.
+      </h4>
     </div><!-- description -->
     <div id="instructions">
-      <h1>How to become a member of The Fireworks Project.</h1>
-      <p>
-      Joining The Fireworks Project is simple.  All you have to do to become a
-      member is to make sure you understand our operating agreement below and
-      then sign on using your real name and email address in the form at the
-      bottom.
+      <h2 class="instructions content">
+        Become a member of The Fireworks Project.
+      </h2>
+      <p class="instructions content">
+      Make sure you understand our operating agreement below and then submit
+      the membership form at the bottom of this page.
       </p>
     </div><!-- instructions -->
     <div id="operating-agreement">
@@ -232,41 +321,34 @@ See CC-LICENSE in this folder for more details.
       </p>
     </div><!-- operating-agreement -->
     <form id="join-form" action="/members/" method="post" enctype="application/x-www-form-urlencoded">
-      <fieldset id="join-forms">
-        <table id="join-form-layout">
-          <tr>
-            <td>
-              <label for="name" accesskey="1">name:</label>
-            </td>
-            <td>
-              <input type="text" id="name" name="name" />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label for="email" accesskey="2">email:</label>
-            </td>
-            <td>
-              <input type="text" id="email" name="email" />
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
-              <input type="submit" value="Join Now" />
-            </td>
-          </tr>
-        </table>
-        <p id="form-disclaimer" class="content">
-        By entering your legal name here you are acknowledging your
-        agreement to the LIMITED LIABILITY COMPANY OPERATING AGREEMENT
-        of Fireworks Technology Projects, LLC (the "Company")
+      <fieldset id="join-inputs">
+        <p class="form content">
+          <input type="checkbox" id="acknowledgement" name="name" />
+          <label for="acknowledge" accesskey="1">
+            I have read and understand the LIMITED LIABILITY COMPANY OPERATING
+            AGREEMENT of Fireworks Technology Projects, LLC (the "Company")
+          </label>
+        </p>
+        <p class="form content input">
+          <label class="form content" for="name" accesskey="1">Full name:</label>
+          <input type="text" id="name" name="name" />
+        </p>
+        <p class="form content input">
+          <label class="form content" for="email" accesskey="2">Email:</label>
+          <input type="text" id="email" name="email" />
+        </p>
+        <p id="submit-container" class="form content">
+          <input id="member-submit" type="submit" value="Join Now" />
         </p>
       </fieldset>
-      <p id="form-annotation" class="content">
-      After submitting the form a welcoming member will attempt to contact you
-      via email and get you set up to start contributing. You'll learn the ins
-      and outs of how we collaborate online and how you can grow your ownership
-      stake in the company. 
+      <p id="form-disclaimer" class="content form">
+        By submitting this form you are acknowledging your agreement to the
+        LIMITED LIABILITY COMPANY OPERATING AGREEMENT of Fireworks Technology
+        Projects, LLC (the "Company")
+      </p>
+      <p id="form-annotation" class="content form">
+        After submitting the form one of our members will attempt to contact
+        you via email and get you set up to start contributing.
       </p>
     </form>
-  </div><!-- join -->{% endblock %}
+  </div><!-- end #join-page -->{% endblock %}
