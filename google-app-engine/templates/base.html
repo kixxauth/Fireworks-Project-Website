@@ -12,8 +12,9 @@ http://docs.djangoproject.com/en/1.2/topics/templates/#topics-templates
 License
 -------
 
-All source code in this file is licensed under the MIT license unless
-otherwise noted in the source file itself.
+All source code in this file is (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, is licensed under the MIT license.
 
 See MIT-LICENSE in this directory for details.
 
@@ -35,7 +36,7 @@ See CC-LICENSE in this folder for more details.
 </head>
 <body id="fireworks-project">
   <div id="container">
-    <div id="header">
+    <div id="header" class="content container">
       <h1 id="heading">
          The Fireworks Project
         <a id="heading-link" href="/" title="Back to the home page.">
@@ -45,7 +46,7 @@ See CC-LICENSE in this folder for more details.
       </h1>
       <h2 id="subheading">{% block subheading %}Dream big.{% endblock %}</h2>
     </div><!-- end #header -->
-    <ul id="navigation">
+    <ul id="navigation" class="content container">
       <li class="navigation">
         <a href="/" title="The Fireworks Project home page." class="navigation">home</a>
       </li>
@@ -60,7 +61,7 @@ See CC-LICENSE in this folder for more details.
       </li>
     </ul><!-- end #navigation -->
     {% block body %}{% endblock %}
-    <div id="footer">
+    <div id="footer" class="content container">
       <div id="creative-commons-license">
         <a id="creative-commons-image" href="http://creativecommons.org/licenses/by-sa/3.0/">
         <img alt="Creative Commons License" height="31" width="88"

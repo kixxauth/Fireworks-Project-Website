@@ -12,8 +12,9 @@ http://docs.djangoproject.com/en/1.2/topics/templates/#topics-templates
 License
 -------
 
-All source code in this file is licensed under the MIT license unless
-otherwise noted in the source file itself.
+All source code in this file is (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, is licensed under the MIT license.
 
 See MIT-LICENSE in this directory for details.
 
@@ -29,13 +30,10 @@ See CC-LICENSE in this folder for more details.
 {% block title %}Redefine your job - The Fireworks Project{% endblock %}
 
 {% block head %}<style type="text/css">
-  #description, #instructions, #join-form, #response-page {
-    margin: 5em 5% 0;
-  }
   h2.description.content, h2.instructions.content {
     font-weight: bold;
     font-size: 200%;
-    background: transparent url(css/img/pointer.gif) no-repeat;
+    background: transparent url(/css/img/pointer.gif) no-repeat;
     line-height: 1;
     padding: .2em 0 .2em 24px; /* left padding for arrow image */
     margin-bottom: 1em;
@@ -51,15 +49,20 @@ See CC-LICENSE in this folder for more details.
     font-size: 130%;
     margin-left: 24px;
   }
+  #instructions {
+    margin-top: 3em;
+  }
   p.instructions.content {
     margin-left: 24px;
     font-size: 130%;
   }
   #operating-agreement {
-    margin: 4em 20% 0 15%;
+    margin-top: 4em;
     border: 3px solid #ccc;
     padding: 0 2em 3em;
     font-family: sans-serif;
+    height: 300px; /* force scroll bars */
+    overflow-y: scroll;
   }
   #operating-agreement h1, #operating-agreement h2, #operating-agreement h3, #operating-agreement h4, #operating-agreement h5 {
     margin-top: 1em;
@@ -82,6 +85,10 @@ See CC-LICENSE in this folder for more details.
   }
   #operating-agreement p {
     margin-top: .3em;
+  }
+  #join-form {
+    overflow: hidden;
+    margin-top: 3em;
   }
   #join-inputs, #form-disclaimer, #form-annotation {
     float: left;
@@ -107,7 +114,7 @@ See CC-LICENSE in this folder for more details.
     margin-top: 2em;
   }
   #member-submit {
-    background: #f90 url(css/img/ff9900-fade-30.gif) repeat-x;
+    background: #f90 url(/css/img/ff9900-fade-30.gif) repeat-x;
     cursor: pointer;
     border: 1px solid #ccc;
     color: #fff;
@@ -150,7 +157,7 @@ See CC-LICENSE in this folder for more details.
     margin-top: 1em;
   }
   button.ajax.error {
-    background: #f90 url(css/img/ff9900-fade-30.gif) repeat-x;
+    background: #f90 url(/css/img/ff9900-fade-30.gif) repeat-x;
     cursor: pointer;
     border: 1px solid #ccc;
     color: #fff;
@@ -309,7 +316,7 @@ See CC-LICENSE in this folder for more details.
 
 {% block subheading %}Dream different.{% endblock %}
 
-{% block body %}<div id="join-page" class="content">
+{% block body %}<div id="join-page" class="inner content container">
     <div id="description">
       <h2 class="description content">Redefine your job.</h2>
       <p class="description content">
@@ -554,7 +561,7 @@ See CC-LICENSE in this folder for more details.
       </p>
     </div>
   </div><!-- end #join-page -->
-  <div id="response-page" style="display:none">
+  <div id="response-page" class="inner content container" style="display:none">
     <h1 class="response header">Contratulations!</h1>
     <h2 class="response header">You&#39;re now an official member of The Fireworks Project.</h2>
     <p class="response message">

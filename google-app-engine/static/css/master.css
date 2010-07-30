@@ -1,3 +1,9 @@
+/*
+ * All source code in this file is (c) 2009 - 2010 by contributors to The
+ * Fireworks Project Inc. (http://www.fireworksproject.com) and, unless
+ * otherwise indicated, is licensed under the MIT license.
+ */
+
 /* Import font from Google Fonts. */
 @import url(http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold);
 
@@ -107,10 +113,9 @@ a {
  */
 #navigation {
   position: absolute;
-  top: 0;
+  top: 1em;
   right: 5%; /* match right and left margin of header container */
   list-style: none;
-  margin-top: 1em;
 }
 
 #navigation li.navigation {
@@ -119,11 +124,29 @@ a {
   margin-left: 1.5em;
   border-bottom: 2px solid #f90;
   line-height: 1;
-  padding: .2em 0 .3em;
 }
 #navigation li.navigation a.navigation {
   display: block;
   color: #777;
+  padding: .2em 0 .3em;
+}
+
+/* Global content container.
+ * -------------------------
+ */
+#container { /* The body element. */
+  /* IE doesn't like margin: auto; so we have to do this instead. */
+  text-align: center;
+}
+.content.container {
+  /* re-align the text back to the left. */
+  text-align: left;
+}
+div.inner.content.container {
+  /* Each page has a div.outer.container
+   * that forms the main content container. */
+  width: 900px;
+  margin: 3em auto 0;
 }
 
 /* Global footer.

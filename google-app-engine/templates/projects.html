@@ -12,8 +12,9 @@ http://docs.djangoproject.com/en/1.2/topics/templates/#topics-templates
 License
 -------
 
-All source code in this file is licensed under the MIT license unless
-otherwise noted in the source file itself.
+All source code in this file is (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, is licensed under the MIT license.
 
 See MIT-LICENSE in this directory for details.
 
@@ -27,18 +28,58 @@ See CC-LICENSE in this folder for more details.
 {% endcomment %}{% extends "base.html" %}
 
 {% block title %}Open source software - The Fireworks Project{% endblock %}
+{% block head %}<style type="text/css">
+  #projects-page-heading {
+    font-weight: bold;
+    font-size: 200%;
+    background: transparent url(/css/img/pointer.gif) no-repeat;
+    line-height: 1;
+    padding: .2em 0 .2em 24px; /* left padding for arrow image */
+    margin-bottom: 1em;
+  }
+  #description {
+    margin-left: 24px;
+  }
+  #project-list {
+    list-style-type: none;
+    width: 400px;
+    position: relative;
+    left: 50%;
+    margin-left: -200px;
+    margin-top: 3em;
+  }
+  li.project.list {
+    margin-top: 2em;
+  }
+  p.project-name {
+    font-weight: bold;
+    font-size: 150%;
+    line-height: 1;
+    padding: .2em 0;
+    margin-bottom: .5em;
+  }
+  p.project-description, p.project-url {
+    font-weight: bold;
+  }
+</style>{% endblock %}
 
-{% block subheading %}Open source software.{% endblock %}
+{% block subheading %}Freedom.{% endblock %}
 
-{% block body %}<div id="projects" class="content">
+{% block body %}<div id="projects-page" class="inner content container">
+    <h1 id="projects-page-heading">
+      Open source software.
+    </h1>
     <div id="description">
       <p>
-      At The Fireworks Project we like to stay busy building stuff. We invite you
-      to browse through our current projects and let us know what you think.
+      At The Fireworks Project we like to stay busy building stuff. All of the
+      software we build is free and open source (FOSS). If you&#39;re a sofware
+      developer, we invite you to browse through our current projects and 
+      <a href="/join">join us</a>
+      in the effort.
       </p>
     </div><!-- description -->
     <ul id="project-list">
-      <li>
+      <li class="project list">
         <p class="project-name">DCube</p>
         <p class="project-description">
         Distributed descriptive graph data store.
@@ -49,8 +90,8 @@ See CC-LICENSE in this folder for more details.
           </a>
         </p>
       </li>
-      <li>
-        <p class="project-name">kixx</p>
+      <li class="project list">
+        <p class="project-name">Kixx</p>
         <p class="project-description">
         Modular Web Browser Plug-in Platform
         </p>
@@ -60,19 +101,8 @@ See CC-LICENSE in this folder for more details.
           </a>
         </p>
       </li>
-      <li>
-        <p class="project-name">DCubeJS</p>
-        <p class="project-description">
-        JavaScript library for DCube
-        </p>
-        <p class="project-url">
-          <a href="http://github.com/FireworksProject/DCubeJS">
-            github.com/FireworksProject/DCubeJS
-          </a>
-        </p>
-      </li>
-      <li>
-        <p class="project-name">kake</p>
+      <li class="project list">
+        <p class="project-name">Kake</p>
         <p class="project-description">
         A multilanguage build system in JavaScript.
         </p>
@@ -83,5 +113,5 @@ See CC-LICENSE in this folder for more details.
         </p>
       </li>
     </ul>
-  </div><!-- projects -->{% endblock %}
+  </div><!-- end #projects-page -->{% endblock %}
 

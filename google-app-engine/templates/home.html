@@ -12,8 +12,9 @@ http://docs.djangoproject.com/en/1.2/topics/templates/#topics-templates
 License
 -------
 
-All source code in this file is licensed under the MIT license unless
-otherwise noted in the source file itself.
+All source code in this file is (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, is licensed under the MIT license.
 
 See MIT-LICENSE in this directory for details.
 
@@ -27,13 +28,10 @@ See CC-LICENSE in this folder for more details.
 {% endcomment %}{% extends "base.html" %}
 
 {% block head %}<style type="text/css">
-  #about {
-    margin: 3em 5% 0; /* right and left margin matches header */
-  }
   #about-introduction {
     float: left;
-    width: 42em; /* this is big to wrap slide show on small screens */
-    margin: 5em 0; /* bottom margin is in case of auto-wrap slide show */
+    width: 474px;
+    margin-top: 5em;
   }
   #about-introduction h3.intro {
     font-size: 170%;
@@ -41,13 +39,12 @@ See CC-LICENSE in this folder for more details.
   }
   #about-introduction p.intro {
     font-size: 130%;
-  }
-  #about-introduction p.intro.first {
     margin-top: 1em;
   }
   #about-presentation {
     font-family: "good-dog-1", "good-dog-2", monospace;
     position: relative;
+    margin-left: 494px;
   }
   #presentation-player-intro {
     text-align: center;
@@ -85,7 +82,7 @@ See CC-LICENSE in this folder for more details.
   #journal-form {
     overflow: hidden;
     clear: both;
-    margin: 3em 5%; /* right and left margin matches header */
+    margin-top: 3em;
   }
   #journal-form-header {
     font-size: 180%;
@@ -251,16 +248,14 @@ See CC-LICENSE in this folder for more details.
 <script type="text/javascript" src="js/jquery.fireworks-impression.js"></script>
 <script type="text/javascript" src="js/home.js"></script>{% endblock %}
 
-{% block body %}<div id="home-page" class="content">
+{% block body %}<div id="home-page" class="inner content container">
       <div id="about">
         <div id="about-introduction">
           <h3 class="intro">Software that just works.</h3>
           <h3 class="intro">Personalized for the way you work.</h3>
           <h3 class="intro">At a price that works.</h3>
-          <p class="intro first">
-          It&#39;s time to think differently about your information systems.
-          </p>
           <p class="intro">
+          It&#39;s time to think differently about your information systems.
           Dream big and we&#39;ll build it.
           </p>
         </div><!-- end #about-introduction -->
@@ -290,7 +285,7 @@ See CC-LICENSE in this folder for more details.
           </div>
         </script>
       </div><!-- end #about -->
-      <form id="journal-form" class="journal" action="./datastore/subscribers/" method="post">
+      <form id="journal-form" class="journal" action="/datastore/subscribers/" method="post">
         <h3 id="journal-form-header" class="journal">
           Don&#39;t leave without subscribing to our free organizational
           development e-journal.
