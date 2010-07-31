@@ -184,6 +184,17 @@ See CC-LICENSE in this folder for more details.
 <script type="text/javascript" src="/js/jquery.js"></script>
 -->
 <script type="text/javascript">
+  if (typeof console === 'undefined') {
+    F = function () {};
+    console = {
+      log: F
+    , info: F
+    , error: F
+    , warn: F
+    , debug: F
+    , assert: F
+    };
+  }
   jQuery(function (jq) {
     var j = jq.noConflict(true)
       , showing_warning = false
@@ -199,28 +210,37 @@ See CC-LICENSE in this folder for more details.
                      'already exists. Try again with a different '+
                      'email address.';
 
+    function show_ajax_error_notice() {
+      var win = j(window);
+      j('#ajax-error')
+        .css('top', ((win.height() /2) + win.scrollTop()) +'px')
+        .show()
+        ;
+    }
+
     j.ajaxSetup({'beforeSend': function (xhr) {
       xhr.setRequestHeader('accept', 'application/json');
     }});
 
     j('#ajax-error').ajaxError(function (ev, xhr, options, err) {
-      var data, win = j(window);
+      var data;
+      console.debug('.ajaxError() fired');
       try {
         data = j.parseJSON(xhr.responseText);
       } catch (e) {
+        console.error(e);
+        console.warn('.ajaxError() response is not valid JSON');
         j('#ajax-error-content').text(ajax_error_msg.unexpected);
+        data = {};
       }
+      console.debug('.ajaxError() response message is', data.message);
       if (data.message === 'member already exists') {
         j('#ajax-error-content').text(ajax_error_msg.member_exists);
       }
       else {
         j('#ajax-error-content').text(ajax_error_msg.unexpected);
       }
-
-      j(this)
-        .css('top', ((win.height() /2) + win.scrollTop()) +'px')
-        .show()
-        ;
+      show_ajax_error_notice();
     });
 
     j('#ajax-error-dismiss').click(function () {
@@ -228,12 +248,11 @@ See CC-LICENSE in this folder for more details.
     });
 
     function ajax_success(data, status, xhr) {
+      console.debug('ajax_success() fired');
       if (xhr.status !== 201) {
+        console.warn('response status is ', xhr.status);
         j('#ajax-error-content').text(ajax_error_msg.unexpected);
-        j('#ajax-error')
-          .css('top', ((win.height() /2) + win.scrollTop()) +'px')
-          .show()
-          ;
+        show_ajax_error_notice();
         return;
       }
       j('#join-page').hide();
@@ -304,6 +323,7 @@ See CC-LICENSE in this folder for more details.
         return false;
       }
 
+      console.debug('Posting data to '+ window.location.href +'/datastore/members/');
       j.post(
             '/datastore/members/'
           , j(this).serialize()
