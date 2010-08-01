@@ -4,9 +4,6 @@
  * otherwise indicated, is licensed under the MIT license.
  */
 
-/* Import font from Google Fonts. */
-@import url(http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold);
-
 /* Reset
  * -----
  */
@@ -70,7 +67,12 @@ body {
   font-size: .9em;
   color: #222;
   line-height: 1.5;
+  visibility: hidden;
   background: #fff;
+}
+
+.wf-active body {
+  visibility: visible;
 }
 
 a {
