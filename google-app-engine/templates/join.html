@@ -184,84 +184,75 @@ See CC-LICENSE in this folder for more details.
 <script type="text/javascript" src="/js/jquery.js"></script>
 -->
 <script type="text/javascript">
-  if (typeof console === 'undefined') {
-    F = function () {};
-    console = {
-      log: F
-    , info: F
-    , error: F
-    , warn: F
-    , debug: F
-    , assert: F
-    };
-  }
-  jQuery(function (jq) {
-    var j = jq.noConflict(true)
-      , showing_warning = false
-      , ajax_error_msg = {}
-      ;
+/*jslint
+  browser: true
+, onevar: true
+, undef: true
+, nomen: true
+, eqeqeq: true
+, plusplus: true
+, bitwise: true
+, regexp: true
+, newcap: true
+, immed: true
+, strict: true
+, maxlen: 80
+*/
 
-    ajax_error_msg
-      .unexpected = 'Awww darn! There was some kind of unexpected error '+
-                    'while processing your submission. Try refreshing '+
-                    'the page and submit it again.';
-    ajax_error_msg
-      .member_exists = 'Hmmmm... It seems a member with that email address '+
-                     'already exists. Try again with a different '+
+/*global
+  window: false
+, console: true
+*/
+
+// ECMAScript 5 strict mode.
+"use strict";
+
+// Page specifications.
+var SPEC = {};
+
+// Error messages.
+SPEC.messages = {};
+SPEC.messages.unexpected  = 'Awww darn! There was some kind of unexpected '+
+                    'error while processing your submission. Try '+
+                    'refreshing the page and submit it again.';
+
+SPEC.messages.member_exists = 'Hmmmm... It seems a member with that email '+
+                     'address already exists. Try again with a different '+
                      'email address.';
 
-    function show_ajax_error_notice() {
-      var win = j(window);
-      j('#ajax-error')
-        .css('top', ((win.height() /2) + win.scrollTop()) +'px')
-        .show()
-        ;
-    }
+// Create a console object if there is not an ambient one.
+if (typeof console === 'undefined') {
+  var F = function () {};
+  console = {
+    log: F
+  , info: F
+  , error: F
+  , warn: F
+  , debug: F
+  , assert: F
+  };
+}
 
+// Page script is composed inside a closure.
+(function (window) {
+   // jQuery is assigned to j
+   var j = window.jQuery.noConflict(true)
+     , messages = window.SPEC.messages
+     ;
+
+    // The server will send HTML if we don't specify application/json.
     j.ajaxSetup({'beforeSend': function (xhr) {
       xhr.setRequestHeader('accept', 'application/json');
     }});
 
-    j('#ajax-error').ajaxError(function (ev, xhr, options, err) {
-      var data;
-      console.debug('.ajaxError() fired');
-      try {
-        data = j.parseJSON(xhr.responseText);
-      } catch (e) {
-        console.error(e);
-        console.warn('.ajaxError() response is not valid JSON');
-        j('#ajax-error-content').text(ajax_error_msg.unexpected);
-        data = {};
-      }
-      console.debug('.ajaxError() response message is', data.message);
-      if (data.message === 'member already exists') {
-        j('#ajax-error-content').text(ajax_error_msg.member_exists);
-      }
-      else {
-        j('#ajax-error-content').text(ajax_error_msg.unexpected);
-      }
-      show_ajax_error_notice();
-    });
 
-    j('#ajax-error-dismiss').click(function () {
-      j('#ajax-error').hide();
-    });
+  // Notification constructor for form validation errors.
+  function make_submit_notice() {
+    var self = {}, showing = false;
 
-    function ajax_success(data, status, xhr) {
-      console.debug('ajax_success() fired');
-      if (xhr.status !== 201) {
-        console.warn('response status is ', xhr.status);
-        j('#ajax-error-content').text(ajax_error_msg.unexpected);
-        show_ajax_error_notice();
-        return;
-      }
-      j('#join-page').hide();
-      j('#response-page').show();
-    }
-
-    function show_submit_warning(message) {
+    self.show = function (message) {
       j('#submit-warning-content').text(message);
-      if (showing_warning) {
+      if (showing) {
         return;
       }
       var ctn = j('#submit-warning')
@@ -277,61 +268,150 @@ See CC-LICENSE in this folder for more details.
           })
         .fadeIn(400)
         ;
-      showing_warning = true;
-    }
+      showing = true;
+    };
 
-    function hide_submit_warning() {
-      if (!showing_warning) {
+    self.hide = function () {
+      if (!showing) {
         return;
       }
       j('#submit-warning').fadeOut(400);
-      showing_warning = false;
+      showing = false;
+    };
+
+    return self;
+  }
+
+  // Notice constructor for AJAX form submission.
+  function make_ajax_notice() {
+    var self = {}, showing = false;
+
+    self.show = function (message) {
+      j('#ajax-error-content').text(message);
+      if (showing) {
+        return;
+      }
+      var win = j(window);
+      j('#ajax-error')
+        .css('top', ((win.height() /2) + win.scrollTop()) +'px')
+        .show()
+        ;
+      showing = true;
+    };
+
+    self.hide = function () {
+      if (!showing) {
+        return;
+      }
+      j('#ajax-error').hide();
+      showing = false;
+    };
+
+    return self;
+  }
+
+  // Constructor for AJAX form submission module.
+  function make_submitter(submit_notice, ajax_notice) {
+    // Flag used to prevent parallel form submission.
+    var submitting = false;
+
+    // Handle all jQuery AJAX error events.
+    j('#ajax-error').ajaxError(function (ev, xhr, options, err) {
+      console.debug('.ajaxError() fired');
+      submitting = false;
+      var data;
+      try {
+        data = j.parseJSON(xhr.responseText);
+      } catch (e) {
+        console.error(e);
+        console.warn('.ajaxError() response is not valid JSON');
+        ajax_notice.show(messages.unexpected);
+        return;
+      }
+      console.debug('.ajaxError() response message is "'+ data.message +'"');
+      if (data.message === 'member already exists') {
+        ajax_notice.show(messages.member_exists);
+        return;
+      }
+      ajax_notice.show(messages.unexpected);
+    });
+
+    // There is a dismiss button on the AJAX error notification.
+    j('#ajax-error-dismiss').click(function () {
+      ajax_notice.hide();
+    });
+
+    // Handle successful AJAX form submission.
+    function success(data, textStatus, xhr) {
+      console.debug('ajax_success() fired');
+      submitting = false;
+      xhr = xhr || {}; // Avoid error.
+      if (xhr.status !== 201) {
+        console.warn('response status is ', xhr.status);
+        ajax_notice.show(messages.unexpected);
+        return;
+      }
+      j('#join-page').hide();
+      j('#response-page').show();
     }
 
-    j('#join-form').submit(function () {
-      var ack = j('#acknowledgement')[0].checked
+    // Event handler function for jQuery form submit event.
+    // Client side form validation.
+    return function () {
+      if (submitting) {
+        return false;
+      }
+      var ack = j('#acknowledgment')[0].checked
         , name = j('#name').val()
         , email = j('#email').val()
         ;
 
-      hide_submit_warning();
+      submit_notice.hide();
 
       if (!ack) {
-        show_submit_warning("Don't forget to check the acknowledgement box.");
-        j('#acknowledgement')
+        submit_notice.show("Don't forget to check the acknowledgment box.");
+        j('#acknowledgment')
           .focus()
-          .change(hide_submit_warning)
+          .change(submit_notice.hide)
           ;
         return false;
       }
       if (!name) {
-        show_submit_warning("Don't forget to include your full name.");
+        submit_notice.show("Don't forget to include your full name.");
         j('#name')
           .focus()
-          .change(hide_submit_warning)
-          .keydown(hide_submit_warning)
+          .change(submit_notice.hide)
+          .keydown(submit_notice.hide)
           ;
         return false;
       }
       if (!email) {
-        show_submit_warning("Don't forget to include your email address.");
+        submit_notice.show("Don't forget to include your email address.");
         j('#email')
           .focus()
-          .change(hide_submit_warning)
-          .keydown(hide_submit_warning)
+          .change(submit_notice.hide)
+          .keydown(submit_notice.hide)
           ;
         return false;
       }
 
-      console.debug('Posting data to '+ window.location.href +'/datastore/members/');
+      console.debug('Posting data to '+ window.location.href +
+                    '/datastore/members/');
+      submitting = true;
       j.post(
             '/datastore/members/'
           , j(this).serialize()
-          , ajax_success
+          , success
           , 'json');
       return false;
-    });
+    };
+  }
+
+  j(function (jq) {
+    j('#join-form')
+      .submit(make_submitter(make_submit_notice(), make_ajax_notice()));
   });
+}(window));
 </script>{% endblock %}
 
 {% block subheading %}Dream different.{% endblock %}
@@ -546,7 +626,7 @@ See CC-LICENSE in this folder for more details.
           <p id="submit-warning-content"></p>
         </div>
         <p class="form content">
-          <input type="checkbox" id="acknowledgement" name="acknowledgement" value="true" />
+          <input type="checkbox" id="acknowledgment" name="acknowledgment" value="true" />
           <label for="acknowledge" accesskey="1">
             I have read and understand the LIMITED LIABILITY COMPANY OPERATING
             AGREEMENT of Fireworks Technology Projects, LLC (the "Company")
@@ -582,7 +662,7 @@ See CC-LICENSE in this folder for more details.
     </div>
   </div><!-- end #join-page -->
   <div id="response-page" class="inner content container" style="display:none">
-    <h1 class="response header">Contratulations!</h1>
+    <h1 class="response header">Congratulations!</h1>
     <h2 class="response header">You&#39;re now an official member of The Fireworks Project.</h2>
     <p class="response message">
       Another member will contact you by email within 48 hours to help you get started.

@@ -26,6 +26,17 @@
 
 // ECMAScript 5 strict mode.
 "use strict";
+if (typeof console === 'undefined') {
+  F = function () {};
+  console = {
+    log: F
+  , info: F
+  , error: F
+  , warn: F
+  , debug: F
+  , assert: F
+  };
+}
 
 var SPEC = {};
 
@@ -61,6 +72,8 @@ SPEC.slideStyles = {
     , spec = window.SPEC || {}
     , presentation_intervals = spec.slideShowIntervals || []
     , slide_styles = spec.slideStyles || {}
+
+    , show_submit_notice
     ;
 
   function setup_slideshow() {
@@ -184,6 +197,32 @@ SPEC.slideStyles = {
     j(window).scrollTop(0);
 
     setup_slideshow();
+
+    submit_notice = (function () {
+      var showing = false, self = {};
+      self.show = function (message) {
+        j('#submit-notice-content').text(message);
+        if (showing) {
+          return;
+        }
+        j('#submit-notice') 
+          .fadeIn(400)
+          ;
+        showing = true;
+      };
+
+      self.hide = function () {
+        if (!showing) {
+          return;
+        }
+        j('#submit-notice').fadeOut(400);
+        showing = false;
+      };
+
+      return self;
+    }());
+
+    j('#journal-form').submit(submit_form);
   });
 }(window));
 

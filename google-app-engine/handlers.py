@@ -234,7 +234,7 @@ class DatastoreMembers(DatastoreHandler):
     with the POST data already exists, and if not, creates it.
     """
     data = self.request.form
-    ack = data.get('acknowledgement')
+    ack = data.get('acknowledgment')
     if not ack:
       e = self.response_error('ValidationError', 'missing "acknowlegement" property')
       return self.respond(409, e)
