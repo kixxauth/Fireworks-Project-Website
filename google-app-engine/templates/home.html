@@ -27,11 +27,208 @@ See CC-LICENSE in this folder for more details.
 
 {% endcomment %}{% extends "base.html" %}
 
+{% block top %}<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<!--
+<script type="text/javascript" src="/js/jquery.js"></script>
+-->
+<script type="text/javascript" src="js/jquery.fireworks-impression.js"></script>
+<script type="text/javascript">
+/*jslint
+  browser: true
+, onevar: true
+, undef: true
+, nomen: true
+, eqeqeq: true
+, plusplus: true
+, bitwise: true
+, regexp: true
+, newcap: true
+, immed: true
+, strict: true
+, maxlen: 80
+*/
+
+/*global
+  window: false
+, console: true
+*/
+
+// ECMAScript 5 strict mode.
+"use strict";
+
+// Page specifications.
+var SPEC = {};
+
+SPEC.slideShowIntervals = [
+  7000
+, 5500
+, 9000
+, 7000
+, 6500
+, 7000
+, 8000
+, 10500
+, 7500
+, 9500
+, 8500
+, 7500
+];
+
+// Create a console object if there is not an ambient one.
+if (typeof console === 'undefined') {
+  var F = function () {};
+  console = {
+    log: F
+  , info: F
+  , error: F
+  , warn: F
+  , debug: F
+  , assert: F
+  };
+}
+
+// Page script is composed inside a closure.
+(function (window) {
+  // jQuery is assigned to j
+  var j = window.jQuery.noConflict(true)
+    , DOM_loaded = true
+    , WF_loaded = false
+    , presentation_intervals = window.SPEC.slideShowIntervals
+    , presentation
+    ;
+
+  WebFontConfig.typekit = {id: 'fcq2zzl'};
+
+  function slide_show_setup() {
+    console.debug('slide_show_setup() triggered');
+    if (!DOM_loaded || !WF_loaded) {
+      console.debug('DOM_loaded =', DOM_loaded);
+      console.debug('WF_loaded =', WF_loaded);
+      return;
+    }
+    console.debug('slide_show_setup() happening');
+
+    var presentation_player = j('#about-presentation')
+      , slide_height = 0
+      , controls = j('#presentation-controls')
+      , controls_height
+      , controls_padding = 12 // top + bottom padding
+      , controls_margins = 40 // left + right margin
+      , controls_widths = 60 // forward + back controls
+      , border_width = 2 // Presentation border
+      ;
+
+    j('div.presentation.slide')
+      .each(function (i) {
+        var h = j(this).show().height();
+        if (h > slide_height) {
+          slide_height = h;
+        }
+      })
+      .hide()
+      .css('height', slide_height +'px')
+      ;
+
+    controls_height = controls.show().height() + controls_padding;
+    j('#player-controls-notice')
+      .width(presentation_player.width()
+             - controls_margins
+             - controls_widths);
+    controls.hide();
+    console.debug('Slide show height', slide_height);
+    console.debug('Controls height', controls_height);
+    presentation_player
+      .css('border', '2px dashed #aaa')
+      .height(slide_height + controls_height);
+    j('#presentation-player-intro')
+      .click(function () {
+        var controls_notice_action = j('#controls-notice-action')
+          , controls_notice_index = j('#controls-notice-index')
+          ;
+
+        j('#controls-notice-length').text(presentation_intervals.length);
+
+        j(this).hide();
+        controls
+          .css('top', (slide_height + border_width) +'px')
+          .show();
+        presentation
+          .impression('play')
+          .css('cursor', 'pointer')
+          .toggle(
+            function () {
+              controls_notice_action.text('stopped on:');
+              presentation.impression('stop');
+            },
+            function () {
+              controls_notice_action.text('playing:');
+              presentation.impression('play');
+              })
+          .bind('impressShowing', function (ev, i) {
+            controls_notice_index.text(i +1);
+          })
+          ;
+        controls_notice_action.text('playing:');
+        controls_notice_index.text('1');
+        return false;
+      })
+      .show();
+  }
+
+  WebFontConfig.active = function () {
+    console.log('WebFont active event');
+    WF_loaded = true;
+    slide_show_setup();
+  };
+
+  j(function (j) {
+    presentation = j('#presentation').impression({
+      intervals: presentation_intervals 
+    });
+
+    j('#about').css('text-align', 'left');
+    j('#about-introduction').css({
+        width          : '48%'
+      , overflow       : 'hide'
+      , 'margin-top'   : '3em'
+      , 'margin-right' : '0'
+      , 'margin-left'  : '0'
+      , 'margin-bottom': '0'
+      , 'float'        : 'left'
+      });
+    j('#about-presentation')
+      .html(j('#presentation-player-template').html())
+      .append(presentation)
+      ;
+    j('div.presentation.slide')
+      .css({
+        'width': '100%'
+      , 'height': '100%'
+      , 'float': 'none'
+      , 'border-top': 'none'
+      , 'border-right': 'none'
+      , 'border-left': 'none'
+      , 'margin-top': '0'
+      , 'margin-left': '0'
+      , 'margin-bottom': '0'
+      , 'margin-right': '0'
+      });
+
+    DOM_loaded = true;
+    slide_show_setup();
+  });
+}(window));
+</script>{% endblock %}
+
 {% block head %}<style type="text/css">
+  #about {
+    text-align: center;
+  }
   #about-introduction {
-    float: left;
-    width: 474px;
-    margin-top: 5em;
+    width: 40em;
+    overflow: show;
+    margin: auto;
+    text-align: left;
   }
   #about-introduction h3.intro {
     font-size: 170%;
@@ -43,19 +240,19 @@ See CC-LICENSE in this folder for more details.
   }
   #about-presentation {
     font-family: "good-dog-1", "good-dog-2", monospace;
+    margin-left: 50%;
     position: relative;
-    margin-left: 494px;
   }
   #presentation-player-intro {
     text-align: center;
     font-size: 32px;
-    width: 250px;
-    height: 182px; /*Flow height calculated with Firebug with 7px of contingency. */
+    width: 12em;
     position: absolute;
     left: 50%;
     top: 40%;
-    margin-left: -125px;
-    margin-top: -91px;
+    margin-left: -6em;
+    margin-top: -2em;
+    cursor: pointer;
   }
   #player-intro-content {
     margin-bottom: 1em;
@@ -64,20 +261,17 @@ See CC-LICENSE in this folder for more details.
     position: absolute;
     font-size: 24px;
     padding: 6px 0;
+    line-height: 1.5;
+    margin-left: 20px;
   }
-  #player-controls-back {
+  #player-back-control, #player-forward-control {
+    display: block;
     float: left;
-    margin-left: 10px;
-    cursor: pointer;
+    line-height: 0;
   }
   #player-controls-notice {
     float: left;
     text-align: center;
-  }
-  #player-controls-next {
-    float: right;
-    margin-right: 10px;
-    cursor: pointer;
   }
   #journal-form {
     overflow: hidden;
@@ -134,8 +328,8 @@ See CC-LICENSE in this folder for more details.
    * ---
    */
   div.presentation.slide {
-    width: 400px;
-    height: 320px;
+    width: 20em;
+    height: 16em;
     float: left;
     border: 2px dashed #aaa;
     margin-left: 2em;
@@ -170,7 +364,7 @@ See CC-LICENSE in this folder for more details.
     margin: 0 1em 1em;
   }
   #slide-3-content-1 {
-    margin: 1em 1em 0;
+    margin: 1em 1em .5em;
   }
   #slide-3-image {
     margin-left: 18%;
@@ -179,7 +373,7 @@ See CC-LICENSE in this folder for more details.
     margin: 1em;
   }
   #slide-4-content-1 {
-    margin: .5em 1em;
+    margin: .5em 1em 1em;
   }
   #slide-4-image {
     margin-left: 14%;
@@ -226,23 +420,18 @@ See CC-LICENSE in this folder for more details.
     margin: 1.5em 0 0 1em;
   }
   #slide-10-content-1 {
-    margin: .5em;
+    margin: .5em 1em 1em;
   }
   #slide-10-image {
     margin-left: 18%;
   }
   #slide-12-content-1 {
-    margin: .5em;
+    margin: .5em 1em 1em;
   }
   #slide-12-image {
     margin-left: 18%;
   }
-</style>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<!--
-<script type="text/javascript" src="/js/jquery.js"></script>
--->
-<script type="text/javascript" src="js/jquery.fireworks-impression.js"></script>{% endblock %}
+</style>{% endblock %}
 
 {% block body %}<div id="home-page" class="inner content container">
       <div id="about">
@@ -263,10 +452,8 @@ See CC-LICENSE in this folder for more details.
                 title="Left arrow control." class="presentation control" width="30" height="30" />
             </a>
             <p id="player-controls-notice" class="presentation control">
-            <span id="controls-notice-action"></span>
-            <span id="controls-notice-index"></span>
-            of
-            <span id="controls-notice-length"></span>
+            <span id="controls-notice-action"></span> <span id="controls-notice-index"></span>
+             of <span id="controls-notice-length"></span>
             </p>
             <a id="player-forward-control" href="#" title="Go forward one slide.">
               <img id="player-controls-next" src="/img/presentation/right-arrow-30.gif"

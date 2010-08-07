@@ -67,8 +67,11 @@ body {
   font-size: .9em;
   color: #222;
   line-height: 1.5;
-  visibility: hidden;
   background: #fff;
+}
+
+.wf-inactive body {
+  visibility: hidden;
 }
 
 .wf-active body {
@@ -136,19 +139,11 @@ a {
 /* Global content container.
  * -------------------------
  */
-#container { /* The body element. */
-  /* IE doesn't like margin: auto; so we have to do this instead. */
-  text-align: center;
-}
-.content.container {
-  /* re-align the text back to the left. */
-  text-align: left;
-}
 div.inner.content.container {
   /* Each page has a div.outer.container
    * that forms the main content container. */
-  width: 900px;
-  margin: 3em auto 0;
+  width: 80%;
+  margin: 3em 9.9% 0;
 }
 
 /* Global footer.
