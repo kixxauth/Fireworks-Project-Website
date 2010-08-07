@@ -1042,7 +1042,7 @@ class DatastoreMembers(unittest.TestCase):
 
     # Create the new member entity.
     ff36.body = urllib.urlencode({
-        'acknowledgement': 'true',
+        'acknowledgment': 'true',
         'name': 'Delete Me',
         'email': '%s@example.com'% random_email()
       })
@@ -1051,7 +1051,7 @@ class DatastoreMembers(unittest.TestCase):
 
     # Repeat for AJAX
     ff36_ajax.body = urllib.urlencode({
-        'acknowledgement': 'true',
+        'acknowledgment': 'true',
         'name': 'Delete Me',
         'email': '%s@example.com'% random_email()
       })
@@ -1059,7 +1059,7 @@ class DatastoreMembers(unittest.TestCase):
     ff36_ajax.response_status = 201
 
     # Make another copy of the test configs to test a form submission with no
-    # 'acknowledgement' data field.
+    # 'acknowledgment' data field.
     ff36_noack = test_utils.TestRequest(ff36)
     ff36_noack.body = urllib.urlencode({
         'name': 'Delete Me',
@@ -1082,7 +1082,7 @@ class DatastoreMembers(unittest.TestCase):
     # 'name' data field.
     ff36_noname = test_utils.TestRequest(ff36)
     ff36_noname.body = urllib.urlencode({
-        'acknowledgement': 'true',
+        'acknowledgment': 'true',
         'name': '',
         'email': '%s@example.com'% random_email()
       })
@@ -1092,7 +1092,7 @@ class DatastoreMembers(unittest.TestCase):
     # Repeat for AJAX
     ff36_noname_ajax = test_utils.TestRequest(ff36_ajax)
     ff36_noname_ajax.body = urllib.urlencode({
-        'acknowledgement': 'true',
+        'acknowledgment': 'true',
         'name': '',
         'email': '%s@example.com'% random_email()
       })
@@ -1104,7 +1104,7 @@ class DatastoreMembers(unittest.TestCase):
     # missing the 'email' data field.
     ff36_noemail = test_utils.TestRequest(ff36)
     ff36_noemail.body = urllib.urlencode({
-        'acknowledgement': 'true',
+        'acknowledgment': 'true',
         'name': 'Delete Me'
       })
     ff36_noemail.headers['Content-Length'] = str(len(ff36_noemail.body))
@@ -1113,7 +1113,7 @@ class DatastoreMembers(unittest.TestCase):
     # Repeat for AJAX
     ff36_noemail_ajax = test_utils.TestRequest(ff36_ajax)
     ff36_noemail_ajax.body = urllib.urlencode({
-        'acknowledgement': 'true',
+        'acknowledgment': 'true',
         'name': 'Delete Me'
       })
     ff36_noemail_ajax.headers['Content-Length'] = \

@@ -173,7 +173,8 @@ class DatastoreHandler(Handler):
 
   # Prepare and send the response.
   def respond(self, status, data=None):
-    if 'application/json' in self.request.accept_mimetypes:
+    if self.request.accept_mimetypes.best_match(
+        ['application/json', 'text/html']) == 'application/json':
       if data is None:
         response = self.out()
       else:
