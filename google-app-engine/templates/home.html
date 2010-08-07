@@ -173,6 +173,17 @@ if (typeof console === 'undefined') {
         return false;
       })
       .show();
+
+    j('#player-back-control').click(function () {
+      presentation.impression('back');
+      return false;
+    });
+    j('#player-forward-control').click(function () {
+      presentation.impression('next');
+      return false;
+    });
+
+    j('#journal-form').show();
   }
 
   WebFontConfig.active = function () {
@@ -185,6 +196,8 @@ if (typeof console === 'undefined') {
     presentation = j('#presentation').impression({
       intervals: presentation_intervals 
     });
+
+    j('#journal-form').hide();
 
     j('#about').css('text-align', 'left');
     j('#about-introduction').css({
@@ -242,16 +255,12 @@ if (typeof console === 'undefined') {
     font-family: "good-dog-1", "good-dog-2", monospace;
     margin-left: 50%;
     position: relative;
+    width: 49%;
   }
   #presentation-player-intro {
     text-align: center;
     font-size: 32px;
-    width: 12em;
-    position: absolute;
-    left: 50%;
-    top: 40%;
-    margin-left: -6em;
-    margin-top: -2em;
+    margin: 2em 1em 0;
     cursor: pointer;
   }
   #player-intro-content {
@@ -281,7 +290,7 @@ if (typeof console === 'undefined') {
   #journal-form-header {
     font-size: 180%;
     background: transparent url(css/img/pointer.gif) no-repeat;
-    line-height: 1;
+    line-height: 1.3;
     padding: .2em 0 .2em 24px; /* left padding for arrow image */
     margin-bottom: 1.2em;
   }
@@ -470,20 +479,20 @@ if (typeof console === 'undefined') {
       </div><!-- end #about -->
       <form id="journal-form" class="journal" action="/datastore/subscribers/" method="post">
         <h3 id="journal-form-header" class="journal">
-          Don&#39;t leave without subscribing to our free organizational
-          development e-journal.
+          Don&#39;t leave without subscribing to our free technology e-journal
+          for small organizations.
         </h3>
         <div id="journal-description" class="journal">
           <p id="journal-intro" class="journal">
-            Our ideal customer is one who cares about building a more effective
-            organization and a better place to work. So, we created
+            You need technology to build a more effective
+            organization and a better workplace. So, we created
             <em class="title journal">Making it Work</em>
-            , an e-journal all about organizational development.
+            , an e-journal all about technology in smaller organizations.
           </p>
           <p id="journal-about" class="journal">
             <em class="title journal">Making it Work</em>
-            is for people like you -- People who dream big to create innovative
-            organizations.
+            cuts through the jargon in the technology industry and provides you
+            with the information you need to make smart choices.
           </p>
         </div>
         <fieldset id="journal-form-fields">

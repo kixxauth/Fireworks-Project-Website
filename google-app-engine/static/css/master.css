@@ -143,7 +143,8 @@ div.inner.content.container {
   /* Each page has a div.outer.container
    * that forms the main content container. */
   width: 80%;
-  margin: 3em 9.9% 0;
+  clear: both;
+  margin: 4em 9.9% 0;
 }
 
 /* Global footer.
