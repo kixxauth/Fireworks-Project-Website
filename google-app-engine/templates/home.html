@@ -59,6 +59,7 @@ See CC-LICENSE in this folder for more details.
 // Page specifications.
 var SPEC = {};
 
+// Presentation slide show timing.
 SPEC.slideShowIntervals = [
   7000
 , 5500
@@ -91,14 +92,160 @@ if (typeof console === 'undefined') {
 (function (window) {
   // jQuery is assigned to j
   var j = window.jQuery.noConflict(true)
+
+    // Flag set to true when the DOM is loaded.
     , DOM_loaded = true
+
+    // Flag set to true when web fonts have loaded.
     , WF_loaded = false
+
     , presentation_intervals = window.SPEC.slideShowIntervals
     , presentation
     ;
 
+  // Configure web font loader to load TypeKit font for slide show.
   WebFontConfig.typekit = {id: 'fcq2zzl'};
 
+  // The server will respond with HTML for form submissions 
+  // if we don't specify application/json.
+  j.ajaxSetup({'beforeSend': function (xhr) {
+    xhr.setRequestHeader('accept', 'application/json');
+  }});
+
+  // Notification constructor for form validation errors.
+  function make_submit_notice() {
+    var self = {}, showing = false;
+
+    self.show = function (message) {
+      j('#submit-warning-content').text(message);
+      if (showing) {
+        return;
+      }
+
+      j('#submit-warning') .fadeIn(400);
+      showing = true;
+    };
+
+    self.hide = function () {
+      if (!showing) {
+        return;
+      }
+      j('#submit-warning').fadeOut(400);
+      showing = false;
+    };
+
+    return self;
+  }
+
+  // Notice constructor for AJAX form submission.
+  function make_ajax_notice() {
+    var self = {}, showing = false;
+
+    self.show = function (message) {
+      j('#ajax-error-content').text(message);
+      if (showing) {
+        return;
+      }
+      var win = j(window);
+      j('#ajax-error')
+        .css('top', ((win.height() /2) + win.scrollTop()) +'px')
+        .show()
+        ;
+      showing = true;
+    };
+
+    self.hide = function () {
+      if (!showing) {
+        return;
+      }
+      j('#ajax-error').hide();
+      showing = false;
+    };
+
+    return self;
+  }
+
+  // Constructor for AJAX form submission module.
+  function make_submitter(submit_notice, ajax_notice) {
+    // Flag used to prevent parallel form submission.
+    var submitting = false;
+
+    // Handle all jQuery AJAX error events.
+    j('#ajax-error').ajaxError(function (ev, xhr, options, err) {
+      console.debug('.ajaxError() fired');
+      submitting = false;
+      console.debug(xhr.responseText);
+      console.warn('.ajaxError() response is not valid JSON');
+      // Should never get anything but a 200 or 201.
+      ajax_notice.show(messages.unexpected);
+    });
+
+    // There is a dismiss button on the AJAX error notification.
+    j('#ajax-error-dismiss').click(function () {
+      ajax_notice.hide();
+    });
+
+    // Handle successful AJAX form submission.
+    function success(data, textStatus, xhr) {
+      console.debug('ajax_success() fired');
+      submitting = false;
+      xhr = xhr || {}; // Avoid error.
+      // Should never get anything but a 200 or 201.
+      if (xhr.status !== 201 && xhr.status !== 200) {
+        console.warn('response status is ', xhr.status);
+        ajax_notice.show(messages.unexpected);
+        return;
+      }
+      ajax_notice.show(messages.success);
+    }
+
+    // Event handler function for jQuery form submit event.
+    // Client side form validation.
+    return function () {
+      console.log('submitting');
+      if (submitting) {
+        return false;
+      }
+      var email = j('#journal-email').val()
+        , email_regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        ;
+
+      submit_notice.hide();
+
+      if (!email) {
+        submit_notice.show("Don't forget to include your email address.");
+        j('#journal-email')
+          .focus()
+          .change(submit_notice.hide)
+          .keydown(submit_notice.hide)
+          ;
+        return false;
+      }
+      if (!email.match(email_regex)) {
+        submit_notice.show("The email address you entered is invalid. "+
+                           "Check for a typo and try again.");
+        j('#journal-email')
+          .focus()
+          .change(submit_notice.hide)
+          .keydown(submit_notice.hide)
+          ;
+        return false;
+      }
+
+      console.debug('Posting data to '+ window.location.href +
+                    '/datastore/subscribers/');
+      submitting = true;
+      j.post(
+            '/datastore/subscribers/'
+          , j(this).serialize()
+          , success
+          , 'json');
+      return false;
+    };
+  }
+
+  // The slide show must be set up after the DOM has loaded and all
+  // web fonts have also loaded.
   function slide_show_setup() {
     console.debug('slide_show_setup() triggered');
     if (!DOM_loaded || !WF_loaded) {
@@ -118,6 +265,7 @@ if (typeof console === 'undefined') {
       , border_width = 2 // Presentation border
       ;
 
+    // Calculate the height of the slide show.
     j('div.presentation.slide')
       .each(function (i) {
         var h = j(this).show().height();
@@ -129,18 +277,25 @@ if (typeof console === 'undefined') {
       .css('height', slide_height +'px')
       ;
 
+    // Set up slide show controls.
     controls_height = controls.show().height() + controls_padding;
     j('#player-controls-notice')
       .width(presentation_player.width()
              - controls_margins
              - controls_widths);
     controls.hide();
+
     console.debug('Slide show height', slide_height);
     console.debug('Controls height', controls_height);
+
+    // Set up presentation player.
     presentation_player
       .css('border', '2px dashed #aaa')
       .height(slide_height + controls_height);
+
+    // Show player intro.
     j('#presentation-player-intro')
+      // Start slide show presentation on click.
       .click(function () {
         var controls_notice_action = j('#controls-notice-action')
           , controls_notice_index = j('#controls-notice-index')
@@ -174,6 +329,7 @@ if (typeof console === 'undefined') {
       })
       .show();
 
+    // Set up player controls.
     j('#player-back-control').click(function () {
       presentation.impression('back');
       return false;
@@ -183,22 +339,27 @@ if (typeof console === 'undefined') {
       return false;
     });
 
+    // Show the form again.
     j('#journal-form').show();
   }
 
+  // Web fonts loaded event.
   WebFontConfig.active = function () {
     console.log('WebFont active event');
     WF_loaded = true;
     slide_show_setup();
   };
 
+  // DOM loaded event.
   j(function (j) {
     presentation = j('#presentation').impression({
       intervals: presentation_intervals 
     });
 
+    // Hide the form until the slide show is set up.
     j('#journal-form').hide();
 
+    // Reset CSS from non-JavaScript page defaults.
     j('#about').css('text-align', 'left');
     j('#about-introduction').css({
         width          : '48%'
@@ -226,6 +387,10 @@ if (typeof console === 'undefined') {
       , 'margin-bottom': '0'
       , 'margin-right': '0'
       });
+
+    // Set submit event handler to intercept form submissions.
+    j('#journal-form')
+      .submit(make_submitter(make_submit_notice(), make_ajax_notice()));
 
     DOM_loaded = true;
     slide_show_setup();
@@ -480,20 +645,23 @@ if (typeof console === 'undefined') {
       <form id="journal-form" class="journal" action="/datastore/subscribers/" method="post">
         <h3 id="journal-form-header" class="journal">
           Don&#39;t leave without subscribing to our free technology e-journal
-          for small organizations.
+          for your organization.
         </h3>
         <div id="journal-description" class="journal">
           <p id="journal-intro" class="journal">
             You need technology to build a more effective
             organization and a better workplace. So, we created
             <em class="title journal">Making it Work</em>
-            , an e-journal all about technology in smaller organizations.
+            , an e-journal all about technology for smaller organizations.
           </p>
           <p id="journal-about" class="journal">
             <em class="title journal">Making it Work</em>
             cuts through the jargon in the technology industry and provides you
             with the information you need to make smart choices.
           </p>
+        </div>
+        <div id="submit-warning" style="display:none">
+          <p id="submit-warning-content"></p>
         </div>
         <fieldset id="journal-form-fields">
           <input type="hidden" name="new_subscription" value="journal-1" />

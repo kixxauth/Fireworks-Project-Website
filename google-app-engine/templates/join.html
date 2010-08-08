@@ -240,11 +240,10 @@ if (typeof console === 'undefined') {
     , messages = window.SPEC.messages
     ;
 
-    // The server will send HTML if we don't specify application/json.
-    j.ajaxSetup({'beforeSend': function (xhr) {
-      xhr.setRequestHeader('accept', 'application/json');
-    }});
-
+  // The server will send HTML if we don't specify application/json.
+  j.ajaxSetup({'beforeSend': function (xhr) {
+    xhr.setRequestHeader('accept', 'application/json');
+  }});
 
   // Notification constructor for form validation errors.
   function make_submit_notice() {
@@ -408,6 +407,7 @@ if (typeof console === 'undefined') {
   }
 
   j(function (jq) {
+    // Set submit event handler to intercept form submissions.
     j('#join-form')
       .submit(make_submitter(make_submit_notice(), make_ajax_notice()));
   });
