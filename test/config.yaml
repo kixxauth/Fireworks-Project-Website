@@ -87,6 +87,16 @@ full:
     - options
     - trace
 
+  - name: About
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
   - name: DatastoreMembers
     tests:
     - get 
@@ -206,6 +216,20 @@ projects:
   classes:
 
   - name: Projects
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+about:
+- module: urls
+  classes:
+
+  - name: About
     tests:
     - get 
     - put

@@ -1,0 +1,95 @@
+{% comment %}
+
+About Template
+==============
+
+This is the template for the www.fireworksproject.com/about page.
+
+For more information regarding the Django template syntax, have a look at the
+documentation.
+http://docs.djangoproject.com/en/1.2/topics/templates/#topics-templates
+
+License
+-------
+
+All source code in this file is (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, is licensed under the MIT license.
+
+See MIT-LICENSE in this directory for details.
+
+All text content in this file is (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, is licensed under a Creative Commons Attribution-Share Alike 3.0
+Unported License (http://creativecommons.org/licenses/by-sa/3.0/).
+
+See CC-LICENSE in this folder for more details.
+
+{% endcomment %}{% extends "base.html" %}
+
+{% block title %}Open source software - The Fireworks Project{% endblock %}
+{% block head %}<style type="text/css">
+  #about-page {
+    width: 700px;
+    overflow: visible;
+    position: relative;
+    left: 48%;
+    margin-left: -350px;
+    margin-top: 3em;
+  }
+  #about-page-heading {
+    font-weight: bold;
+    font-size: 200%;
+    background: transparent url(/css/img/pointer.gif) no-repeat;
+    line-height: 1;
+    padding: .2em 0 .2em 24px; /* left padding for arrow image */
+    margin-bottom: 1em;
+  }
+  p.description.content {
+    margin-bottom: 2em;
+  }
+</style>{% endblock %}
+
+{% block subheading %}Better software.{% endblock %}
+
+{% block body %}<div id="about-page" class="inner content container">
+    <h1 id="about-page-heading">
+      Freedom in simplicity.
+    </h1>
+    <div id="description">
+      <p class="description content">
+      The Fireworks project is a small band of software engineers and designers
+      who&#39;ve come together to build better software systems.
+      </p>
+      
+      <p class="description content">
+      Most of the software we&#39;ve been forced to use in the past never did
+      what we thought it should do and left us feeling really frustrated.
+      Besides that, it was too complicated for our purposes and bloated with
+      useless features we didn't want.
+      </p>
+      
+      <p class="description content">
+      We decided that life is too short for bad software and so we started a
+      software development firm to make things better. Of course, building
+      better software is not easy. If it was, everyone would be doing it, but
+      we understand that nothing worth doing is easy.
+      </p>
+
+      <p class="description content">
+      Currently we are engineering a new kind of software production system
+      that uses interchangeable components to build computer programs. Our
+      system will enable us to build programs customized to the unique needs of
+      your organization. We know that sounds expensive, but the best part is
+      that we&#39;ll be able to do it at a much more affordable price than what
+      was possible in the past.
+      </p>
+
+      <p class="description content">
+      So, don&#39;t be affraid to dream big, because if you can dream it, we can
+      build it.
+      </p>
+    </div><!-- end #description -->
+  </div><!-- end #about-page -->{% endblock %}
+
+

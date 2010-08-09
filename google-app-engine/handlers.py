@@ -149,6 +149,10 @@ class ProjectsHandler(SimpleHandler):
   """Handler class for '/projects' URL."""
   template = 'projects'
 
+class AboutHandler(SimpleHandler):
+  """Handler class for '/about' URL."""
+  template = 'about'
+
 class DatastoreHandler(Handler):
   """Base class for datastore handlers.
 
@@ -404,6 +408,7 @@ handler_map = [
     , ('/projects', 'projects', ProjectsHandler)
     , ('/projects/', 'projects', ProjectsHandler)
     , ('/join', 'join', JoinHandler)
+    , ('/about', 'about', AboutHandler)
     , ('/datastore/members/', 'datastore_members', DatastoreMembers)
     , ('/datastore/subscribers/', 'datastore_subscribers', DatastoreSubscribers)
     , ('/datastore/actions/', 'datastore_actions', DatastoreActions)
