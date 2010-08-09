@@ -27,10 +27,10 @@ See CC-LICENSE in this folder for more details.
 
 {% endcomment %}{% extends "base.html" %}
 
-{% block top %}<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<!--
-<script type="text/javascript" src="/js/jquery.js"></script>
+{% block top %}<!--
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 -->
+<script type="text/javascript" src="/js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.fireworks-impression.js"></script>
 <script type="text/javascript">
 /*jslint
@@ -86,21 +86,20 @@ SPEC.messages.success = 'Great! Your subscription has been received.';
 
 // Create a console object if there is not an ambient one.
 if (typeof console === 'undefined') {
-  var F = function () {};
-  console = {
-    log: F
-  , info: F
-  , error: F
-  , warn: F
-  , debug: F
-  , assert: F
-  };
+  console = {log: function (message) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    window.setTimeout(function () {
+      var e = new Error(message +' '+ args.join(' '));
+      e.name = 'ConsoleLogging';
+      throw e;
+    }, 0);
+  }};
 }
 
 // Page script is composed inside a closure.
 (function (window) {
   // jQuery is assigned to j
-  var j = window.jQuery.noConflict(true)
+  var j = window.jQuery.noConflict()
 
     // Flag set to true when the DOM is loaded.
     , DOM_loaded = true
@@ -191,10 +190,10 @@ if (typeof console === 'undefined') {
 
     // Handle all jQuery AJAX error events.
     j('#ajax-notice').ajaxError(function (ev, xhr, options, err) {
-      console.debug('.ajaxError() fired');
       submitting = false;
-      console.debug(xhr.responseText);
-      console.warn('.ajaxError() response is not valid JSON');
+      console.log('.ajaxError() fired');
+      console.log('.ajaxError() response is not valid JSON');
+      console.log(xhr.responseText);
       // Should never get anything but a 200 or 201.
       ajax_notice.show(messages.unexpected);
     });
@@ -206,12 +205,12 @@ if (typeof console === 'undefined') {
 
     // Handle successful AJAX form submission.
     function success(data, textStatus, xhr) {
-      console.debug('ajax_success() fired');
+      console.log('ajax_success() fired');
       submitting = false;
       xhr = xhr || {}; // Avoid error.
       // Should never get anything but a 200 or 201.
       if (xhr.status !== 201 && xhr.status !== 200) {
-        console.warn('response status is ', xhr.status);
+        console.log('response status is ', xhr.status);
         ajax_notice.show(messages.unexpected);
         return;
       }
@@ -251,7 +250,7 @@ if (typeof console === 'undefined') {
         return false;
       }
 
-      console.debug('Posting data to '+ window.location.href +
+      console.log('Posting data to '+ window.location.href +
                     '/datastore/subscribers/');
       submitting = true;
       j.post(
@@ -266,13 +265,13 @@ if (typeof console === 'undefined') {
   // The slide show must be set up after the DOM has loaded and all
   // web fonts have also loaded.
   function slide_show_setup() {
-    console.debug('slide_show_setup() triggered');
+    console.log('slide_show_setup() triggered');
     if (!DOM_loaded || !WF_loaded) {
-      console.debug('DOM_loaded =', DOM_loaded);
-      console.debug('WF_loaded =', WF_loaded);
+      console.log('DOM_loaded =', DOM_loaded);
+      console.log('WF_loaded =', WF_loaded);
       return;
     }
-    console.debug('slide_show_setup() happening');
+    console.log('slide_show_setup() executing');
 
     var presentation_player = j('#about-presentation')
       , slide_height = 0
@@ -304,8 +303,8 @@ if (typeof console === 'undefined') {
              - controls_widths);
     controls.hide();
 
-    console.debug('Slide show height', slide_height);
-    console.debug('Controls height', controls_height);
+    console.log('Slide show height', slide_height);
+    console.log('Controls height', controls_height);
 
     // Set up presentation player.
     presentation_player
@@ -383,7 +382,7 @@ if (typeof console === 'undefined') {
           j('#slide-a')
             .unbind('impressPlaying', resume_countdown)
             .unbind('impressStopped', stopped_handler)
-          console.debug('Cleared presentation countdown.');
+          console.log('Cleared presentation countdown.');
         }
       }, 1000)
     }
@@ -415,7 +414,7 @@ if (typeof console === 'undefined') {
     j('#about').css('text-align', 'left');
     j('#about-introduction').css({
         width          : '48%'
-      , overflow       : 'hide'
+      , overflow       : 'hidden'
       , 'margin-top'   : '3em'
       , 'margin-right' : '0'
       , 'margin-left'  : '0'

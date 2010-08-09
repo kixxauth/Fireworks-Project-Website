@@ -179,10 +179,10 @@ See CC-LICENSE in this folder for more details.
     margin-bottom: 1em;
   }
 </style>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <!--
-<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 -->
+<script type="text/javascript" src="/js/jquery.js"></script>
 <script type="text/javascript">
 /*jslint
   browser: true
@@ -222,21 +222,20 @@ SPEC.messages.member_exists = 'Hmmmm... It seems a member with that email '+
 
 // Create a console object if there is not an ambient one.
 if (typeof console === 'undefined') {
-  var F = function () {};
-  console = {
-    log: F
-  , info: F
-  , error: F
-  , warn: F
-  , debug: F
-  , assert: F
-  };
+  console = {log: function (message) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    window.setTimeout(function () {
+      var e = new Error(message +' '+ args.join(' '));
+      e.name = 'ConsoleLogging';
+      throw e;
+    }, 0);
+  }};
 }
 
 // Page script is composed inside a closure.
 (function (window) {
   // jQuery is assigned to j
-  var j = window.jQuery.noConflict(true)
+  var j = window.jQuery.noConflict()
     , messages = window.SPEC.messages
     ;
 
@@ -316,18 +315,18 @@ if (typeof console === 'undefined') {
 
     // Handle all jQuery AJAX error events.
     j('#ajax-error').ajaxError(function (ev, xhr, options, err) {
-      console.debug('.ajaxError() fired');
+      console.log('.ajaxError() fired');
       submitting = false;
       var data;
       try {
         data = j.parseJSON(xhr.responseText);
       } catch (e) {
-        console.error(e);
-        console.warn('.ajaxError() response is not valid JSON');
+        console.log(e);
+        console.log('.ajaxError() response is not valid JSON');
         ajax_notice.show(messages.unexpected);
         return;
       }
-      console.debug('.ajaxError() response message is "'+ data.message +'"');
+      console.log('.ajaxError() response message is "'+ data.message +'"');
       if (data.message === 'member already exists') {
         ajax_notice.show(messages.member_exists);
         return;
@@ -342,11 +341,11 @@ if (typeof console === 'undefined') {
 
     // Handle successful AJAX form submission.
     function success(data, textStatus, xhr) {
-      console.debug('ajax_success() fired');
+      console.log('ajax_success() fired');
       submitting = false;
       xhr = xhr || {}; // Avoid error.
       if (xhr.status !== 201) {
-        console.warn('response status is ', xhr.status);
+        console.log('response status is ', xhr.status);
         ajax_notice.show(messages.unexpected);
         return;
       }
@@ -394,7 +393,7 @@ if (typeof console === 'undefined') {
         return false;
       }
 
-      console.debug('Posting data to '+ window.location.href +
+      console.log('Posting data to '+ window.location.href +
                     '/datastore/members/');
       submitting = true;
       j.post(
