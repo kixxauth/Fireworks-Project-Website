@@ -744,44 +744,6 @@ if (typeof console === 'undefined') {
           </div>
         </script>
       </div><!-- end #about -->
-      <form id="journal-form" class="journal" action="/datastore/subscribers/" method="post">
-        <h3 id="journal-form-header" class="journal">
-          Don&#39;t leave without subscribing to our free technology e-journal
-          for your organization.
-        </h3>
-        <div id="journal-description" class="journal">
-          <p id="journal-intro" class="journal">
-            You need technology to build a more effective
-            organization and a better workplace. So, we created
-            <em class="title journal">Making it Work</em>
-            , an e-journal all about technology for smaller organizations.
-          </p>
-          <p id="journal-about" class="journal">
-            <em class="title journal">Making it Work</em>
-            cuts through the jargon of the technology industry and provides you
-            with the information you need to make smart choices.
-          </p>
-        </div>
-        <div id="submit-notice" style="display:none">
-          <p id="submit-notice-content"></p>
-        </div>
-        <fieldset id="journal-form-fields">
-          <input type="hidden" name="new_subscription" value="journal-1" />
-          <label class="journal" for="journal-email">Email address*</label>
-          <input id="journal-email" class="journal custom" name="email" type="text" />
-          <input id="journal-submit" class="journal button" type="submit" value="Subscribe" />
-          <p id="journal-privacy" class="journal">
-          * Our privacy policy is to never share, rent, or sell your
-          information to anyone, EVER.
-          </p>
-        </fieldset>
-      </form>
-      <div id="ajax-notice" style="display:none">
-        <p id="ajax-notice-content"></p>
-        <p id="ajax-notice-actions">
-          <button id="ajax-notice-dismiss" class="ajax error">OK</button>
-        </p>
-      </div>
       <div id="presentation">
         <div id="slide-a" class="presentation slide" style="display:none">
           <p id="slide-a-content-1" class="presentation slide content">
@@ -919,5 +881,43 @@ if (typeof console === 'undefined') {
             title="Resting on the beach illustration." class="presentation slide content" />
         </div>
       </div><!-- end #presentation -->
+      <form id="journal-form" class="journal" action="/datastore/subscribers/" method="post">
+        <h3 id="journal-form-header" class="journal">
+          Don&#39;t leave without subscribing to our free technology e-journal
+          for your organization.
+        </h3>
+        <div id="journal-description" class="journal">
+          <p id="journal-intro" class="journal">
+            You need technology to build a more effective
+            organization and a better workplace. So, we created
+            <em class="title journal">Making it Work</em>
+            , an e-journal all about technology for smaller organizations.
+          </p>
+          <p id="journal-about" class="journal">
+            <em class="title journal">Making it Work</em>
+            cuts through the jargon of the technology industry and provides you
+            with the information you need to make smart choices.
+          </p>
+        </div>
+        <div id="submit-notice" style="display:none">
+          <p id="submit-notice-content"></p>
+        </div>
+        <fieldset id="journal-form-fields">
+          <input type="hidden" name="new_subscription" value="journal-1" />
+          <label class="journal" for="journal-email">Email address*</label>
+          <input id="journal-email" class="journal custom" name="email" type="text" />
+          <input id="journal-submit" class="journal button" type="submit" value="Subscribe" />
+          <p id="journal-privacy" class="journal">
+          * Our privacy policy is to never share, rent, or sell your
+          information to anyone, EVER.
+          </p>
+        </fieldset>
+      </form>
+      <div id="ajax-notice" style="display:none">
+        <p id="ajax-notice-content"></p>
+        <p id="ajax-notice-actions">
+          <button id="ajax-notice-dismiss" class="ajax error">OK</button>
+        </p>
+      </div>
     </div><!-- end #home-page -->{% endblock %}
 

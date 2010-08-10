@@ -120,6 +120,7 @@ a {
   top: 1em;
   right: 5%; /* match right and left margin of header container */
   list-style: none;
+  clear: both;
 }
 
 #navigation li.navigation {
