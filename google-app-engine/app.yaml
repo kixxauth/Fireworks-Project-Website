@@ -198,6 +198,13 @@ handlers:
   static_dir: static/mozilla-downloads
   secure: always 
  
+# ### The favicon is static.
+# `/google-app-engine/static/favicon.ico`
+- url: /favicon\.ico
+  static_files: static/favicon.ico
+  upload: static/favicon.ico
+  expiration: 21d
+
 # ### The robots.txt file is static.
 # `/google-app-engine/static/robots.txt`
 - url: /robots\.txt
