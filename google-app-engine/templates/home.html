@@ -343,10 +343,10 @@ if (typeof console === 'undefined') {
               presentation.impression('play');
             })
           .bind('impressShowing', function (ev, i) {
-            controls_notice_index.text(i +1);
+            controls_notice_index.text((i+1) +' ');
           })
           ;
-        controls_notice_index.text('1');
+        controls_notice_index.text('1 ');
         return false;
       })
       .css('visibility', 'visible');
@@ -741,7 +741,8 @@ if (typeof console === 'undefined') {
             </a>
             <p id="player-controls-notice">
             <span id="controls-notice-action"></span>
-            <span id="controls-notice-index"></span> of <span id="controls-notice-length"></span>
+            <span id="controls-notice-index"></span>
+            of <span id="controls-notice-length"></span>
             </p>
             <a id="player-forward-control" href="#" title="Go forward one slide.">
               <img id="player-controls-next" src="/img/presentation/right-arrow-30.gif"
