@@ -89,6 +89,7 @@ a {
  */
 #header {
   margin: 3em 5% 0;
+  line-height: 1;
 }
 #heading {
   width: 260px; /* logo width */
@@ -97,7 +98,6 @@ a {
   float: left;
   /* fix the font line height */
   font-size: 1em;
-  line-height: 1;
   color: #fff; /* hide the text */
 }
 #heading-logo {
@@ -105,12 +105,11 @@ a {
 }
 #subheading {
   font-size: 90px;
-  line-height: 1;
   font-weight: bold;
   color: #ccc;
   margin-left: 310px; /* logo width + 50px */
   border-left: 7px solid #f90;
-  padding: .2em 0 .05em 50px;
+  padding: .2em 0 .1em 50px;
 }
 
 /* Global navigation.
