@@ -153,9 +153,12 @@ div.inner-content-container {
  */
 #footer {
   margin-top: 5em;
+  color: #555;
+  font-size: 90%;
+  font-family: sans-serif;
+  line-height: 1.2;
 }
 #creative-commons-license {
   width: 80%;
-  margin-left: 5%;
-  margin-bottom: 2em;
+  margin: 0 0 1em 1em;
 }
