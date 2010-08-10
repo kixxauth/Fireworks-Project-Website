@@ -29,6 +29,8 @@ from django.utils import simplejson
 from google.appengine.ext import db
 import dstore
 
+from google.appengine.api import mail
+
 # Standard 'Do not cache this!' declaration for the cache-control header.
 NO_CACHE_HEADER = 'no-cache, no-store, must-revalidate, pre-check=0, post-check=0'
 
@@ -257,10 +259,19 @@ class DatastoreMembers(DatastoreHandler):
       e = self.response_error('ConflictError', 'member already exists')
       return self.respond(409, e)
 
+    logging.info('New member posting: name=%s, email=%s', name, email)
     new_member = dstore.Member(member_name=name
                              , uid=email
                              , init_date=int(time.time()));
     new_member.put()
+
+    # TODO: The params for this email should not be hard coded in here.
+    mail.send_mail(
+        'kixxauth@gmail.com',
+        'kixxauth@gmail.com',
+        'New FWP member posted.',
+        ('name: %s, email: %s' % (name, email)))
+
     return self.respond(201, {
           'member_name': new_member.member_name
         , 'uid'        : new_member.uid
