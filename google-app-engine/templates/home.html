@@ -296,12 +296,11 @@ if (typeof console === 'undefined') {
       ;
 
     // Set up slide show controls.
-    controls_height = controls.show().height() + controls_padding;
+    controls_height = controls.height() + controls_padding;
     j('#player-controls-notice')
       .width(presentation_player.width()
              - controls_margins
              - controls_widths);
-    controls.hide();
 
     console.log('Slide show height', slide_height);
     console.log('Controls height', controls_height);
@@ -322,9 +321,10 @@ if (typeof console === 'undefined') {
         j('#controls-notice-length').text(presentation_intervals.length);
 
         j(this).hide();
-        controls
-          .css('top', (slide_height + border_width) +'px')
-          .show();
+        controls.css({
+            'top': (slide_height + border_width) +'px'
+          , 'visibility': 'visible'
+          });
         presentation
           .impression('play')
           .css('cursor', 'pointer')
@@ -345,7 +345,7 @@ if (typeof console === 'undefined') {
         controls_notice_index.text('1');
         return false;
       })
-      .show();
+      .css('visibility', 'visible');
 
     // Set up player controls.
     j('#player-back-control').click(function () {
@@ -358,7 +358,7 @@ if (typeof console === 'undefined') {
     });
 
     // Show the form again.
-    j('#journal-form').show();
+    j('#journal-form').css('visibility', 'visible');
   }
 
   // Set up slide show countdown.
@@ -407,15 +407,15 @@ if (typeof console === 'undefined') {
       intervals: presentation_intervals 
     });
 
-    // Hide the form until the slide show is set up.
-    j('#journal-form').hide();
+    // Hide the form while we set up the slide show.
+    j('#journal-form').css('visibility', 'hidden');
 
     // Reset CSS from non-JavaScript page defaults.
     j('#about').css('text-align', 'left');
     j('#about-introduction').css({
         width          : '48%'
       , overflow       : 'hidden'
-      , 'margin-top'   : '3em'
+      , 'margin-top'   : '5em'
       , 'margin-right' : '0'
       , 'margin-left'  : '0'
       , 'margin-bottom': '0'
@@ -722,7 +722,7 @@ if (typeof console === 'undefined') {
         </div><!-- end #about-introduction -->
         <div id="about-presentation"></div>
         <script id="presentation-player-template" type="text/html">
-          <div id="presentation-controls" style="display:none">
+          <div id="presentation-controls" style="visibility:hidden">
             <a id="player-back-control" href="#" title="Go back one slide.">
               <img id="player-controls-back" src="/img/presentation/left-arrow-30.gif"
                 title="Left arrow control." class="presentation control" width="30" height="30" />
@@ -736,7 +736,7 @@ if (typeof console === 'undefined') {
                 title="Right arrow control." class="presentation control" width="30" height="30" />
             </a>
           </div>
-          <div id="presentation-player-intro" style="display:none">
+          <div id="presentation-player-intro" style="visibility:hidden">
             <p id="player-intro-content">Press play to find out how.</p>
             <a id="presentation-play-button" href="#">
             <img src="/img/presentation/play-button-30.gif" />
