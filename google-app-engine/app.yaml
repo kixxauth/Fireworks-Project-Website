@@ -190,6 +190,12 @@ handlers:
 - url: /pages
   static_dir: static/pages
 
+# ### The hacker's and hitchiker's guide.
+# `/google-app-engine/static/guide`
+- url: /guide
+  static_dir: static/guide
+  mime_type: text/html
+
 # ### Mozilla package download files.
 # Must be made secure through https for the Mozilla browser extention
 # autoupdate tool to work properly .
