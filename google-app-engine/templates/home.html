@@ -27,10 +27,10 @@ See CC-LICENSE in this folder for more details.
 
 {% endcomment %}{% extends "base.html" %}
 
-{% block top %}<!--
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
--->
+{% block top %}<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<!--
 <script type="text/javascript" src="/js/jquery.js"></script>
+-->
 <script type="text/javascript" src="js/jquery.fireworks-impression.js"></script>
 <script type="text/javascript">
 /*jslint
@@ -51,6 +51,7 @@ See CC-LICENSE in this folder for more details.
 /*global
   window: false
 , console: true
+, WebFontConfig: true
 */
 
 // ECMAScript 5 strict mode.
@@ -386,14 +387,16 @@ if (typeof console === 'undefined') {
           j('#slide-a')
             .unbind('impressPlaying', resume_countdown)
             .unbind('impressStopped', stopped_handler)
+            ;
           console.log('Cleared presentation countdown.');
         }
-      }, 1000)
+      }, 1000);
     }
 
     j('#slide-a')
       .bind('impressPlaying', resume_countdown)
       .bind('impressStopped', stopped_handler)
+      ;
 
     j('#slide-a-content-3').text(counter);
   });
