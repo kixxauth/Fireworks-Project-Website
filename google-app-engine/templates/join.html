@@ -30,7 +30,7 @@ See CC-LICENSE in this folder for more details.
 {% block title %}Redefine your job - The Fireworks Project{% endblock %}
 
 {% block head %}<style type="text/css">
-  h2.description.content, h2.instructions.content {
+  h2.description-content, h2.instructions-content {
     font-weight: bold;
     font-size: 200%;
     background: transparent url(/css/img/pointer.gif) no-repeat;
@@ -38,12 +38,13 @@ See CC-LICENSE in this folder for more details.
     padding: .2em 0 .2em 24px; /* left padding for arrow image */
     margin-bottom: 1em;
   }
-  p.description.content {
+  p.description-content {
+    display: inline;
     float: left;
     margin: 0 5% 2em 24px;
     width: 40%;
   }
-  h4.description.content {
+  h4.description-content {
     clear: both;
     font-weight: bold;
     font-size: 130%;
@@ -52,7 +53,7 @@ See CC-LICENSE in this folder for more details.
   #instructions {
     margin-top: 3em;
   }
-  p.instructions.content {
+  p.instructions-content {
     margin-left: 24px;
     font-size: 130%;
   }
@@ -98,10 +99,10 @@ See CC-LICENSE in this folder for more details.
   #join-inputs {
     position: relative;
   }
-  p.form.content.input {
+  p.form-content-input {
     margin-top: 1em;
   }
-  label.form.content {
+  label.form-content {
     margin-right: 1em;
   }
   #name, #email {
@@ -156,7 +157,7 @@ See CC-LICENSE in this folder for more details.
     text-align: center;
     margin-top: 1em;
   }
-  button.ajax.error {
+  button.ajax-error {
     background: #f90 url(/css/img/ff9900-fade-30.gif) repeat-x;
     cursor: pointer;
     border: 1px solid #ccc;
@@ -168,12 +169,12 @@ See CC-LICENSE in this folder for more details.
     -webkit-border-radius: 0.3em;
     border-radius: 0.3em;
   }
-  h1.response.header {
+  h1.response-header {
     font-weight: bold;
     font-size: 200%;
     margin-bottom: 1em;
   }
-  h2.response.header {
+  h2.response-header {
     font-weight: bold;
     font-size: 150%;
     margin-bottom: 1em;
@@ -415,17 +416,17 @@ if (typeof console === 'undefined') {
 
 {% block subheading %}Dream different.{% endblock %}
 
-{% block body %}<div id="join-page" class="inner content container">
+{% block body %}<div id="join-page" class="inner-content-container">
     <div id="description">
-      <h2 class="description content">Redefine your job.</h2>
-      <p class="description content">
+      <h2 class="description-content">Redefine your job.</h2>
+      <p class="description-content">
       Working as a member of The Fireworks Project is not like any other job
       you&#39;ve ever had. Our company was built from the ground up to be an
       employee owned and employee managed corporation. In fact we are
       officially referred to as a &quot;member owned corporation&quot; because
       our members are a unique blend of shareholders and employees.
       </p>
-      <p class="description content">
+      <p class="description-content">
       We didn&#39;t want venture capitalists and other investors dictating our
       livelihoods, and our unique corporate structure put control of the
       company into the hands of the people who are building it. The downside is
@@ -434,15 +435,15 @@ if (typeof console === 'undefined') {
       doing what we love to do and get a life away from work to enjoy the stuff
       that really matters.
       </p>
-      <h4 class="description content">
+      <h4 class="description-content">
       This opportunity is not for everyone, but it might be for you.
       </h4>
     </div><!-- description -->
     <div id="instructions">
-      <h2 class="instructions content">
+      <h2 class="instructions-content">
         Become a member of The Fireworks Project.
       </h2>
-      <p class="instructions content">
+      <p class="instructions-content">
       Make sure you understand our operating agreement below and then submit
       the membership form at the bottom of this page.
       </p>
@@ -624,31 +625,31 @@ if (typeof console === 'undefined') {
         <div id="submit-warning" style="display:none">
           <p id="submit-warning-content"></p>
         </div>
-        <p class="form content">
+        <p class="form-content">
           <input type="checkbox" id="acknowledgment" name="acknowledgment" value="true" />
           <label for="acknowledge" accesskey="1">
             I have read and understand the LIMITED LIABILITY COMPANY OPERATING
             AGREEMENT of Fireworks Technology Projects, LLC (the "Company")
           </label>
         </p>
-        <p class="form content input">
-          <label class="form content" for="name" accesskey="1">Full name:</label>
+        <p class="form-content-input">
+          <label class="form-content" for="name" accesskey="1">Full name:</label>
           <input type="text" id="name" name="name" />
         </p>
-        <p class="form content input">
-          <label class="form content" for="email" accesskey="2">Email:</label>
+        <p class="form-content-input">
+          <label class="form-content" for="email" accesskey="2">Email:</label>
           <input type="text" id="email" name="email" />
         </p>
-        <p id="submit-container" class="form content">
+        <p id="submit-container" class="form-content">
           <input id="member-submit" type="submit" value="Join Now" />
         </p>
       </fieldset>
-      <p id="form-disclaimer" class="content form">
+      <p id="form-disclaimer" class="form-content">
         By submitting this form you are acknowledging your agreement to the
         LIMITED LIABILITY COMPANY OPERATING AGREEMENT of Fireworks Technology
         Projects, LLC (the "Company")
       </p>
-      <p id="form-annotation" class="content form">
+      <p id="form-annotation" class="form-content">
         After submitting the form one of our members will attempt to contact
         you via email and get you set up to start contributing.
       </p>
@@ -656,14 +657,14 @@ if (typeof console === 'undefined') {
     <div id="ajax-error" style="display:none">
       <p id="ajax-error-content"></p>
       <p id="ajax-error-actions">
-        <button id="ajax-error-dismiss" class="ajax error">OK</button>
+        <button id="ajax-error-dismiss" class="ajax-error">OK</button>
       </p>
     </div>
   </div><!-- end #join-page -->
-  <div id="response-page" class="inner content container" style="display:none">
-    <h1 class="response header">Congratulations!</h1>
-    <h2 class="response header">You&#39;re now an official member of The Fireworks Project.</h2>
-    <p class="response message">
+  <div id="response-page" class="inner-content-container" style="display:none">
+    <h1 class="response-header">Congratulations!</h1>
+    <h2 class="response-header">You&#39;re now an official member of The Fireworks Project.</h2>
+    <p>
       Another member will contact you by email within 48 hours to help you get started.
     </p>
   </div><!-- end #response -->{% endblock %}

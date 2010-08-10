@@ -88,7 +88,7 @@ a {
  * --------------
  */
 #header {
-  margin: 3em 5% 0;
+  margin: 3em 5% 4em;
   line-height: 1;
 }
 #heading {
@@ -104,12 +104,13 @@ a {
   margin-top: -1em; /* cover the text */
 }
 #subheading {
-  font-size: 70px;
+  font-size: 65px;
   font-weight: bold;
   color: #ccc;
   margin-left: 310px; /* logo width + 50px */
   border-left: 7px solid #f90;
-  padding: .2em 0 .1em 50px;
+  padding: .3em 0 .2em 30px;
+  overflow: visible;
 }
 
 /* Global navigation.
@@ -139,12 +140,12 @@ a {
 /* Global content container.
  * -------------------------
  */
-div.inner.content.container {
+div.inner-content-container {
   /* Each page has a div.outer.container
    * that forms the main content container. */
   width: 80%;
   clear: both;
-  margin: 4em 9.9% 0;
+  margin-left: 9.9%;
 }
 
 /* Global footer.
