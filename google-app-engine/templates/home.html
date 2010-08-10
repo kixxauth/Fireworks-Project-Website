@@ -126,7 +126,7 @@ if (typeof console === 'undefined') {
   function make_submit_notice() {
     var self = {}
       , showing = false
-      , fields = j('#journal-form-fields')
+      , ref_width = j('#journal-description').width()
       ;
 
     self.show = function (message) {
@@ -134,11 +134,12 @@ if (typeof console === 'undefined') {
       if (showing) {
         return;
       }
-      var offset = fields.position();
 
       j('#submit-notice')
-        .width(Math.floor(fields.width() / 1.5))
-        .css({'left': offset.left +'px', 'top': '2em'})
+        .css({
+            'left': Math.floor(ref_width * 0.2) +'px'
+          , 'width': Math.floor(ref_width * 0.75) +'px'
+          })
         .fadeIn(400)
         ;
       showing = true;
@@ -886,6 +887,9 @@ if (typeof console === 'undefined') {
           Don&#39;t leave without subscribing to our free technology e-journal
           for your organization.
         </h3>
+        <div id="submit-notice" style="display:none">
+          <p id="submit-notice-content"></p>
+        </div>
         <div id="journal-description" class="journal">
           <p id="journal-intro" class="journal">
             You need technology to build a more effective
@@ -898,9 +902,6 @@ if (typeof console === 'undefined') {
             cuts through the jargon of the technology industry and provides you
             with the information you need to make smart choices.
           </p>
-        </div>
-        <div id="submit-notice" style="display:none">
-          <p id="submit-notice-content"></p>
         </div>
         <fieldset id="journal-form-fields">
           <input type="hidden" name="new_subscription" value="journal-1" />
