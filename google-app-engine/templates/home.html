@@ -33,6 +33,7 @@ See CC-LICENSE in this folder for more details.
 -->
 <script type="text/javascript" src="js/jquery.fireworks-impression.js"></script>
 <script type="text/javascript">
+//<![CDATA[
 /*jslint
   browser: true
 , onevar: true
@@ -454,6 +455,7 @@ if (typeof console === 'undefined') {
     slide_show_setup();
   });
 }(window));
+//]]>
 </script>{% endblock %}
 
 {% block head %}<style type="text/css">
@@ -740,7 +742,7 @@ if (typeof console === 'undefined') {
           <div id="presentation-controls" style="visibility:hidden">
             <a id="player-back-control" href="#" title="Go back one slide.">
               <img id="player-controls-back" src="/img/presentation/left-arrow-30.gif"
-                title="Left arrow control." width="30" height="30" />
+                title="Left arrow control." alt="Back arrow." width="30" height="30" />
             </a>
             <p id="player-controls-notice">
             <span id="controls-notice-action"></span>
@@ -749,13 +751,14 @@ if (typeof console === 'undefined') {
             </p>
             <a id="player-forward-control" href="#" title="Go forward one slide.">
               <img id="player-controls-next" src="/img/presentation/right-arrow-30.gif"
-                title="Right arrow control." width="30" height="30" />
+                title="Right arrow control." alt="Next arrow." width="30" height="30" />
             </a>
           </div>
           <div id="presentation-player-intro" style="visibility:hidden">
             <p id="player-intro-content">Press play to find out how.</p>
-            <a id="presentation-play-button" href="#">
-            <img src="/img/presentation/play-button-30.gif" />
+            <a id="presentation-play-button" href="#" title="Play slide show.">
+              <img src="/img/presentation/play-button-30.gif"
+                alt="Play button." />
             </a>
           </div>
         </script>
@@ -784,7 +787,7 @@ if (typeof console === 'undefined') {
           But maybe it doesn&#39;t have to be.
           </p>
           <img id="slide-2-image" src="img/presentation/thinking_man.png" width="25%"
-            title="Thinking man illustration." />
+            alt="Thinking man illustration." />
           <p id="slide-2-content-2">
           We've found a way to make it simple and affordable by thinking
           a little differently.
@@ -795,7 +798,7 @@ if (typeof console === 'undefined') {
           We imagined an artisan software bakery,
           </p>
           <img id="slide-3-image" src="img/presentation/light-bulb.gif" width="60%"
-            title="Light bulb idea illustration." />
+            alt="Light bulb idea illustration." />
           <p id="slide-3-content-2" >
           where each batch of software could be crafted with personal attention.
           </p>
@@ -806,7 +809,7 @@ if (typeof console === 'undefined') {
           lines used to build the first affordable automobiles.
           </p>
           <img id="slide-4-image" src="img/presentation/assembly_line.png" width="70%"
-            title="Automobile assembly line illustration." />
+            alt="Automobile assembly line illustration." />
         </div>
         <div id="slide-5" class="presentation-slide">
           <p id="slide-5-content-1">
@@ -820,7 +823,7 @@ if (typeof console === 'undefined') {
           making affordable goods since the industrial revolution.
           </p>
           <img id="slide-55-image" src="img/presentation/factory.png" width="50%"
-            title="Factory illustration." />
+            alt="Factory illustration." />
         </div>
         <div id="slide-7" class="presentation-slide">
           <p id="slide-7-content-1">
@@ -829,7 +832,7 @@ if (typeof console === 'undefined') {
           companies.
           </p>
           <img id="slide-7-image" src="img/presentation/custom_software_choice.png" width="60%"
-            title="Illustration of waiter with choice of dishes." />
+            alt="Illustration of waiter with choice of dishes." />
         </div>
         <!-- yes, slide 6 comes after slide 7 -->
         <div id="slide-6" class="presentation-slide">
@@ -838,7 +841,7 @@ if (typeof console === 'undefined') {
           need, without getting stuck with the ones you don&#39;t.
           </p>
           <img id="slide-6-image"src="img/presentation/software_components.png" width="60%"
-            title="Software components illustration." />
+            alt="Software components illustration." />
         </div>
         <div id="slide-8" class="presentation-slide">
           <h4 id="slide-8-content-1">
@@ -884,7 +887,7 @@ if (typeof console === 'undefined') {
           working night and day to get it ready for the grand opening.
           </p>
           <img id="slide-10-image" src="img/presentation/software_factory_grand_opening.png" width="60%"
-            title="Software bakery grand opening illustration." />
+            alt="Software bakery grand opening illustration." />
         </div>
         <div id="slide-12" class="presentation-slide">
           <p id="slide-12-content-1">
@@ -893,7 +896,7 @@ if (typeof console === 'undefined') {
           one click.
           </p>
           <img id="slide-12-image" src="img/presentation/resting_software_engineer.png" width="60%"
-            title="Resting on the beach illustration." />
+            alt="Resting on the beach illustration." />
         </div>
       </div><!-- end #presentation -->
       <form id="journal-form" class="journal" action="/datastore/subscribers/" method="post">
