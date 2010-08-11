@@ -162,7 +162,7 @@ class SimpleHandler(Handler):
                           expires=(now + 31556926)) # Exp in 1 year.
 
     # Set the request id nomatter what.
-    response.set_cookie('rid', value=req_time)
+    response.set_cookie('rid', value=req_time, path=self.request.path)
 
     # Expire in 4 days.
     response.expires = now + (86400 * 4)

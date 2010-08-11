@@ -55,7 +55,7 @@ firefox36_config.response_body = True
 bid_len = '48'
 if test_utils.LOCAL:
   bid_len = '46'
-cookie_regex = re.compile('^bid=[a-zA-Z0-9]{'+ bid_len +'}; expires=[SMTWF]{1}[unoedhriat]{2}, [0-3]{1}[0-9]{1}\-[JFMASOND]{1}[anebrpyulgctov]{2}\-20[0-9]{2} [012]{1}[0-9]{1}:[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1} GMT; Path=\/, rid=[0-9]{10}; Path=\/$')
+cookie_regex = re.compile('^bid=[a-zA-Z0-9\-]{'+ bid_len +'}; expires=[SMTWF]{1}[unoedhriat]{2}, [0-3]{1}[0-9]{1}\-[JFMASOND]{1}[anebrpyulgctov]{2}\-20[0-9]{2} [012]{1}[0-9]{1}:[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1} GMT; Path=\/, rid=[0-9]{10}; Path=\/[a-z\/]*$')
 
 class RobotsTxt(unittest.TestCase):
   url = '/robots.txt'
@@ -584,7 +584,7 @@ class Root(unittest.TestCase):
     ff36_cookie = test_utils.TestRequest(self.firefox36)
     ff36_cookie.headers['cookie'] = 'bid=testing'
     ff36_cookie.response_headers.append(
-        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/[a-z]*$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
@@ -642,7 +642,7 @@ class Root(unittest.TestCase):
     ff36_cookie.response_body = None
     ff36_cookie.headers['cookie'] = 'bid=testing'
     ff36_cookie.response_headers.append(
-        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/[a-z]*$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
@@ -747,7 +747,7 @@ class About(unittest.TestCase):
     ff36_cookie = test_utils.TestRequest(self.firefox36)
     ff36_cookie.headers['cookie'] = 'bid=testing'
     ff36_cookie.response_headers.append(
-        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/[a-z]*$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
@@ -805,7 +805,7 @@ class About(unittest.TestCase):
     ff36_cookie.response_body = None
     ff36_cookie.headers['cookie'] = 'bid=testing'
     ff36_cookie.response_headers.append(
-        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/[a-z]*$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
@@ -913,7 +913,7 @@ class Join(unittest.TestCase):
     ff36_cookie = test_utils.TestRequest(self.firefox36)
     ff36_cookie.headers['cookie'] = 'bid=testing'
     ff36_cookie.response_headers.append(
-        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/[a-z]*$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
@@ -971,7 +971,7 @@ class Join(unittest.TestCase):
     ff36_cookie.response_body = None
     ff36_cookie.headers['cookie'] = 'bid=testing'
     ff36_cookie.response_headers.append(
-        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/[a-z]*$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
@@ -1076,7 +1076,7 @@ class Projects(unittest.TestCase):
     ff36_cookie = test_utils.TestRequest(self.firefox36)
     ff36_cookie.headers['cookie'] = 'bid=testing'
     ff36_cookie.response_headers.append(
-        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/[a-z]*[\/]?$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
@@ -1134,7 +1134,7 @@ class Projects(unittest.TestCase):
     ff36_cookie.response_body = None
     ff36_cookie.headers['cookie'] = 'bid=testing'
     ff36_cookie.response_headers.append(
-        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/[a-z]*[\/]?$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
