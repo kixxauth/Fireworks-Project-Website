@@ -28,7 +28,11 @@ See CC-LICENSE in this folder for more details.
 {% endcomment %}{% extends "base.html" %}
 
 {% block title %}Better software - The Fireworks Project{% endblock %}
-{% block head %}<style type="text/css">
+{% block head %}<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<!--
+<script type="text/javascript" src="/js/jquery.js"></script>
+-->
+<style type="text/css">
   #about-page {
     width: 700px;
     overflow: visible;
@@ -48,7 +52,84 @@ See CC-LICENSE in this folder for more details.
   p.description.content {
     margin-bottom: 2em;
   }
-</style>{% endblock %}
+</style>
+<script type="text/javascript">
+//<![CDATA[
+/*jslint
+  browser: true
+, onevar: true
+, undef: true
+, nomen: true
+, eqeqeq: true
+, plusplus: true
+, bitwise: true
+, regexp: true
+, newcap: true
+, immed: true
+, strict: true
+, maxlen: 80
+*/
+
+/*global
+  window: false
+, console: true
+*/
+
+// ECMAScript 5 strict mode.
+"use strict";
+
+// Create a console object if there is not an ambient one.
+if (typeof console === 'undefined') {
+  console = {log: function (message) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    window.setTimeout(function () {
+      var e = new Error(message +' '+ args.join(' '));
+      e.name = 'ConsoleLogging';
+      throw e;
+    }, 0);
+  }};
+}
+
+// Page script is composed inside a closure.
+(function (window) {
+  // jQuery is assigned to j
+  var j = window.jQuery.noConflict()
+    , browser_id = document.cookie.split('=')[1]
+    ;
+
+  console.log(browser_id);
+
+  // The server will send HTML if we don't specify application/json.
+  j.ajaxSetup({'beforeSend': function (xhr) {
+    xhr.setRequestHeader('accept', 'application/json');
+  }});
+
+  j(window)
+    .ajaxError(function (ev, xhr, options, err) {
+        if (options.url !== '/datastore/actions/') {
+          return;
+        }
+        console.log(
+          'jQuery.ajaxError(); posting actions to "/datastore/actions/"')
+      })
+    .bind('unload', function () {
+        j.post('/datastore/actions/'
+          , {
+              browser_id: browser_id
+            , actions: 'window-unload'
+            });
+      })
+    .bind('close', function () {
+        j.post('/datastore/actions/'
+          , {
+              browser_id: browser_id
+            , actions: 'window-close'
+            });
+      })
+    ;
+}(window));
+//]]>
+</script>{% endblock %}
 
 {% block subheading %}Better software.{% endblock %}
 

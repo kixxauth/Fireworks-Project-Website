@@ -119,20 +119,14 @@ class SimpleHandler(Handler):
 
   # Prepare and send the response.
   def respond(self):
+    set_cookie = False
     now = time.time()
     cache_control = 'public'
-
-    response = set_default_headers(
-        self.out(
-          utils.render_template(self.template)))
-    response.mimetype = 'text/html'
-    response.add_etag()
-
-    bid = self.request.cookies.get('bid')
     browser = None
+    key_name = None
+    bid = self.request.cookies.get('bid')
 
     if bid:
-      key_name = None
       try:
         # In most cases the browser_id is a datastore key.
         browser = db.get(db.Key(encoded=bid))
@@ -142,19 +136,32 @@ class SimpleHandler(Handler):
         browser = dstore.Browser.get_by_key_name(key_name)
 
     if browser is None:
+      # Create a new browser object if it does not exist.
+      set_cookie = True
       user_agent, user_agent_str = utils.format_user_agent(self.request)
       user_agent_str = (user_agent.browser and
                         user_agent_str or user_agent.string)
       browser = dstore.Browser(user_agent=user_agent_str)
 
-    req = dstore.format_request(now,
+    # Add this request to the list of requests made by this browser.
+    req = dstore.format_request(int(now),
                                 self.request.path,
                                 self.request.remote_addr)
     browser.requests.append(req)
     k = str(browser.put())
-    if bid is None:
+
+    # Prepare the response.
+    response = set_default_headers(
+        self.out(
+          utils.render_template(self.template)))
+    response.mimetype = 'text/html'
+    response.add_etag()
+
+    if set_cookie:
       # Cookie expires in 1 year.
-      response.set_cookie('bid', value=k, expires=(now + 31556926))
+      response.set_cookie('bid',
+                          value=(key_name and key_name[3:] or k),
+                          expires=(now + 31556926))
       # No public caching when a cookie is sent.
       cache_control = 'private'
 
@@ -420,10 +427,10 @@ class DatastoreActions(DatastoreHandler):
 
     # Append the actions and persist the entity.
     browser.actions = browser.actions + actions
-    k = browser.put()
+    k = str(browser.put())
 
     return self.respond(200, {
-          'browser_id': key_name and key_name[3:] or str(k)
+          'browser_id': key_name and key_name[3:] or k
         , 'user_agent': browser.user_agent
         , 'actions'   : len(browser.actions or [])
         , 'requests'  : len(browser.requests or [])
