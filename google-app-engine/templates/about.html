@@ -94,10 +94,30 @@ if (typeof console === 'undefined') {
 (function (window) {
   // jQuery is assigned to j
   var j = window.jQuery.noConflict()
-    , browser_id = document.cookie.split('=')[1]
+    , cookies = (function () {
+        var rv = {}
+          , parts = document.cookie.split(';')
+          , i = 0
+          , c, ck
+          ;
+        for (; i < parts.length; i += 1) {
+          c = parts[i].split('=');
+          ck = c[0];
+          while (ck.charAt(0) === ' ') {
+            ck = ck.slice(1);
+          }
+          rv[ck] = c[1];
+        }
+        return rv;
+      }())
+
+    , browser_id = cookies.bid || 'anonymous'
+    , req_id = cookies.rid || 'undefined'
     ;
 
-  console.log('cookies', document.cookie);
+  function format_action(action) {
+    return req_id +';'+ new Date().getTime() +';'+ action;
+  }
 
   // The server will send HTML if we don't specify application/json.
   j.ajaxSetup({'beforeSend': function (xhr) {
@@ -111,17 +131,30 @@ if (typeof console === 'undefined') {
         }
         console.log(
           'jQuery.ajaxError(); posting actions to "/datastore/actions/"')
+        console.log('HTTP status', xhr.status);
       })
-  /*
     .bind('unload', function () {
         j.post('/datastore/actions/'
           , {
               browser_id: browser_id
-            , actions: 'window-unload'
+            , actions: format_action('window_unload')
             });
       })
-      */
     ;
+
+  j.post('/datastore/actions/'
+    , {
+        browser_id: browser_id
+      , actions: format_action('window_loading')
+      });
+
+  j(function () {
+    j.post('/datastore/actions/'
+      , {
+          browser_id: browser_id
+        , actions: format_action('DOM_loaded')
+        });
+  });
 }(window));
 //]]>
 </script>{% endblock %}
