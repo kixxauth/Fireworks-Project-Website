@@ -97,7 +97,7 @@ if (typeof console === 'undefined') {
     , browser_id = document.cookie.split('=')[1]
     ;
 
-  console.log(browser_id);
+  console.log('cookies', document.cookie);
 
   // The server will send HTML if we don't specify application/json.
   j.ajaxSetup({'beforeSend': function (xhr) {
@@ -112,6 +112,7 @@ if (typeof console === 'undefined') {
         console.log(
           'jQuery.ajaxError(); posting actions to "/datastore/actions/"')
       })
+  /*
     .bind('unload', function () {
         j.post('/datastore/actions/'
           , {
@@ -119,13 +120,7 @@ if (typeof console === 'undefined') {
             , actions: 'window-unload'
             });
       })
-    .bind('close', function () {
-        j.post('/datastore/actions/'
-          , {
-              browser_id: browser_id
-            , actions: 'window-close'
-            });
-      })
+      */
     ;
 }(window));
 //]]>

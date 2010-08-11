@@ -121,7 +121,7 @@ class SimpleHandler(Handler):
   def respond(self):
     set_cookie = False
     now = time.time()
-    cache_control = 'public'
+    req_time = int(now)
     browser = None
     key_name = None
     bid = self.request.cookies.get('bid')
@@ -141,12 +141,13 @@ class SimpleHandler(Handler):
       user_agent, user_agent_str = utils.format_user_agent(self.request)
       user_agent_str = (user_agent.browser and
                         user_agent_str or user_agent.string)
-      browser = dstore.Browser(user_agent=user_agent_str)
+      browser = dstore.Browser(key_name=key_name, user_agent=user_agent_str)
 
     # Add this request to the list of requests made by this browser.
-    req = dstore.format_request(int(now),
+    req = dstore.format_request(req_time,
                                 self.request.path,
-                                self.request.remote_addr)
+                                self.request.remote_addr,
+                                self.request.referrer)
     browser.requests.append(req)
     k = str(browser.put())
 
@@ -157,19 +158,21 @@ class SimpleHandler(Handler):
     response.mimetype = 'text/html'
     response.add_etag()
 
+    # Maybe set the browser id cookie.
     if set_cookie:
-      # Cookie expires in 1 year.
       response.set_cookie('bid',
-                          value=(key_name and key_name[3:] or k),
-                          expires=(now + 31556926))
-      # No public caching when a cookie is sent.
-      cache_control = 'private'
+                          value=(key_name and key_name[4:] or k),
+                          expires=(now + 31556926)) # Exp in 1 year.
+
+    # Set the request id nomatter what.
+    response.set_cookie('rid', value=req_time)
 
     # Expire in 4 days.
     response.expires = now + (86400 * 4)
-    response.headers['Cache-Control'] = \
-        '%s, max-age=%d' % (cache_control, (86400 * 4))
+    # Caching is private because we're setting a cookie.
+    response.headers['Cache-Control'] = 'private, max-age=%d' % (86400 * 4)
 
+    # Only send a response body if the E-Tag does not match.
     return response.make_conditional(self.request)
 
   def get(self):
@@ -430,7 +433,7 @@ class DatastoreActions(DatastoreHandler):
     k = str(browser.put())
 
     return self.respond(200, {
-          'browser_id': key_name and key_name[3:] or k
+          'browser_id': key_name and key_name[4:] or k
         , 'user_agent': browser.user_agent
         , 'actions'   : len(browser.actions or [])
         , 'requests'  : len(browser.requests or [])

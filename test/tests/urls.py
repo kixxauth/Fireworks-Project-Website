@@ -55,7 +55,7 @@ firefox36_config.response_body = True
 bid_len = '48'
 if test_utils.LOCAL:
   bid_len = '46'
-cookie_regex = re.compile('^bid=[a-zA-Z0-9]{'+ bid_len +'}; expires=[SMTWF]{1}[unoedhriat]{2}, [0-3]{1}[0-9]{1}\-[JFMASOND]{1}[anebrpyulgctov]{2}\-20[0-9]{2} [012]{1}[0-9]{1}:[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1} GMT; Path=\/$')
+cookie_regex = re.compile('^bid=[a-zA-Z0-9]{'+ bid_len +'}; expires=[SMTWF]{1}[unoedhriat]{2}, [0-3]{1}[0-9]{1}\-[JFMASOND]{1}[anebrpyulgctov]{2}\-20[0-9]{2} [012]{1}[0-9]{1}:[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1} GMT; Path=\/, rid=[0-9]{10}; Path=\/$')
 
 class RobotsTxt(unittest.TestCase):
   url = '/robots.txt'
@@ -524,7 +524,7 @@ class Root(unittest.TestCase):
             ('expires', 'regex', test_utils.HTTP_DATE_RX),
             ('pragma', 'eq', None),
             # Expire in 4 days.
-            ('cache-control', 'eq', 'public, max-age=345600'),
+            ('cache-control', 'eq', 'private, max-age=345600'),
             ('content-encoding', 'eq', None),
             ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
@@ -539,7 +539,7 @@ class Root(unittest.TestCase):
             ('expires', 'regex', test_utils.HTTP_DATE_RX),
             ('pragma', 'eq', None),
             # Expire in 4 days.
-            ('cache-control', 'eq', 'public, max-age=345600'),
+            ('cache-control', 'eq', 'private, max-age=345600'),
             ('content-encoding', 'eq', 'gzip'),
             ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
@@ -579,13 +579,12 @@ class Root(unittest.TestCase):
     """GET request for /
     """
     ff36_nocookie = test_utils.TestRequest(self.firefox36)
-    ff36_nocookie.response_headers[5] = (
-        'cache-control', 'eq', 'private, max-age=345600')
     ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
 
     ff36_cookie = test_utils.TestRequest(self.firefox36)
     ff36_cookie.headers['cookie'] = 'bid=testing'
-    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+    ff36_cookie.response_headers.append(
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
@@ -635,8 +634,6 @@ class Root(unittest.TestCase):
     ff36_nocookie.response_headers[6] = content_enc
     ff36_nocookie.response_headers[7] = content_length
     ff36_nocookie.response_body = None
-    ff36_nocookie.response_headers[5] = (
-        'cache-control', 'eq', 'private, max-age=345600')
     ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
 
     ff36_cookie = test_utils.TestRequest(self.firefox36)
@@ -644,7 +641,8 @@ class Root(unittest.TestCase):
     ff36_cookie.response_headers[7] = content_length
     ff36_cookie.response_body = None
     ff36_cookie.headers['cookie'] = 'bid=testing'
-    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+    ff36_cookie.response_headers.append(
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
@@ -689,7 +687,7 @@ class About(unittest.TestCase):
             ('expires', 'regex', test_utils.HTTP_DATE_RX),
             ('pragma', 'eq', None),
             # Expire in 4 days.
-            ('cache-control', 'eq', 'public, max-age=345600'),
+            ('cache-control', 'eq', 'private, max-age=345600'),
             ('content-encoding', 'eq', None),
             ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
@@ -704,7 +702,7 @@ class About(unittest.TestCase):
             ('expires', 'regex', test_utils.HTTP_DATE_RX),
             ('pragma', 'eq', None),
             # Expire in 4 days.
-            ('cache-control', 'eq', 'public, max-age=345600'),
+            ('cache-control', 'eq', 'private, max-age=345600'),
             ('content-encoding', 'eq', 'gzip'),
             ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
@@ -744,13 +742,12 @@ class About(unittest.TestCase):
     """GET request for /about
     """
     ff36_nocookie = test_utils.TestRequest(self.firefox36)
-    ff36_nocookie.response_headers[5] = (
-        'cache-control', 'eq', 'private, max-age=345600')
     ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
 
     ff36_cookie = test_utils.TestRequest(self.firefox36)
     ff36_cookie.headers['cookie'] = 'bid=testing'
-    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+    ff36_cookie.response_headers.append(
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
@@ -800,8 +797,6 @@ class About(unittest.TestCase):
     ff36_nocookie.response_headers[6] = content_enc
     ff36_nocookie.response_headers[7] = content_length
     ff36_nocookie.response_body = None
-    ff36_nocookie.response_headers[5] = (
-        'cache-control', 'eq', 'private, max-age=345600')
     ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
 
     ff36_cookie = test_utils.TestRequest(self.firefox36)
@@ -809,7 +804,8 @@ class About(unittest.TestCase):
     ff36_cookie.response_headers[7] = content_length
     ff36_cookie.response_body = None
     ff36_cookie.headers['cookie'] = 'bid=testing'
-    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+    ff36_cookie.response_headers.append(
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
@@ -857,7 +853,7 @@ class Join(unittest.TestCase):
             ('expires', 'regex', test_utils.HTTP_DATE_RX),
             ('pragma', 'eq', None),
             # Expire in 4 days.
-            ('cache-control', 'eq', 'public, max-age=345600'),
+            ('cache-control', 'eq', 'private, max-age=345600'),
             ('content-encoding', 'eq', None),
             ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
@@ -872,7 +868,7 @@ class Join(unittest.TestCase):
             ('expires', 'regex', test_utils.HTTP_DATE_RX),
             ('pragma', 'eq', None),
             # Expire in 4 days.
-            ('cache-control', 'eq', 'public, max-age=345600'),
+            ('cache-control', 'eq', 'private, max-age=345600'),
             ('content-encoding', 'eq', 'gzip'),
             ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
@@ -912,13 +908,12 @@ class Join(unittest.TestCase):
     """GET request for /join
     """
     ff36_nocookie = test_utils.TestRequest(self.firefox36)
-    ff36_nocookie.response_headers[5] = (
-        'cache-control', 'eq', 'private, max-age=345600')
     ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
 
     ff36_cookie = test_utils.TestRequest(self.firefox36)
     ff36_cookie.headers['cookie'] = 'bid=testing'
-    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+    ff36_cookie.response_headers.append(
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
@@ -968,8 +963,6 @@ class Join(unittest.TestCase):
     ff36_nocookie.response_headers[6] = content_enc
     ff36_nocookie.response_headers[7] = content_length
     ff36_nocookie.response_body = None
-    ff36_nocookie.response_headers[5] = (
-        'cache-control', 'eq', 'private, max-age=345600')
     ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
 
     ff36_cookie = test_utils.TestRequest(self.firefox36)
@@ -977,7 +970,8 @@ class Join(unittest.TestCase):
     ff36_cookie.response_headers[7] = content_length
     ff36_cookie.response_body = None
     ff36_cookie.headers['cookie'] = 'bid=testing'
-    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+    ff36_cookie.response_headers.append(
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
@@ -1022,7 +1016,7 @@ class Projects(unittest.TestCase):
             ('expires', 'regex', test_utils.HTTP_DATE_RX),
             ('pragma', 'eq', None),
             # Expire in 4 days.
-            ('cache-control', 'eq', 'public, max-age=345600'),
+            ('cache-control', 'eq', 'private, max-age=345600'),
             ('content-encoding', 'eq', None),
             ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
@@ -1037,7 +1031,7 @@ class Projects(unittest.TestCase):
             ('expires', 'regex', test_utils.HTTP_DATE_RX),
             ('pragma', 'eq', None),
             # Expire in 4 days.
-            ('cache-control', 'eq', 'public, max-age=345600'),
+            ('cache-control', 'eq', 'private, max-age=345600'),
             ('content-encoding', 'eq', 'gzip'),
             ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
@@ -1077,13 +1071,12 @@ class Projects(unittest.TestCase):
     """GET request for /projects/
     """
     ff36_nocookie = test_utils.TestRequest(self.firefox36)
-    ff36_nocookie.response_headers[5] = (
-        'cache-control', 'eq', 'private, max-age=345600')
     ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
 
     ff36_cookie = test_utils.TestRequest(self.firefox36)
     ff36_cookie.headers['cookie'] = 'bid=testing'
-    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+    ff36_cookie.response_headers.append(
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)
@@ -1133,8 +1126,6 @@ class Projects(unittest.TestCase):
     ff36_nocookie.response_headers[6] = content_enc
     ff36_nocookie.response_headers[7] = content_length
     ff36_nocookie.response_body = None
-    ff36_nocookie.response_headers[5] = (
-        'cache-control', 'eq', 'private, max-age=345600')
     ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
 
     ff36_cookie = test_utils.TestRequest(self.firefox36)
@@ -1142,7 +1133,8 @@ class Projects(unittest.TestCase):
     ff36_cookie.response_headers[7] = content_length
     ff36_cookie.response_body = None
     ff36_cookie.headers['cookie'] = 'bid=testing'
-    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+    ff36_cookie.response_headers.append(
+        ('set-cookie', 'regex', re.compile('^rid=[0-9]{10}; Path=\/$')))
 
     configs = test_utils.TestConfig()
     configs.update('firefox36_no_cookie', ff36_nocookie)

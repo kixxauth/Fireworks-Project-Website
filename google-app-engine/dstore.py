@@ -15,6 +15,6 @@ class Browser(db.Model):
   requests = db.StringListProperty(indexed=False)
   actions = db.StringListProperty(indexed=False)
 
-def format_request(timestamp, path, address):
-  return '%d;%s;%s'% (timestamp, path, address)
+def format_request(timestamp, path, address, referrer):
+  return '%d;%s;%s;%s'% (timestamp, path, address, referrer)
 
