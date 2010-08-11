@@ -572,8 +572,17 @@ class Root(unittest.TestCase):
   def get(self):
     """GET request for /
     """
+    rx = re.compile('^bid=[a-zA-Z0-9]{46}; expires=[SMTWF]{1}[unoedhriat]{2}, [0-3]{1}[0-9]{1}\-[JFMASOND]{1}[anebrpyulgctov]{2}\-20[0-9]{2} [012]{1}[0-9]{1}:[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1} GMT; Path=\/$')
+    ff36_nocookie = test_utils.TestRequest(self.firefox36)
+    ff36_nocookie.response_headers.append(('set-cookie', 'regex', rx))
+
+    ff36_cookie = test_utils.TestRequest(self.firefox36)
+    ff36_cookie.headers['cookie'] = 'bid=testing'
+    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+
     configs = test_utils.TestConfig()
-    configs.update('firefox36', self.firefox36)
+    configs.update('firefox36_no_cookie', ff36_nocookie)
+    configs.update('firefox36_cookie', ff36_cookie)
     return configs.items()
 
   @test_function
@@ -1884,7 +1893,7 @@ class DatastoreActions(unittest.TestCase):
     ff36.headers['Content-Length'] = str(len(ff36.body))
     ff36.headers['Content-Type'] = 'application/x-www-form-urlencoded'
 
-    ff36.response_status = 400
+    ff36.response_status = 409
 
     configs = test_utils.TestConfig()
     configs.update('firefox36', ff36)

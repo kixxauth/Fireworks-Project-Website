@@ -119,6 +119,8 @@ class SimpleHandler(Handler):
 
   # Prepare and send the response.
   def respond(self):
+    now = time.time()
+
     response = set_default_headers(
         self.out(
           utils.render_template(self.template)))
@@ -126,8 +128,36 @@ class SimpleHandler(Handler):
     response.add_etag()
 
     # Expire in 4 days.
-    response.expires = time.time() + (86400 * 4)
+    response.expires = now + (86400 * 4)
     response.headers['Cache-Control'] = 'public, max-age=%d' % (86400 * 4)
+
+    bid = self.request.cookies.get('bid')
+    browser = None
+
+    if bid:
+      key_name = None
+      try:
+        # In most cases the browser_id is a datastore key.
+        browser = db.get(db.Key(encoded=bid))
+      except db.BadKeyError:
+        # But, sometimes it may be a key_name instead.
+        key_name = 'bid_'+ bid
+        browser = dstore.Browser.get_by_key_name(key_name)
+
+    if browser is None:
+      user_agent, user_agent_str = utils.format_user_agent(self.request)
+      user_agent_str = (user_agent.browser and
+                        user_agent_str or user_agent.string)
+      browser = dstore.Browser(user_agent=user_agent_str)
+
+    req = dstore.format_request(now,
+                                self.request.path,
+                                self.request.remote_addr)
+    browser.requests.append(req)
+    k = str(browser.put())
+    if bid is None:
+      # Cookie expires in 1 year
+      response.set_cookie('bid', value=k, expires=(now + 31556926))
 
     return response.make_conditional(self.request)
 
@@ -360,7 +390,7 @@ class DatastoreActions(DatastoreHandler):
     browser_id = data.get('browser_id')
     if not browser_id:
       e = self.response_error('ValidationError', 'missing "browser_id" property')
-      return self.respond(400, e)
+      return self.respond(409, e)
 
     actions = data.get('actions')
     actions = isinstance(actions, list) and actions or [actions]
@@ -368,7 +398,7 @@ class DatastoreActions(DatastoreHandler):
     key_name = None
     try:
       # In most cases the browser_id is a datastore key.
-      browser = db.get(browser_id)
+      browser = db.get(db.Key(encoded=browser_id))
     except db.BadKeyError:
       # But, sometimes it may be a key_name instead.
       key_name = 'bid_'+ browser_id

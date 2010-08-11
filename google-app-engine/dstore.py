@@ -12,6 +12,9 @@ class Subscriber(db.Model):
 
 class Browser(db.Model):
   user_agent = db.StringProperty()
-  requests = db.StringProperty(indexed=False)
+  requests = db.StringListProperty(indexed=False)
   actions = db.StringListProperty(indexed=False)
+
+def format_request(timestamp, path, address):
+  return '%d;%s;%s'% (timestamp, path, address)
 
