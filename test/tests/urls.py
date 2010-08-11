@@ -51,6 +51,12 @@ firefox36_config.response_headers = []
 # assert that a response body exists.
 firefox36_config.response_body = True
 
+# Define the cookie detection regex once.
+bid_len = '48'
+if test_utils.LOCAL:
+  bid_len = '46'
+cookie_regex = re.compile('^bid=[a-zA-Z0-9]{'+ bid_len +'}; expires=[SMTWF]{1}[unoedhriat]{2}, [0-3]{1}[0-9]{1}\-[JFMASOND]{1}[anebrpyulgctov]{2}\-20[0-9]{2} [012]{1}[0-9]{1}:[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1} GMT; Path=\/$')
+
 class RobotsTxt(unittest.TestCase):
   url = '/robots.txt'
 
@@ -572,9 +578,10 @@ class Root(unittest.TestCase):
   def get(self):
     """GET request for /
     """
-    rx = re.compile('^bid=[a-zA-Z0-9]{46}; expires=[SMTWF]{1}[unoedhriat]{2}, [0-3]{1}[0-9]{1}\-[JFMASOND]{1}[anebrpyulgctov]{2}\-20[0-9]{2} [012]{1}[0-9]{1}:[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1} GMT; Path=\/$')
     ff36_nocookie = test_utils.TestRequest(self.firefox36)
-    ff36_nocookie.response_headers.append(('set-cookie', 'regex', rx))
+    ff36_nocookie.response_headers[5] = (
+        'cache-control', 'eq', 'private, max-age=345600')
+    ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
 
     ff36_cookie = test_utils.TestRequest(self.firefox36)
     ff36_cookie.headers['cookie'] = 'bid=testing'
@@ -621,12 +628,27 @@ class Root(unittest.TestCase):
   def head(self):
     """HEAD request for /
     """
-    ff36 = test_utils.TestRequest(self.firefox36)
-    ff36.response_headers[6] = ('content-encoding', 'eq', None)
-    ff36.response_headers[7] = ('content-length', 'eq', '0')
-    ff36.response_body = None
+    content_enc = ('content-encoding', 'eq', None)
+    content_length = ('content-length', 'eq', '0')
+
+    ff36_nocookie = test_utils.TestRequest(self.firefox36)
+    ff36_nocookie.response_headers[6] = content_enc
+    ff36_nocookie.response_headers[7] = content_length
+    ff36_nocookie.response_body = None
+    ff36_nocookie.response_headers[5] = (
+        'cache-control', 'eq', 'private, max-age=345600')
+    ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
+
+    ff36_cookie = test_utils.TestRequest(self.firefox36)
+    ff36_cookie.response_headers[6] = content_enc
+    ff36_cookie.response_headers[7] = content_length
+    ff36_cookie.response_body = None
+    ff36_cookie.headers['cookie'] = 'bid=testing'
+    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+
     configs = test_utils.TestConfig()
-    configs.update('firefox36', ff36)
+    configs.update('firefox36_no_cookie', ff36_nocookie)
+    configs.update('firefox36_cookie', ff36_cookie)
     return configs.items()
 
   @test_function
@@ -640,6 +662,171 @@ class Root(unittest.TestCase):
   @test_function
   def trace(self):
     """TRACE request for /
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36_not_allowed)
+    return configs.items()
+
+class About(unittest.TestCase):
+  url = '/about'
+
+  def configure(self):
+    """Set up the request/response data.
+
+    The test_utils.test_function decorator will cause this method
+    to be called once for this test class, but NOT each time a test
+    function is called.
+    """
+    self.firefox36 = test_utils.TestRequest(firefox36_config)
+    self.firefox36.response_status = 200
+    self.firefox36.response_body = True
+
+    if test_utils.LOCAL:
+      self.firefox36.response_headers = [
+            ('etag', 'regex', re.compile('"[0-9a-f]{32}"')),
+            ('server', 'eq', 'Development/1.0'),
+            ('date', 'regex', test_utils.HTTP_DATE_RX),
+            ('expires', 'regex', test_utils.HTTP_DATE_RX),
+            ('pragma', 'eq', None),
+            # Expire in 4 days.
+            ('cache-control', 'eq', 'public, max-age=345600'),
+            ('content-encoding', 'eq', None),
+            ('content-length', 'regex', re.compile('[0-9]+')),
+            ('content-type', 'eq', 'text/html; charset=utf-8'),
+            ('x-xss-protection', 'eq', '0')
+          ]
+
+    else:
+      self.firefox36.response_headers = [
+            ('etag', 'regex', re.compile('"[0-9a-f]{32}"')),
+            ('server', 'eq', 'Google Frontend'),
+            ('date', 'regex', test_utils.HTTP_DATE_RX),
+            ('expires', 'regex', test_utils.HTTP_DATE_RX),
+            ('pragma', 'eq', None),
+            # Expire in 4 days.
+            ('cache-control', 'eq', 'public, max-age=345600'),
+            ('content-encoding', 'eq', 'gzip'),
+            ('content-length', 'regex', re.compile('[0-9]+')),
+            ('content-type', 'eq', 'text/html; charset=utf-8'),
+            ('x-xss-protection', 'eq', '0')
+          ]
+
+    # Make a special request for the not allowed method tests.
+    self.firefox36_not_allowed = test_utils.TestRequest(self.firefox36)
+    self.firefox36_not_allowed.response_status = 405
+
+    # The error page is served in simple text/html.
+    self.firefox36_not_allowed.response_body = True
+    self.firefox36_not_allowed.response_headers[8] = ('content-type', 'eq', 'text/html')
+    self.firefox36_not_allowed.response_headers[9] = ('x-xss-protection', 'eq', None)
+    self.firefox36_not_allowed.response_headers.append(
+        ('allow', 'eq', 'GET, HEAD'))
+    self.firefox36_not_allowed.response_headers[0] = ('etag', 'eq', None)
+
+    if test_utils.LOCAL:
+      # The dev_appserver autimatically sets the Expires and Cache-Control
+      # headers -- annoying.
+      self.firefox36_not_allowed.response_headers[3] = (
+          'expires', 'eq', 'Fri, 01 Jan 1990 00:00:00 GMT')
+      self.firefox36_not_allowed.response_headers[5] = (
+          'cache-control', 'eq', 'no-cache')
+    else:
+      self.firefox36_not_allowed.response_headers[3] = (
+          'expires', 'eq', None)
+      # And the production server automatically sets the Cache-Control header,
+      # but I'm assuming this is because we don't set it in our 405 handler.
+      # See issue #28
+      self.firefox36_not_allowed.response_headers[5] = (
+          'cache-control', 'eq', 'private, x-gzip-ok=""')
+
+  @test_function
+  def get(self):
+    """GET request for /about
+    """
+    ff36_nocookie = test_utils.TestRequest(self.firefox36)
+    ff36_nocookie.response_headers[5] = (
+        'cache-control', 'eq', 'private, max-age=345600')
+    ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
+
+    ff36_cookie = test_utils.TestRequest(self.firefox36)
+    ff36_cookie.headers['cookie'] = 'bid=testing'
+    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+
+    configs = test_utils.TestConfig()
+    configs.update('firefox36_no_cookie', ff36_nocookie)
+    configs.update('firefox36_cookie', ff36_cookie)
+    return configs.items()
+
+  @test_function
+  def put(self):
+    """PUT request for /about
+    """
+    ff36 = test_utils.TestRequest(self.firefox36_not_allowed)
+    ff36.body = '<html>Some HTML</html>'
+    ff36.headers['Content-Length'] = str(len(ff36.body))
+    ff36.headers['Content-Type'] = 'text/html'
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', ff36)
+    return configs.items()
+
+  @test_function
+  def post(self):
+    """POST request for /about
+    """
+    ff36 = test_utils.TestRequest(self.firefox36_not_allowed)
+    ff36.body = 's=foo&num=44'
+    ff36.headers['Content-Length'] = str(len(ff36.body))
+    ff36.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', ff36)
+    return configs.items()
+
+  @test_function
+  def delete(self):
+    """DELETE request for /about
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36_not_allowed)
+    return configs.items()
+
+  @test_function
+  def head(self):
+    """HEAD request for /about
+    """
+    content_enc = ('content-encoding', 'eq', None)
+    content_length = ('content-length', 'eq', '0')
+
+    ff36_nocookie = test_utils.TestRequest(self.firefox36)
+    ff36_nocookie.response_headers[6] = content_enc
+    ff36_nocookie.response_headers[7] = content_length
+    ff36_nocookie.response_body = None
+    ff36_nocookie.response_headers[5] = (
+        'cache-control', 'eq', 'private, max-age=345600')
+    ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
+
+    ff36_cookie = test_utils.TestRequest(self.firefox36)
+    ff36_cookie.response_headers[6] = content_enc
+    ff36_cookie.response_headers[7] = content_length
+    ff36_cookie.response_body = None
+    ff36_cookie.headers['cookie'] = 'bid=testing'
+    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+
+    configs = test_utils.TestConfig()
+    configs.update('firefox36_no_cookie', ff36_nocookie)
+    configs.update('firefox36_cookie', ff36_cookie)
+    return configs.items()
+
+  @test_function
+  def options(self):
+    """OPTIONS request for /about
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36_not_allowed)
+    return configs.items()
+
+  @test_function
+  def trace(self):
+    """TRACE request for /about
     """
     configs = test_utils.TestConfig()
     configs.update('firefox36', self.firefox36_not_allowed)
@@ -724,8 +911,18 @@ class Join(unittest.TestCase):
   def get(self):
     """GET request for /join
     """
+    ff36_nocookie = test_utils.TestRequest(self.firefox36)
+    ff36_nocookie.response_headers[5] = (
+        'cache-control', 'eq', 'private, max-age=345600')
+    ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
+
+    ff36_cookie = test_utils.TestRequest(self.firefox36)
+    ff36_cookie.headers['cookie'] = 'bid=testing'
+    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+
     configs = test_utils.TestConfig()
-    configs.update('firefox36', self.firefox36)
+    configs.update('firefox36_no_cookie', ff36_nocookie)
+    configs.update('firefox36_cookie', ff36_cookie)
     return configs.items()
 
   @test_function
@@ -764,12 +961,27 @@ class Join(unittest.TestCase):
   def head(self):
     """HEAD request for /join
     """
-    ff36 = test_utils.TestRequest(self.firefox36)
-    ff36.response_headers[6] = ('content-encoding', 'eq', None)
-    ff36.response_headers[7] = ('content-length', 'eq', '0')
-    ff36.response_body = None
+    content_enc = ('content-encoding', 'eq', None)
+    content_length = ('content-length', 'eq', '0')
+
+    ff36_nocookie = test_utils.TestRequest(self.firefox36)
+    ff36_nocookie.response_headers[6] = content_enc
+    ff36_nocookie.response_headers[7] = content_length
+    ff36_nocookie.response_body = None
+    ff36_nocookie.response_headers[5] = (
+        'cache-control', 'eq', 'private, max-age=345600')
+    ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
+
+    ff36_cookie = test_utils.TestRequest(self.firefox36)
+    ff36_cookie.response_headers[6] = content_enc
+    ff36_cookie.response_headers[7] = content_length
+    ff36_cookie.response_body = None
+    ff36_cookie.headers['cookie'] = 'bid=testing'
+    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+
     configs = test_utils.TestConfig()
-    configs.update('firefox36', ff36)
+    configs.update('firefox36_no_cookie', ff36_nocookie)
+    configs.update('firefox36_cookie', ff36_cookie)
     return configs.items()
 
   @test_function
@@ -864,8 +1076,18 @@ class Projects(unittest.TestCase):
   def get(self):
     """GET request for /projects/
     """
+    ff36_nocookie = test_utils.TestRequest(self.firefox36)
+    ff36_nocookie.response_headers[5] = (
+        'cache-control', 'eq', 'private, max-age=345600')
+    ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
+
+    ff36_cookie = test_utils.TestRequest(self.firefox36)
+    ff36_cookie.headers['cookie'] = 'bid=testing'
+    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+
     configs = test_utils.TestConfig()
-    configs.update('firefox36', self.firefox36)
+    configs.update('firefox36_no_cookie', ff36_nocookie)
+    configs.update('firefox36_cookie', ff36_cookie)
     return configs.items()
 
   @test_function
@@ -904,12 +1126,27 @@ class Projects(unittest.TestCase):
   def head(self):
     """HEAD request for /projects/
     """
-    ff36 = test_utils.TestRequest(self.firefox36)
-    ff36.response_headers[6] = ('content-encoding', 'eq', None)
-    ff36.response_headers[7] = ('content-length', 'eq', '0')
-    ff36.response_body = None
+    content_enc = ('content-encoding', 'eq', None)
+    content_length = ('content-length', 'eq', '0')
+
+    ff36_nocookie = test_utils.TestRequest(self.firefox36)
+    ff36_nocookie.response_headers[6] = content_enc
+    ff36_nocookie.response_headers[7] = content_length
+    ff36_nocookie.response_body = None
+    ff36_nocookie.response_headers[5] = (
+        'cache-control', 'eq', 'private, max-age=345600')
+    ff36_nocookie.response_headers.append(('set-cookie', 'regex', cookie_regex))
+
+    ff36_cookie = test_utils.TestRequest(self.firefox36)
+    ff36_cookie.response_headers[6] = content_enc
+    ff36_cookie.response_headers[7] = content_length
+    ff36_cookie.response_body = None
+    ff36_cookie.headers['cookie'] = 'bid=testing'
+    ff36_cookie.response_headers.append(('set-cookie', 'eq', None))
+
     configs = test_utils.TestConfig()
-    configs.update('firefox36', ff36)
+    configs.update('firefox36_no_cookie', ff36_nocookie)
+    configs.update('firefox36_cookie', ff36_cookie)
     return configs.items()
 
   @test_function
@@ -923,146 +1160,6 @@ class Projects(unittest.TestCase):
   @test_function
   def trace(self):
     """TRACE request for /projects/
-    """
-    configs = test_utils.TestConfig()
-    configs.update('firefox36', self.firefox36_not_allowed)
-    return configs.items()
-
-class About(unittest.TestCase):
-  url = '/about'
-
-  def configure(self):
-    """Set up the request/response data.
-
-    The test_utils.test_function decorator will cause this method
-    to be called once for this test class, but NOT each time a test
-    function is called.
-    """
-    self.firefox36 = test_utils.TestRequest(firefox36_config)
-    self.firefox36.response_status = 200
-    self.firefox36.response_body = True
-
-    if test_utils.LOCAL:
-      self.firefox36.response_headers = [
-            ('etag', 'regex', re.compile('"[0-9a-f]{32}"')),
-            ('server', 'eq', 'Development/1.0'),
-            ('date', 'regex', test_utils.HTTP_DATE_RX),
-            ('expires', 'regex', test_utils.HTTP_DATE_RX),
-            ('pragma', 'eq', None),
-            # Expire in 4 days.
-            ('cache-control', 'eq', 'public, max-age=345600'),
-            ('content-encoding', 'eq', None),
-            ('content-length', 'regex', re.compile('[0-9]+')),
-            ('content-type', 'eq', 'text/html; charset=utf-8'),
-            ('x-xss-protection', 'eq', '0')
-          ]
-
-    else:
-      self.firefox36.response_headers = [
-            ('etag', 'regex', re.compile('"[0-9a-f]{32}"')),
-            ('server', 'eq', 'Google Frontend'),
-            ('date', 'regex', test_utils.HTTP_DATE_RX),
-            ('expires', 'regex', test_utils.HTTP_DATE_RX),
-            ('pragma', 'eq', None),
-            # Expire in 4 days.
-            ('cache-control', 'eq', 'public, max-age=345600'),
-            ('content-encoding', 'eq', 'gzip'),
-            ('content-length', 'regex', re.compile('[0-9]+')),
-            ('content-type', 'eq', 'text/html; charset=utf-8'),
-            ('x-xss-protection', 'eq', '0')
-          ]
-
-    # Make a special request for the not allowed method tests.
-    self.firefox36_not_allowed = test_utils.TestRequest(self.firefox36)
-    self.firefox36_not_allowed.response_status = 405
-
-    # The error page is served in simple text/html.
-    self.firefox36_not_allowed.response_body = True
-    self.firefox36_not_allowed.response_headers[8] = ('content-type', 'eq', 'text/html')
-    self.firefox36_not_allowed.response_headers[9] = ('x-xss-protection', 'eq', None)
-    self.firefox36_not_allowed.response_headers.append(
-        ('allow', 'eq', 'GET, HEAD'))
-    self.firefox36_not_allowed.response_headers[0] = ('etag', 'eq', None)
-
-    if test_utils.LOCAL:
-      # The dev_appserver autimatically sets the Expires and Cache-Control
-      # headers -- annoying.
-      self.firefox36_not_allowed.response_headers[3] = (
-          'expires', 'eq', 'Fri, 01 Jan 1990 00:00:00 GMT')
-      self.firefox36_not_allowed.response_headers[5] = (
-          'cache-control', 'eq', 'no-cache')
-    else:
-      self.firefox36_not_allowed.response_headers[3] = (
-          'expires', 'eq', None)
-      # And the production server automatically sets the Cache-Control header,
-      # but I'm assuming this is because we don't set it in our 405 handler.
-      # See issue #28
-      self.firefox36_not_allowed.response_headers[5] = (
-          'cache-control', 'eq', 'private, x-gzip-ok=""')
-
-  @test_function
-  def get(self):
-    """GET request for /about
-    """
-    configs = test_utils.TestConfig()
-    configs.update('firefox36', self.firefox36)
-    return configs.items()
-
-  @test_function
-  def put(self):
-    """PUT request for /about
-    """
-    ff36 = test_utils.TestRequest(self.firefox36_not_allowed)
-    ff36.body = '<html>Some HTML</html>'
-    ff36.headers['Content-Length'] = str(len(ff36.body))
-    ff36.headers['Content-Type'] = 'text/html'
-    configs = test_utils.TestConfig()
-    configs.update('firefox36', ff36)
-    return configs.items()
-
-  @test_function
-  def post(self):
-    """POST request for /about
-    """
-    ff36 = test_utils.TestRequest(self.firefox36_not_allowed)
-    ff36.body = 's=foo&num=44'
-    ff36.headers['Content-Length'] = str(len(ff36.body))
-    ff36.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-    configs = test_utils.TestConfig()
-    configs.update('firefox36', ff36)
-    return configs.items()
-
-  @test_function
-  def delete(self):
-    """DELETE request for /about
-    """
-    configs = test_utils.TestConfig()
-    configs.update('firefox36', self.firefox36_not_allowed)
-    return configs.items()
-
-  @test_function
-  def head(self):
-    """HEAD request for /about
-    """
-    ff36 = test_utils.TestRequest(self.firefox36)
-    ff36.response_headers[6] = ('content-encoding', 'eq', None)
-    ff36.response_headers[7] = ('content-length', 'eq', '0')
-    ff36.response_body = None
-    configs = test_utils.TestConfig()
-    configs.update('firefox36', ff36)
-    return configs.items()
-
-  @test_function
-  def options(self):
-    """OPTIONS request for /about
-    """
-    configs = test_utils.TestConfig()
-    configs.update('firefox36', self.firefox36_not_allowed)
-    return configs.items()
-
-  @test_function
-  def trace(self):
-    """TRACE request for /about
     """
     configs = test_utils.TestConfig()
     configs.update('firefox36', self.firefox36_not_allowed)

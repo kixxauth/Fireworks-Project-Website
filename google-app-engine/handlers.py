@@ -120,16 +120,13 @@ class SimpleHandler(Handler):
   # Prepare and send the response.
   def respond(self):
     now = time.time()
+    cache_control = 'public'
 
     response = set_default_headers(
         self.out(
           utils.render_template(self.template)))
     response.mimetype = 'text/html'
     response.add_etag()
-
-    # Expire in 4 days.
-    response.expires = now + (86400 * 4)
-    response.headers['Cache-Control'] = 'public, max-age=%d' % (86400 * 4)
 
     bid = self.request.cookies.get('bid')
     browser = None
@@ -156,8 +153,15 @@ class SimpleHandler(Handler):
     browser.requests.append(req)
     k = str(browser.put())
     if bid is None:
-      # Cookie expires in 1 year
+      # Cookie expires in 1 year.
       response.set_cookie('bid', value=k, expires=(now + 31556926))
+      # No public caching when a cookie is sent.
+      cache_control = 'private'
+
+    # Expire in 4 days.
+    response.expires = now + (86400 * 4)
+    response.headers['Cache-Control'] = \
+        '%s, max-age=%d' % (cache_control, (86400 * 4))
 
     return response.make_conditional(self.request)
 
