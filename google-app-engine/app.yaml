@@ -65,7 +65,7 @@ application: fireworkscomputer
 #
 # where `VERSION` refers to this version string.
 #
-version: 5
+version: 6
 
 # ### The name of the App Engine runtime environment.
 #
