@@ -102,7 +102,7 @@ class App(object):
       # Dispatch the request to the correct handler and method.
       endpoint, arguments = url_adapter.match()
       handler_constructor = self.handlers.get(endpoint)
-      handler = handler_constructor(request, Response)
+      handler = handler_constructor(endpoint, request, Response)
 
       # If all goes well, the handler will return the callable response object
       # which we will return to the WSGI app runner that invoked us.
@@ -152,7 +152,8 @@ class Handler(object):
 
   """
   methods = ['get', 'post', 'put', 'delete', 'head', 'options']
-  def __init__(self, request, response_constructor):
+  def __init__(self, endpoint, request, response_constructor):
+    self.name = endpoint
     self.request = request
     self.out = response_constructor
 

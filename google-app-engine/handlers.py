@@ -114,9 +114,6 @@ class SimpleHandler(Handler):
   `werkzeug/wrappers.py` for more information about the request and response
   objects.
   """
-  # Default template name.
-  template = 'home'
-
   # Prepare and send the response.
   def respond(self):
     set_cookie = False
@@ -154,7 +151,7 @@ class SimpleHandler(Handler):
     # Prepare the response.
     response = set_default_headers(
         self.out(
-          utils.render_template(self.template)))
+          utils.render_template(self.name)))
     response.mimetype = 'text/html'
     response.add_etag()
 
@@ -182,22 +179,6 @@ class SimpleHandler(Handler):
   def head(self):
     """Accept the HTTP HEAD method."""
     return self.respond()
-
-class IndexHandler(SimpleHandler):
-  """Handler class for '/' URL."""
-  template = 'home'
-
-class JoinHandler(SimpleHandler):
-  """Handler class for '/join' URL."""
-  template = 'join'
-
-class ProjectsHandler(SimpleHandler):
-  """Handler class for '/projects' URL."""
-  template = 'projects'
-
-class AboutHandler(SimpleHandler):
-  """Handler class for '/about' URL."""
-  template = 'about'
 
 class DatastoreHandler(Handler):
   """Base class for datastore handlers.
@@ -459,11 +440,11 @@ class TestException(Handler):
 # http://werkzeug.pocoo.org/documentation/0.6.2/routing.html#rule-format
 #
 handler_map = [
-      ('/', 'index', IndexHandler)
-    , ('/projects', 'projects', ProjectsHandler)
-    , ('/projects/', 'projects', ProjectsHandler)
-    , ('/join', 'join', JoinHandler)
-    , ('/about', 'about', AboutHandler)
+      ('/', 'home', SimpleHandler)
+    , ('/projects', 'projects', SimpleHandler)
+    , ('/projects/', 'projects', SimpleHandler)
+    , ('/join', 'join', SimpleHandler)
+    , ('/about', 'about', SimpleHandler)
     , ('/datastore/members/', 'datastore_members', DatastoreMembers)
     , ('/datastore/subscribers/', 'datastore_subscribers', DatastoreSubscribers)
     , ('/datastore/actions/', 'datastore_actions', DatastoreActions)
