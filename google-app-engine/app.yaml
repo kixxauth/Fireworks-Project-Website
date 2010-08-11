@@ -174,27 +174,32 @@ handlers:
 # `/google-app-engine/static/css/README.txt`
 - url: /css
   static_dir: static/css
+  expiration: 1d
 
 # ### All of our static image files.
 # `/google-app-engine/static/img/README.txt`
 - url: /img
   static_dir: static/img
+  expiration: 1d
 
 # ### All of our static JavaScript files.
 # `/google-app-engine/static/js/README.txt`
 - url: /js
   static_dir: static/js
+  expiration: 1d
 
 # ### All of our static html files.
 # `/google-app-engine/static/pages/README.txt`
 - url: /pages
   static_dir: static/pages
+  expiration: 1d
 
 # ### The hacker's and hitchiker's guide.
 # `/google-app-engine/static/guide`
 - url: /guide
   static_dir: static/guide
   mime_type: text/html
+  expiration: 1d
 
 # ### Mozilla package download files.
 # Must be made secure through https for the Mozilla browser extention
