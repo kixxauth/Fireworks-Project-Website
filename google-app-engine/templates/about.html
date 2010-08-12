@@ -113,11 +113,19 @@ if (typeof console === 'undefined') {
 
     , browser_id = cookies.bid || 'anonymous'
     , req_id = cookies.rid || 'undefined'
+
+    , format_action = (function () {
+        var page_view = new Date().getTime();
+        return function (action) {
+          return (req_id +';'+
+            page_view +';'+
+            new Date().getTime() +';'+
+            action);
+        };
+      }())
     ;
 
-  function format_action(action) {
-    return req_id +';'+ new Date().getTime() +';'+ action;
-  }
+  console.log('document.cookie', document.cookie);
 
   // The server will send HTML if we don't specify application/json.
   j.ajaxSetup({'beforeSend': function (xhr) {
