@@ -162,7 +162,7 @@ class SimpleHandler(Handler):
                           expires=(now + 31556926)) # Exp in 1 year.
 
     # Set the request id nomatter what.
-    response.set_cookie('rid', value=req_time)
+    response.set_cookie('rid', value=('%d%s'% (req_time, self.request.path)))
 
     # Expire in 4 days.
     response.expires = now + (86400 * 4)
@@ -387,8 +387,7 @@ class DatastoreActions(DatastoreHandler):
       e = self.response_error('ValidationError', 'missing "browser_id" property')
       return self.respond(409, e)
 
-    actions = data.get('actions')
-    actions = isinstance(actions, list) and actions or [actions]
+    actions = map(str, data.getlist('actions'))
 
     key_name = None
     try:

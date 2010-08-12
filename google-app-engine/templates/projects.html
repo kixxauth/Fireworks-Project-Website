@@ -28,7 +28,11 @@ See CC-LICENSE in this folder for more details.
 {% endcomment %}{% extends "base.html" %}
 
 {% block title %}Open source software - The Fireworks Project{% endblock %}
-{% block head %}<style type="text/css">
+{% block head %}<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<!--
+<script type="text/javascript" src="/js/jquery.js"></script>
+-->
+<style type="text/css">
   #projects-page {
     width: 700px;
     overflow: visible;
@@ -70,7 +74,124 @@ See CC-LICENSE in this folder for more details.
   p.project-description, p.project-url {
     font-weight: bold;
   }
-</style>{% endblock %}
+</style>
+<script type="text/javascript">
+//<![CDATA[
+/*jslint
+  browser: true
+, onevar: true
+, undef: true
+, nomen: true
+, eqeqeq: true
+, plusplus: true
+, bitwise: true
+, regexp: true
+, newcap: true
+, immed: true
+, strict: true
+, maxlen: 80
+*/
+
+/*global
+  window: false
+, console: true
+*/
+
+// ECMAScript 5 strict mode.
+"use strict";
+
+// Create a console object if there is not an ambient one.
+if (typeof console === 'undefined') {
+  console = {log: function (message) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    window.setTimeout(function () {
+      var e = new Error(message +' '+ args.join(' '));
+      e.name = 'ConsoleLogging';
+      throw e;
+    }, 0);
+  }};
+}
+
+// Page script is composed inside a closure.
+(function (window) {
+  // jQuery is assigned to j
+  var j = window.jQuery.noConflict()
+
+    , cookies = (function () {
+        var rv = {}
+          , parts = document.cookie.split(';')
+          , i = 0
+          , c, ck
+          ;
+        for (; i < parts.length; i += 1) {
+          c = parts[i].split('=');
+          ck = c[0];
+          while (ck.charAt(0) === ' ') {
+            ck = ck.slice(1);
+          }
+          rv[ck] = c[1];
+        }
+        return rv;
+      }())
+
+    , browser_id = cookies.bid || 'anonymous'
+    , req_id = cookies.rid || 'undefined'
+
+    , format_action = (function () {
+        var page_view = new Date().getTime() + window.location.pathname;
+        return function (action) {
+          return (req_id +';'+
+            page_view +';'+
+            new Date().getTime() +';'+
+            action);
+        };
+      }())
+
+    , actions = [format_action('window_loading')]
+    ;
+
+  console.log('document.cookie', document.cookie);
+
+  // The server will send HTML if we don't specify application/json.
+  j.ajaxSetup({'beforeSend': function (xhr) {
+    xhr.setRequestHeader('accept', 'application/json');
+  }});
+
+  j(window)
+    .ajaxError(function (ev, xhr, options, err) {
+        if (options.url !== '/datastore/actions/') {
+          return;
+        }
+        console.log(
+          'jQuery.ajaxError(); posting actions to "/datastore/actions/"');
+        console.log('HTTP status', xhr.status);
+      })
+    .bind('unload', function () {
+        actions.push(format_action('window_unload'));
+        j.post('/datastore/actions/'
+          , j.param({
+              browser_id: browser_id
+            , actions: actions
+            }, true));
+      })
+    ;
+
+  j(function () {
+    actions.push(format_action('DOM_loaded'));
+    j.post('/datastore/actions/'
+      , j.param({
+          browser_id: browser_id
+        , actions: actions
+        }, true));
+    actions = [];
+
+    j('a.project-url').click(function () {
+      actions.push(format_action('linkto '+ j(this).attr('href')));
+    });
+  });
+}(window));
+//]]>
+</script>{% endblock %}
 
 {% block subheading %}Freedom.{% endblock %}
 
@@ -94,7 +215,7 @@ See CC-LICENSE in this folder for more details.
         Distributed descriptive graph data store.
         </p>
         <p class="project-url">
-          <a href="http://github.com/FireworksProject/DCube">
+          <a href="http://github.com/FireworksProject/DCube" class="project-url">
             github.com/FireworksProject/DCube
           </a>
         </p>
@@ -105,7 +226,7 @@ See CC-LICENSE in this folder for more details.
         Modular Web Browser Plug-in Platform
         </p>
         <p class="project-url">
-          <a href="http://github.com/FireworksProject/kixx">
+          <a href="http://github.com/FireworksProject/kixx" class="project-url">
             http://github.com/FireworksProject/kixx
           </a>
         </p>
@@ -116,7 +237,7 @@ See CC-LICENSE in this folder for more details.
         A multi-language build system in JavaScript.
         </p>
         <p class="project-url">
-        <a href="http://github.com/FireworksProject/kake">
+        <a href="http://github.com/FireworksProject/kake" class="project-url">
           github.com/FireworksProject/kake
         </a>
         </p>

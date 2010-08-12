@@ -94,6 +94,7 @@ if (typeof console === 'undefined') {
 (function (window) {
   // jQuery is assigned to j
   var j = window.jQuery.noConflict()
+
     , cookies = (function () {
         var rv = {}
           , parts = document.cookie.split(';')
@@ -115,7 +116,7 @@ if (typeof console === 'undefined') {
     , req_id = cookies.rid || 'undefined'
 
     , format_action = (function () {
-        var page_view = new Date().getTime();
+        var page_view = new Date().getTime() + window.location.pathname;
         return function (action) {
           return (req_id +';'+
             page_view +';'+
@@ -123,6 +124,8 @@ if (typeof console === 'undefined') {
             action);
         };
       }())
+
+    , actions = [format_action('window_loading')]
     ;
 
   console.log('document.cookie', document.cookie);
@@ -138,30 +141,27 @@ if (typeof console === 'undefined') {
           return;
         }
         console.log(
-          'jQuery.ajaxError(); posting actions to "/datastore/actions/"')
+          'jQuery.ajaxError(); posting actions to "/datastore/actions/"');
         console.log('HTTP status', xhr.status);
       })
     .bind('unload', function () {
+        actions.push(format_action('window_unload'));
         j.post('/datastore/actions/'
-          , {
+          , j.param({
               browser_id: browser_id
-            , actions: format_action('window_unload')
-            });
+            , actions: actions
+            }, true));
       })
     ;
 
-  j.post('/datastore/actions/'
-    , {
-        browser_id: browser_id
-      , actions: format_action('window_loading')
-      });
-
   j(function () {
+    actions.push(format_action('DOM_loaded'));
     j.post('/datastore/actions/'
-      , {
+      , j.param({
           browser_id: browser_id
-        , actions: format_action('DOM_loaded')
-        });
+        , actions: actions
+        }, true));
+    actions = [];
   });
 }(window));
 //]]>
