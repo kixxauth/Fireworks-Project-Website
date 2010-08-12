@@ -130,6 +130,15 @@ if (typeof console === 'undefined') {
 
   console.log('document.cookie', document.cookie);
 
+  function post_actions() {
+    j.post('/datastore/actions/'
+      , j.param({
+          browser_id: browser_id
+        , actions: actions
+        }, true));
+    actions = [];
+  }
+
   // The server will send HTML if we don't specify application/json.
   j.ajaxSetup({'beforeSend': function (xhr) {
     xhr.setRequestHeader('accept', 'application/json');
@@ -146,22 +155,13 @@ if (typeof console === 'undefined') {
       })
     .bind('unload', function () {
         actions.push(format_action('window_unload'));
-        j.post('/datastore/actions/'
-          , j.param({
-              browser_id: browser_id
-            , actions: actions
-            }, true));
+        post_actions();
       })
     ;
 
   j(function () {
     actions.push(format_action('DOM_loaded'));
-    j.post('/datastore/actions/'
-      , j.param({
-          browser_id: browser_id
-        , actions: actions
-        }, true));
-    actions = [];
+    post_actions();
   });
 }(window));
 //]]>

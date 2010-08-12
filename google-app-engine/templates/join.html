@@ -239,7 +239,50 @@ if (typeof console === 'undefined') {
   // jQuery is assigned to j
   var j = window.jQuery.noConflict()
     , messages = window.SPEC.messages
+
+    , cookies = (function () {
+        var rv = {}
+          , parts = document.cookie.split(';')
+          , i = 0
+          , c, ck
+          ;
+        for (; i < parts.length; i += 1) {
+          c = parts[i].split('=');
+          ck = c[0];
+          while (ck.charAt(0) === ' ') {
+            ck = ck.slice(1);
+          }
+          rv[ck] = c[1];
+        }
+        return rv;
+      }())
+
+    , browser_id = cookies.bid || 'anonymous'
+    , req_id = cookies.rid || 'undefined'
+
+    , format_action = (function () {
+        var page_view = new Date().getTime() + window.location.pathname;
+        return function (action) {
+          return (req_id +';'+
+            page_view +';'+
+            new Date().getTime() +';'+
+            action);
+        };
+      }())
+
+    , actions = [format_action('window_loading')]
     ;
+
+  console.log('document.cookie', document.cookie);
+
+  function post_actions() {
+    j.post('/datastore/actions/'
+      , j.param({
+          browser_id: browser_id
+        , actions: actions
+        }, true));
+    actions = [];
+  }
 
   // The server will send HTML if we don't specify application/json.
   j.ajaxSetup({'beforeSend': function (xhr) {
@@ -317,8 +360,12 @@ if (typeof console === 'undefined') {
 
     // Handle all jQuery AJAX error events.
     j('#ajax-error').ajaxError(function (ev, xhr, options, err) {
+      if (options.url !== '/datastore/members/') {
+        return;
+      }
       console.log('.ajaxError() fired');
       submitting = false;
+      actions.push(format_action('post_failed'));
       var data;
       try {
         data = j.parseJSON(xhr.responseText);
@@ -326,14 +373,19 @@ if (typeof console === 'undefined') {
         console.log(e);
         console.log('.ajaxError() response is not valid JSON');
         ajax_notice.show(messages.unexpected);
+        actions.push(format_action('invalid_JSON'));
+        post_actions();
         return;
       }
       console.log('.ajaxError() response message is "'+ data.message +'"');
+      actions.push(format_action('message:'+ data.message));
       if (data.message === 'member already exists') {
         ajax_notice.show(messages.member_exists);
+        post_actions();
         return;
       }
       ajax_notice.show(messages.unexpected);
+      post_actions();
     });
 
     // There is a dismiss button on the AJAX error notification.
@@ -349,10 +401,14 @@ if (typeof console === 'undefined') {
       if (xhr.status !== 201) {
         console.log('response status is ', xhr.status);
         ajax_notice.show(messages.unexpected);
+        actions.push(format_action('post_failed'));
+        post_actions();
         return;
       }
       j('#join-page').hide();
       j('#response-page').show();
+      actions.push(format_action('post_success'));
+      post_actions();
     }
 
     // Event handler function for jQuery form submit event.
@@ -367,6 +423,7 @@ if (typeof console === 'undefined') {
         ;
 
       submit_notice.hide();
+      actions.push(format_action('membership_post_attempt'));
 
       if (!ack) {
         submit_notice.show("Don't forget to check the acknowledgment box.");
@@ -403,11 +460,30 @@ if (typeof console === 'undefined') {
           , j(this).serialize()
           , success
           , 'json');
+      actions.push(format_action('posted_membership'));
       return false;
     };
   }
 
+  j(window)
+    .ajaxError(function (ev, xhr, options, err) {
+        if (options.url !== '/datastore/actions/') {
+          return;
+        }
+        console.log(
+          'jQuery.ajaxError(); posting actions to "/datastore/actions/"');
+        console.log('HTTP status', xhr.status);
+      })
+    .bind('unload', function () {
+        actions.push(format_action('window_unload'));
+        post_actions();
+      })
+    ;
+
   j(function (jq) {
+    actions.push(format_action('DOM_loaded'));
+    post_actions();
+
     // Set submit event handler to intercept form submissions.
     j('#join-form')
       .submit(make_submitter(make_submit_notice(), make_ajax_notice()));

@@ -109,11 +109,55 @@ if (typeof console === 'undefined') {
     // Flag set to true when web fonts have loaded.
     , WF_loaded = false
 
-    , presentation_intervals = window.SPEC.slideShowIntervals
     , presentation
 
+    , presentation_intervals = window.SPEC.slideShowIntervals
+
     , messages = SPEC.messages
+
+    , cookies = (function () {
+        var rv = {}
+          , parts = document.cookie.split(';')
+          , i = 0
+          , c, ck
+          ;
+        for (; i < parts.length; i += 1) {
+          c = parts[i].split('=');
+          ck = c[0];
+          while (ck.charAt(0) === ' ') {
+            ck = ck.slice(1);
+          }
+          rv[ck] = c[1];
+        }
+        return rv;
+      }())
+
+    , browser_id = cookies.bid || 'anonymous'
+    , req_id = cookies.rid || 'undefined'
+
+    , format_action = (function () {
+        var page_view = new Date().getTime() + window.location.pathname;
+        return function (action) {
+          return (req_id +';'+
+            page_view +';'+
+            new Date().getTime() +';'+
+            action);
+        };
+      }())
+
+    , actions = [format_action('window_loading')]
     ;
+
+  console.log('document.cookie', document.cookie);
+
+  function post_actions() {
+    j.post('/datastore/actions/'
+      , j.param({
+          browser_id: browser_id
+        , actions: actions
+        }, true));
+    actions = [];
+  }
 
   // Configure web font loader to load TypeKit font for slide show.
   WebFontConfig.typekit = {id: 'fcq2zzl'};
@@ -123,6 +167,21 @@ if (typeof console === 'undefined') {
   j.ajaxSetup({'beforeSend': function (xhr) {
     xhr.setRequestHeader('accept', 'application/json');
   }});
+
+  j(window)
+    .ajaxError(function (ev, xhr, options, err) {
+        if (options.url !== '/datastore/actions/') {
+          return;
+        }
+        console.log(
+          'jQuery.ajaxError(); posting actions to "/datastore/actions/"');
+        console.log('HTTP status', xhr.status);
+      })
+    .bind('unload', function () {
+        actions.push(format_action('window_unload'));
+        post_actions();
+      })
+    ;
 
   // Notification constructor for form validation errors.
   function make_submit_notice() {
@@ -193,12 +252,17 @@ if (typeof console === 'undefined') {
 
     // Handle all jQuery AJAX error events.
     j('#ajax-notice').ajaxError(function (ev, xhr, options, err) {
+      if (options.url !== '/datastore/subscribers/') {
+        return;
+      }
       submitting = false;
       console.log('.ajaxError() fired');
       console.log('.ajaxError() response is not valid JSON');
       console.log(xhr.responseText);
       // Should never get anything but a 200 or 201.
       ajax_notice.show(messages.unexpected);
+      actions.push(format_action('post_failed'));
+      post_actions();
     });
 
     // There is a dismiss button on the AJAX error notification.
@@ -215,9 +279,13 @@ if (typeof console === 'undefined') {
       if (xhr.status !== 201 && xhr.status !== 200) {
         console.log('response status is ', xhr.status);
         ajax_notice.show(messages.unexpected);
+        actions.push(format_action('post_failed'));
+        post_actions();
         return;
       }
       ajax_notice.show(messages.success);
+      actions.push(format_action('post_success'));
+      post_actions();
     }
 
     // Event handler function for jQuery form submit event.
@@ -232,6 +300,7 @@ if (typeof console === 'undefined') {
         ;
 
       submit_notice.hide();
+      actions.push(format_action('subscription_post_attempt'));
 
       if (!email) {
         submit_notice.show("Don't forget to include your email address.");
@@ -261,6 +330,7 @@ if (typeof console === 'undefined') {
           , j(this).serialize()
           , success
           , 'json');
+      actions.push(format_action('posted_subscription'));
       return false;
     };
   }
@@ -321,7 +391,7 @@ if (typeof console === 'undefined') {
           , controls_notice_index = j('#controls-notice-index')
           ;
 
-        j('#controls-notice-length').text(presentation_intervals.length +1);
+        j('#controls-notice-length').text(presentation_intervals.length);
 
         j(this).hide();
         controls.css({
@@ -334,6 +404,8 @@ if (typeof console === 'undefined') {
             })
           .bind('impressStopped', function () {
               controls_notice_action.text('stopped on: ');
+              actions.push(format_action('slide_show_stopped'));
+              post_actions();
             })
           .impression('play')
           .css('cursor', 'pointer')
@@ -345,10 +417,11 @@ if (typeof console === 'undefined') {
               presentation.impression('play');
             })
           .bind('impressShowing', function (ev, i) {
-            controls_notice_index.text((i+1) +' ');
+            controls_notice_index.text(i +' ');
+            actions.push(format_action('showing_slide:'+ i));
           })
           ;
-        controls_notice_index.text('1 ');
+        controls_notice_index.text('0 ');
         return false;
       })
       .css('visibility', 'visible');
@@ -356,15 +429,18 @@ if (typeof console === 'undefined') {
     // Set up player controls.
     j('#player-back-control').click(function () {
       presentation.impression('back');
+      actions.push(format_action('slideshow_back'));
       return false;
     });
     j('#player-forward-control').click(function () {
       presentation.impression('next');
+      actions.push(format_action('slideshow_next'));
       return false;
     });
 
     // Show the form again.
     j('#journal-form').css('visibility', 'visible');
+    actions.push(format_action('slide_show_set_up'));
   }
 
   // Set up slide show countdown.
@@ -453,6 +529,9 @@ if (typeof console === 'undefined') {
 
     DOM_loaded = true;
     slide_show_setup();
+
+    actions.push(format_action('DOM_loaded'));
+    post_actions();
   });
 }(window));
 //]]>
