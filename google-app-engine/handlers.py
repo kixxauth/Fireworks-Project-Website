@@ -196,38 +196,38 @@ class DatastoreHandler(Handler):
   `werkzeug/wrappers.py` for more information about the request and response
   objects.
   """
-  templates = {
-      'post': 'datastore_default'
-    , 'get' : 'datastore_default'
-    , 'err' : 'datastore_default'
-    }
+  # Create a JSON response.
+  def json_response(self, data=None):
+    if data is None:
+      response = self.out()
+    else:
+      response = self.out(simplejson.dumps(data))
+
+    response.mimetype = 'application/json'
+    return response
+
+  # Create an HTML response.
+  def html_response(self, template, context):
+    if template is None:
+      response = self.out()
+    else:
+      context['referrer'] = self.request.referrer
+      response = self.out(utils.render_template(template, context))
+
+    response.mimetype = 'text/html'
+    return response
 
   # Prepare and send the response.
-  def respond(self, status, data=None):
+  def respond(self,
+      status, data=None, template='datastore_generic', context={}):
+
     if self.request.accept_mimetypes.best_match(
         ['application/json', 'text/html']) == 'application/json':
-      if data is None:
-        response = self.out()
-      else:
-        response = self.out(simplejson.dumps(data))
-      response.mimetype = 'application/json'
+      response = set_default_headers(self.json_response(data))
     else:
-      if data is None:
-        response = self.out()
-      else:
-        if status > 299:
-          tpl = self.templates['err']
-          context = {
-              'message': data['name'] +': '+ data['message']
-            , 'referrer': self.request.referrer
-            }
-        else:
-          context = {'referrer': self.request.referrer}
-          tpl = self.templates[self.request.method.lower()]
-        response = self.out(utils.render_template(tpl, context))
-      response.mimetype = 'text/html'
+      response = set_default_headers(self.html_response(template, context))
 
-    response = set_default_headers(response)
+    # Prepare the response.
     response.status_code = status
     response.add_etag()
 
@@ -236,6 +236,7 @@ class DatastoreHandler(Handler):
     response.headers['Pragma'] = 'no-cache'
     response.headers['Cache-Control'] = NO_CACHE_HEADER
 
+    # Only send a response body if the E-Tag does not match.
     return response.make_conditional(self.request)
 
   def response_error(self, name, message):
@@ -243,21 +244,15 @@ class DatastoreHandler(Handler):
 
   def head(self):
     """Accept the HTTP HEAD method."""
-    return self.respond(200, None)
-
-class DatastoreMembers(DatastoreHandler):
-  """Handler for /datastore/members/ URL."""
-
-  templates = {
-      'post': 'datastore_members_post'
-    , 'get' : 'datastore_default'
-    , 'err' : 'datastore_members_err'
-    }
+    return self.respond(200)
 
   def get(self):
     """Accept the HTTP GET method."""
-    # Querying the member list is not yet implemented.
-    return self.respond(200, {})
+    # Querying is not yet implemented.
+    return self.respond(200)
+
+class DatastoreMembers(DatastoreHandler):
+  """Handler for /datastore/members/ URL."""
 
   def post(self):
     """Accept the HTTP POST method.
@@ -268,22 +263,42 @@ class DatastoreMembers(DatastoreHandler):
     data = self.request.form
     ack = data.get('acknowledgment')
     if not ack:
-      e = self.response_error('ValidationError', 'missing "acknowlegement" property')
-      return self.respond(409, e)
+      message = 'Missing "acknowledgment" property.'
+      e = self.response_error('ValidationError', message)
+      return self.respond(409,
+                          data=e,
+                          template='datastore_error',
+                          context={'message': message})
+
     name = data.get('name')
     if not name:
-      e = self.response_error('ValidationError', 'missing "name" property')
-      return self.respond(409, e)
+      message = 'Missing "name" property.'
+      e = self.response_error('ValidationError', message)
+      return self.respond(409,
+                          data=e,
+                          template='datastore_error',
+                          context={'message': message})
+
     email = data.get('email')
     if not email:
-      e = self.response_error('ValidationError', 'missing "email" property')
-      return self.respond(409, e)
+      message = 'Missing "email" property.'
+      e = self.response_error('ValidationError', message)
+      return self.respond(409,
+                          data=e,
+                          template='datastore_error',
+                          context={'message': message})
 
+    # Check to see if a member with the same email address already exists.
     q = dstore.Member.all(keys_only=True)
     if q.filter('uid =', email).count(1):
-      e = self.response_error('ConflictError', 'member already exists')
-      return self.respond(409, e)
+      message = 'Member email already exists.'
+      e = self.response_error('ConflictError', message)
+      return self.respond(409,
+                          data=e,
+                          template='datastore_error',
+                          context={'message': message})
 
+    # Log this post and send a notification email.
     logging.info('New member posting: name=%s, email=%s', name, email)
     new_member = dstore.Member(member_name=name
                              , uid=email
@@ -297,25 +312,18 @@ class DatastoreMembers(DatastoreHandler):
         'New FWP member posted.',
         ('name: %s, email: %s' % (name, email)))
 
-    return self.respond(201, {
+    json_data = {
           'member_name': new_member.member_name
         , 'uid'        : new_member.uid
         , 'init_date'  : new_member.init_date
-        })
+        }
+
+    return self.respond(201,
+                        data=json_data,
+                        template='datastore_members_post')
 
 class DatastoreSubscribers(DatastoreHandler):
   """Handler for /datastore/subscribers/ URL."""
-
-  templates = {
-      'post': 'datastore_subscribers_post'
-    , 'get' : 'datastore_default'
-    , 'err' : 'datastore_subscribers_err'
-    }
-
-  def get(self):
-    """Accept the HTTP GET method."""
-    # Querying the subscriber list is not yet implemented.
-    return self.respond(200, {})
 
   def post(self):
     """Accept the HTTP POST method.
@@ -331,25 +339,33 @@ class DatastoreSubscribers(DatastoreHandler):
 
     # Email is a required data field.
     if not email:
-      e = self.response_error('ValidationError', 'missing "email" property')
-      return self.respond(409, e)
+      message = 'Missing "email" property.'
+      e = self.response_error('ValidationError', message)
+      return self.respond(409,
+                          data=e,
+                          template='datastore_error',
+                          context={'message': message})
 
     # Check for subscriber with the same email.
     q = dstore.Subscriber.all()
     subscriber = q.filter('email =', email).fetch(1)
     subscriber = len(subscriber) is 1 and subscriber[0] or None
-    if subscriber:
 
+    if subscriber:
       # Add new subscription.
       if new_sub and new_sub not in subscriber.subscriptions:
         subscriber.subscriptions.append(new_sub)
         subscriber.put()
 
-      return self.respond(200, {
-            'email'        : subscriber.email
-          , 'subscriptions': subscriber.subscriptions
-          , 'init_date'    : subscriber.init_date
-          })
+      json_data = {
+              'email'        : subscriber.email
+            , 'subscriptions': subscriber.subscriptions
+            , 'init_date'    : subscriber.init_date
+            }
+
+      return self.respond(200,
+                          data=json_data,
+                          template='datastore_subscribers_post')
 
     # If a subscriber with the given email did not exist, create it.
     subs = new_sub and [new_sub] or []
@@ -357,19 +373,19 @@ class DatastoreSubscribers(DatastoreHandler):
                                      , subscriptions=subs
                                      , init_date=int(time.time()));
     new_subscriber.put()
-    return self.respond(201, {
+
+    json_data = {
           'email'        : new_subscriber.email
         , 'subscriptions': new_subscriber.subscriptions
         , 'init_date'    : new_subscriber.init_date
-        })
+        }
+
+    return self.respond(201,
+                        data=json_data,
+                        template='datastore_subscribers_post')
 
 class DatastoreActions(DatastoreHandler):
   """Handler for /datastore/actions/ URL."""
-
-  def get(self):
-    """Accept the HTTP GET method."""
-    # Querying the subscriber list is not yet implemented.
-    return self.respond(200, {})
 
   def post(self):
     """Accept the HTTP POST method.
@@ -384,8 +400,12 @@ class DatastoreActions(DatastoreHandler):
 
     browser_id = data.get('browser_id')
     if not browser_id:
-      e = self.response_error('ValidationError', 'missing "browser_id" property')
-      return self.respond(409, e)
+      message = 'Missing "browser_id" property.'
+      e = self.response_error('ValidationError', message)
+      return self.respond(409,
+                          data=e,
+                          template='datastore_error',
+                          context={'message': message})
 
     actions = map(str, data.getlist('actions'))
 
@@ -412,12 +432,14 @@ class DatastoreActions(DatastoreHandler):
     browser.actions = browser.actions + actions
     k = str(browser.put())
 
-    return self.respond(200, {
+    json_data = {
           'browser_id': key_name and key_name[4:] or k
         , 'user_agent': browser.user_agent
         , 'actions'   : len(browser.actions or [])
         , 'requests'  : len(browser.requests or [])
-        })
+        }
+
+    return self.respond(200, data=json_data)
 
 class TestException(Handler):
   """Handler class for '/exception' URL.

@@ -379,7 +379,7 @@ if (typeof console === 'undefined') {
       }
       console.log('.ajaxError() response message is "'+ data.message +'"');
       actions.push(format_action('message:'+ data.message));
-      if (data.message === 'member already exists') {
+      if (data.message === 'Member email already exists.') {
         ajax_notice.show(messages.member_exists);
         post_actions();
         return;

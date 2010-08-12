@@ -26,15 +26,28 @@ See CC-LICENSE in this folder for more details.
 
 {% endcomment %}{% extends "base.html" %}
 
-{% block body %}<div id="member-response">
-      <h3 class="member response">
-        There was an error processing your membership request:
-      </h3>
-      <p class="member response warning">
+{% block head %}<style type="text/css">
+  h1.response-header {
+    font-weight: bold;
+    font-size: 140%;
+    margin-bottom: 1em;
+  }
+  h2.response-header {
+    font-weight: bold;
+    font-size: 120%;
+    margin-bottom: 1em;
+  }
+  p
+</style>{% endblock %}
+
+{% block body %}<div id="response-page" class="inner-content-container">
+    <h1 class="response-header">There is a problem with your request.</h1>
+    <h2 class="response-header">If at first you fail... Try, try again.</h2>
+    <p class="response-content">
       {{ message }}
-      </p>
-      <p class="member response">
-      <a href="{{ referrer }}" class="member response">Continue...</a>
-      </p>
-    </div>{% endblock %}
+    </p>
+    <p class="response-content">
+      <a href="{{ referrer }}" class="member response">Try again...</a>
+    </p>
+  </div><!-- end #response -->{% endblock %}
 

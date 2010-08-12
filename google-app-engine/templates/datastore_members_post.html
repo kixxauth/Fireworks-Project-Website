@@ -12,8 +12,9 @@ http://docs.djangoproject.com/en/1.2/topics/templates/#topics-templates
 License
 -------
 
-All source code in this file is licensed under the MIT license unless
-otherwise noted in the source file itself.
+All source code in this file is (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, is licensed under the MIT license.
 
 See MIT-LICENSE in this directory for details.
 
@@ -25,13 +26,30 @@ Unported License (http://creativecommons.org/licenses/by-sa/3.0/).
 See CC-LICENSE in this folder for more details.
 
 {% endcomment %}{% extends "base.html" %}
+{% block head %}<style type="text/css">
+  h1.response-header {
+    font-weight: bold;
+    font-size: 200%;
+    margin-bottom: 1em;
+  }
+  h2.response-header {
+    font-weight: bold;
+    font-size: 150%;
+    margin-bottom: 1em;
+  }
+  p.response-content {
+    margin-bottom: 1em;
+  }
+</style>{% endblock %}
 
-{% block body %}<div id="member-response">
-      <h3 class="member response">
-        Your membership request has been received and will be processed shortly.
-      </h3>
-      <p class="member response">
-      <a href="{{ referrer }}" class="member response">Continue...</a>
-      </p>
-    </div>{% endblock %}
+{% block body %}<div id="response-page" class="inner-content-container">
+    <h1 class="response-header">Congratulations!</h1>
+    <h2 class="response-header">You&#39;re now an official member of The Fireworks Project.</h2>
+    <p class="response-content">
+      Another member will contact you by email within 48 hours to help you get started.
+    </p>
+    <p class="response-content">
+      <a href="{{ referrer }}" class="member response">Go back...</a>
+    </p>
+  </div><!-- end #response -->{% endblock %}
 
