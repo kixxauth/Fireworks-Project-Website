@@ -73,7 +73,6 @@ SPEC.slideShowIntervals = [
 , 10500
 , 7500
 , 9500
-, 8500
 , 7500
 ];
 
@@ -513,6 +512,7 @@ if (typeof console === 'undefined') {
       .css({
         'width': '100%'
       , 'height': '100%'
+      , 'font-size': '24px'
       , 'float': 'none'
       , 'border-top': 'none'
       , 'border-right': 'none'
@@ -624,6 +624,9 @@ if (typeof console === 'undefined') {
     border: none;
     border-bottom: 2px solid #ccc;
   }
+  #journal-email {
+    width: 16em;
+  }
   #journal-submit {
     background: #f90 url(css/img/ff9900-fade-30.gif) repeat-x;
     cursor: pointer;
@@ -692,14 +695,14 @@ if (typeof console === 'undefined') {
     margin-bottom: 3em;
   }
   div.presentation-slide {
-    width: 20em;
-    height: 16em;
+    width: 22em;
+    height: 18em;
     float: left;
     border: 2px dashed #aaa;
     margin-left: 2em;
     margin-top: 2em;
     font-family: "good-dog-1", "good-dog-2", monospace;
-    font-size: 20px;
+    font-size: 16px;
     line-height: 1.2;
     color: #555;
   }
@@ -786,15 +789,6 @@ if (typeof console === 'undefined') {
     margin: 2em 1em 0;
     font-size: 120%;
   }
-  #slide-9-content-1 {
-    margin: 1em 1em 0;
-    font-size: 120%;
-  }
-  #slide-9-content-2 {
-    font-size: 150%;
-    margin: 1.5em 0 0;
-    text-align: center;
-  }
   #slide-10-content-1 {
     margin: .5em 1em 1em;
   }
@@ -873,24 +867,24 @@ if (typeof console === 'undefined') {
           <img id="slide-2-image" src="img/presentation/thinking_man.png" width="25%"
             alt="Thinking man illustration." />
           <p id="slide-2-content-2">
-          We've found a way to make it simple and affordable by thinking
-          a little differently.
+          Thinking a little differently, we&#39;ve found a way to make it
+          simple and affordable.
           </p>
         </div>
         <div id="slide-3" class="presentation-slide">
           <p id="slide-3-content-1" >
-          We imagined an artisan software bakery,
+          Imagine an artisan software bakery,
           </p>
           <img id="slide-3-image" src="img/presentation/light-bulb.gif" width="60%"
             alt="Light bulb idea illustration." />
           <p id="slide-3-content-2" >
-          where each batch of software could be crafted with personal attention.
+          where each batch of software is crafted with personal attention.
           </p>
         </div>
         <div id="slide-4" class="presentation-slide">
           <p id="slide-4-content-1">
-          Then we borrowed some ideas from the assembly
-          lines used to build the first affordable automobiles.
+          Then borrow some ideas from the assembly lines used to build the
+          first affordable automobiles.
           </p>
           <img id="slide-4-image" src="img/presentation/assembly_line.png" width="70%"
             alt="Automobile assembly line illustration." />
@@ -911,9 +905,8 @@ if (typeof console === 'undefined') {
         </div>
         <div id="slide-7" class="presentation-slide">
           <p id="slide-7-content-1">
-          By building software this way, we can all afford customized
-          information systems that were once only affordable to very large
-          companies.
+          By building software this way, we can all afford customized programs
+          that were once only affordable to very large companies.
           </p>
           <img id="slide-7-image" src="img/presentation/custom_software_choice.png" width="60%"
             alt="Illustration of waiter with choice of dishes." />
@@ -955,20 +948,10 @@ if (typeof console === 'undefined') {
           Your imagination is the limit.
           </p>
         </div>
-        <div id="slide-9" class="presentation-slide">
-          <p id="slide-9-content-1">
-          And, because your new system will be designed with interchangeable parts,
-          it will allow you to move information between your other systems
-          as well.
-          </p>
-          <p id="slide-9-content-2">
-          It will just work!
-          </p>
-        </div>
         <div id="slide-10" class="presentation-slide">
           <p id="slide-10-content-1">
           Our software bakery is not quite operational yet, but we&#39;re
-          working night and day to get it ready for the grand opening.
+          working day and night to get it ready for the grand opening.
           </p>
           <img id="slide-10-image" src="img/presentation/software_factory_grand_opening.png" width="60%"
             alt="Software bakery grand opening illustration." />
