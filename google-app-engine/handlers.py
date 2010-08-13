@@ -48,7 +48,7 @@ def set_default_headers(response):
 def set_cookies(request, response):
   browser_id = request.cookies.get('bid')
   req_time = int(time.time())
-  set_browser_cookie = False
+  new_browser = False
   browser = None
   key_name = None
   if browser_id:
@@ -62,11 +62,11 @@ def set_cookies(request, response):
 
   if browser is None:
     # Create a new browser object if it does not exist.
-    set_browser_cookie = True
     user_agent, user_agent_str = utils.format_user_agent(request)
     user_agent_str = (user_agent.browser and
                       user_agent_str or user_agent.string)
     browser = dstore.Browser(key_name=key_name, user_agent=user_agent_str)
+    new_browser = True
 
   # Add this request to the list of requests made by this browser.
   req = dstore.format_request(req_time,
@@ -77,7 +77,7 @@ def set_cookies(request, response):
   k = str(browser.put())
 
   # Maybe set the browser id cookie.
-  if set_browser_cookie:
+  if new_browser:
     response.set_cookie('bid',
                         value=(key_name and key_name[4:] or k),
                         expires=(req_time + 31556926)) # Exp in 1 year.

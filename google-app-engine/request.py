@@ -63,10 +63,25 @@
 from fwerks import App
 from google.appengine.ext.webapp.util import run_bare_wsgi_app
 from handlers import handler_map, exception_handler, not_found, request_redirect
+from werkzeug import BaseRequest, CommonRequestDescriptorsMixin, BaseResponse, AcceptMixin, CommonResponseDescriptorsMixin,ETagResponseMixin
+
+class Request(BaseRequest, CommonRequestDescriptorsMixin, AcceptMixin):
+  """Request class implementing the following Werkzeug mixins:
+
+      - :class:`CommonRequestDescriptorsMixin` for various HTTP descriptors.
+      - :class:`AcceptMixin` for the HTTP Accept header.
+  """
+
+class Response(BaseResponse, CommonResponseDescriptorsMixin, ETagResponseMixin):
+  """Response class implementing the following Werkzeug mixins:
+
+      - :class:`CommonResponseDescriptorsMixin` for various HTTP descriptors.
+      - :class:`ETagResponseMixin` ETag and conditional response utilities.
+  """
 
 # Create a fwerks WSGI application object. Fwerks is our quick and dirty WSGI
 # framework built with Werkzeug.
-fireworks_project_website = App(handler_map
+fireworks_project_website = App(handler_map, Request, Response
                               , exception_handler=exception_handler
                               , not_found=not_found
                               , request_redirect=request_redirect)

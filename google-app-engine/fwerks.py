@@ -12,21 +12,6 @@
 from werkzeug.routing import Map, Rule, RequestRedirect
 from werkzeug.exceptions import HTTPException, MethodNotAllowed
 from werkzeug.exceptions import NotFound, InternalServerError
-from werkzeug import BaseRequest, CommonRequestDescriptorsMixin, BaseResponse, AcceptMixin, CommonResponseDescriptorsMixin,ETagResponseMixin
-
-class Request(BaseRequest, CommonRequestDescriptorsMixin, AcceptMixin):
-  """Request class implementing the following Werkzeug mixins:
-
-      - :class:`CommonRequestDescriptorsMixin` for various HTTP descriptors.
-      - :class:`AcceptMixin` for the HTTP Accept header.
-  """
-
-class Response(BaseResponse, CommonResponseDescriptorsMixin, ETagResponseMixin):
-  """Response class implementing the following Werkzeug mixins:
-
-      - :class:`CommonResponseDescriptorsMixin` for various HTTP descriptors.
-      - :class:`ETagResponseMixin` ETag and conditional response utilities.
-  """
 
 class App(object):
   """Create a WSGI conforming callable application.
@@ -68,11 +53,13 @@ class App(object):
   application:  http://werkzeug.pocoo.org/
 
   """
-  def __init__(self, mapping
+  def __init__(self, mapping, Request, Response
       , exception_handler=None
       , not_found=None
       , request_redirect=None):
     self.handlers = {}
+    self.Request = Request
+    self.Response = Response
     self.exception_handler = exception_handler
     self.not_found = not_found
     self.request_redirect = request_redirect
@@ -88,7 +75,7 @@ class App(object):
 
   def __call__(self, env, start_response):
     # Construct a Werkzeug request object.
-    request = Request(env)
+    request = self.Request(env)
 
     # Construct a Werkzeug adapter object.
     url_adapter = self.url_map.bind_to_environ(env)
@@ -102,7 +89,7 @@ class App(object):
       # Dispatch the request to the correct handler and method.
       endpoint, arguments = url_adapter.match()
       handler_constructor = self.handlers.get(endpoint)
-      handler = handler_constructor(endpoint, request, Response)
+      handler = handler_constructor(endpoint, request, self.Response)
 
       # If all goes well, the handler will return the callable response object
       # which we will return to the WSGI app runner that invoked us.
@@ -121,7 +108,7 @@ class App(object):
       response = e
     except Exception, e:
       if callable(self.exception_handler):
-        response = self.exception_handler(e, request, Response)
+        response = self.exception_handler(e, request, self.Response)
       else:
         response = InternalServerError()
     return response(env, start_response)
