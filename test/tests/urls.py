@@ -1180,7 +1180,8 @@ class DatastoreMembers(unittest.TestCase):
             ('content-encoding', 'eq', None),
             ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
-            ('x-xss-protection', 'eq', '0')
+            ('x-xss-protection', 'eq', '0'),
+            ('set-cookie', 'regex', cookie_regex)
           ]
 
     else:
@@ -1194,7 +1195,8 @@ class DatastoreMembers(unittest.TestCase):
             ('content-encoding', 'eq', 'gzip'),
             ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
-            ('x-xss-protection', 'eq', '0')
+            ('x-xss-protection', 'eq', '0'),
+            ('set-cookie', 'regex', cookie_regex)
           ]
 
     # Make a special request for the not allowed method tests.
@@ -1206,6 +1208,7 @@ class DatastoreMembers(unittest.TestCase):
     self.firefox36_not_allowed.response_headers[4] = ('pragma', 'eq', None)
     self.firefox36_not_allowed.response_headers[8] = ('content-type', 'eq', 'text/html')
     self.firefox36_not_allowed.response_headers[9] = ('x-xss-protection', 'eq', None)
+    self.firefox36_not_allowed.response_headers[10] = ('set-cookie', 'eq', None)
     self.firefox36_not_allowed.response_headers.append(
         ('allow', 'eq', 'GET, POST, HEAD'))
     self.firefox36_not_allowed.response_headers[0] = ('etag', 'eq', None)
@@ -1230,8 +1233,17 @@ class DatastoreMembers(unittest.TestCase):
   def get(self):
     """GET request for /datastore/members/
     """
+    ff36_nocookie = test_utils.TestRequest(self.firefox36)
+
+    ff36_cookie = test_utils.TestRequest(self.firefox36)
+    ff36_cookie.headers['cookie'] = 'bid=testing'
+    ff36_cookie.response_headers[10] = (
+        'set-cookie', 'regex',
+        re.compile('^rid=\"[0-9]{10}\/[a-z\/]*\"; Path=\/$'))
+
     configs = test_utils.TestConfig()
-    configs.update('firefox36', self.firefox36)
+    configs.update('firefox36_no_cookie', ff36_nocookie)
+    configs.update('firefox36_cookie', ff36_cookie)
     return configs.items()
 
   @test_function
@@ -1257,6 +1269,9 @@ class DatastoreMembers(unittest.TestCase):
 
     Complete /datastore/ testing should be put into a dedicated module.
     """
+
+    # TODO: We're not testing 'cookie' header case.
+
     # Create a random email address, since that is how we distinguish unique
     # members.
     def random_email():
@@ -1378,12 +1393,20 @@ class DatastoreMembers(unittest.TestCase):
   def head(self):
     """HEAD request for /datastore/members/
     """
-    ff36 = test_utils.TestRequest(self.firefox36)
-    ff36.response_headers[6] = ('content-encoding', 'eq', None)
-    ff36.response_headers[7] = ('content-length', 'eq', '0')
-    ff36.response_body = None
+    ff36_nocookie = test_utils.TestRequest(self.firefox36)
+    ff36_nocookie.response_headers[6] = ('content-encoding', 'eq', None)
+    ff36_nocookie.response_headers[7] = ('content-length', 'eq', '0')
+    ff36_nocookie.response_body = None
+
+    ff36_cookie = test_utils.TestRequest(ff36_nocookie)
+    ff36_cookie.headers['cookie'] = 'bid=testing'
+    ff36_cookie.response_headers[10] = (
+        'set-cookie', 'regex',
+        re.compile('^rid=\"[0-9]{10}\/[a-z\/]*\"; Path=\/$'))
+
     configs = test_utils.TestConfig()
-    configs.update('firefox36', ff36)
+    configs.update('firefox36_no_cookie', ff36_nocookie)
+    configs.update('firefox36_cookie', ff36_cookie)
     return configs.items()
 
   @test_function
@@ -1542,7 +1565,8 @@ class DatastoreSubscribers(unittest.TestCase):
             ('content-encoding', 'eq', None),
             ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
-            ('x-xss-protection', 'eq', '0')
+            ('x-xss-protection', 'eq', '0'),
+            ('set-cookie', 'regex', cookie_regex)
           ]
 
     else:
@@ -1556,7 +1580,8 @@ class DatastoreSubscribers(unittest.TestCase):
             ('content-encoding', 'eq', 'gzip'),
             ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
-            ('x-xss-protection', 'eq', '0')
+            ('x-xss-protection', 'eq', '0'),
+            ('set-cookie', 'regex', cookie_regex)
           ]
 
     # Make a special request for the not allowed method tests.
@@ -1568,6 +1593,7 @@ class DatastoreSubscribers(unittest.TestCase):
     self.firefox36_not_allowed.response_headers[4] = ('pragma', 'eq', None)
     self.firefox36_not_allowed.response_headers[8] = ('content-type', 'eq', 'text/html')
     self.firefox36_not_allowed.response_headers[9] = ('x-xss-protection', 'eq', None)
+    self.firefox36_not_allowed.response_headers[10] = ('set-cookie', 'eq', None)
     self.firefox36_not_allowed.response_headers.append(
         ('allow', 'eq', 'GET, POST, HEAD'))
     self.firefox36_not_allowed.response_headers[0] = ('etag', 'eq', None)
@@ -1592,8 +1618,17 @@ class DatastoreSubscribers(unittest.TestCase):
   def get(self):
     """GET request for /datastore/subscribers/
     """
+    ff36_nocookie = test_utils.TestRequest(self.firefox36)
+
+    ff36_cookie = test_utils.TestRequest(self.firefox36)
+    ff36_cookie.headers['cookie'] = 'bid=testing'
+    ff36_cookie.response_headers[10] = (
+        'set-cookie', 'regex',
+        re.compile('^rid=\"[0-9]{10}\/[a-z\/]*\"; Path=\/$'))
+
     configs = test_utils.TestConfig()
-    configs.update('firefox36', self.firefox36)
+    configs.update('firefox36_no_cookie', ff36_nocookie)
+    configs.update('firefox36_cookie', ff36_cookie)
     return configs.items()
 
   @test_function
@@ -1711,12 +1746,20 @@ class DatastoreSubscribers(unittest.TestCase):
   def head(self):
     """HEAD request for /datastore/subscribers/
     """
-    ff36 = test_utils.TestRequest(self.firefox36)
-    ff36.response_headers[6] = ('content-encoding', 'eq', None)
-    ff36.response_headers[7] = ('content-length', 'eq', '0')
-    ff36.response_body = None
+    ff36_nocookie = test_utils.TestRequest(self.firefox36)
+    ff36_nocookie.response_headers[6] = ('content-encoding', 'eq', None)
+    ff36_nocookie.response_headers[7] = ('content-length', 'eq', '0')
+    ff36_nocookie.response_body = None
+
+    ff36_cookie = test_utils.TestRequest(ff36_nocookie)
+    ff36_cookie.headers['cookie'] = 'bid=testing'
+    ff36_cookie.response_headers[10] = (
+        'set-cookie', 'regex',
+        re.compile('^rid=\"[0-9]{10}\/[a-z\/]*\"; Path=\/$'))
+
     configs = test_utils.TestConfig()
-    configs.update('firefox36', ff36)
+    configs.update('firefox36_no_cookie', ff36_nocookie)
+    configs.update('firefox36_cookie', ff36_cookie)
     return configs.items()
 
   @test_function
@@ -1875,7 +1918,8 @@ class DatastoreActions(unittest.TestCase):
             ('content-encoding', 'eq', None),
             ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
-            ('x-xss-protection', 'eq', '0')
+            ('x-xss-protection', 'eq', '0'),
+            ('set-cookie', 'regex', cookie_regex)
           ]
 
     else:
@@ -1889,7 +1933,8 @@ class DatastoreActions(unittest.TestCase):
             ('content-encoding', 'eq', 'gzip'),
             ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'text/html; charset=utf-8'),
-            ('x-xss-protection', 'eq', '0')
+            ('x-xss-protection', 'eq', '0'),
+            ('set-cookie', 'regex', cookie_regex)
           ]
 
     # Make a special request for the not allowed method tests.
@@ -1901,6 +1946,7 @@ class DatastoreActions(unittest.TestCase):
     self.firefox36_not_allowed.response_headers[4] = ('pragma', 'eq', None)
     self.firefox36_not_allowed.response_headers[8] = ('content-type', 'eq', 'text/html')
     self.firefox36_not_allowed.response_headers[9] = ('x-xss-protection', 'eq', None)
+    self.firefox36_not_allowed.response_headers[10] = ('set-cookie', 'eq', None)
     self.firefox36_not_allowed.response_headers.append(
         ('allow', 'eq', 'GET, POST, HEAD'))
     self.firefox36_not_allowed.response_headers[0] = ('etag', 'eq', None)
@@ -1925,8 +1971,17 @@ class DatastoreActions(unittest.TestCase):
   def get(self):
     """GET request for /datastore/actions/
     """
+    ff36_nocookie = test_utils.TestRequest(self.firefox36)
+
+    ff36_cookie = test_utils.TestRequest(self.firefox36)
+    ff36_cookie.headers['cookie'] = 'bid=testing'
+    ff36_cookie.response_headers[10] = (
+        'set-cookie', 'regex',
+        re.compile('^rid=\"[0-9]{10}\/[a-z\/]*\"; Path=\/$'))
+
     configs = test_utils.TestConfig()
-    configs.update('firefox36', self.firefox36)
+    configs.update('firefox36_no_cookie', ff36_nocookie)
+    configs.update('firefox36_cookie', ff36_cookie)
     return configs.items()
 
   @test_function
@@ -1998,12 +2053,20 @@ class DatastoreActions(unittest.TestCase):
   def head(self):
     """HEAD request for /datastore/actions/
     """
-    ff36 = test_utils.TestRequest(self.firefox36)
-    ff36.response_headers[6] = ('content-encoding', 'eq', None)
-    ff36.response_headers[7] = ('content-length', 'eq', '0')
-    ff36.response_body = None
+    ff36_nocookie = test_utils.TestRequest(self.firefox36)
+    ff36_nocookie.response_headers[6] = ('content-encoding', 'eq', None)
+    ff36_nocookie.response_headers[7] = ('content-length', 'eq', '0')
+    ff36_nocookie.response_body = None
+
+    ff36_cookie = test_utils.TestRequest(ff36_nocookie)
+    ff36_cookie.headers['cookie'] = 'bid=testing'
+    ff36_cookie.response_headers[10] = (
+        'set-cookie', 'regex',
+        re.compile('^rid=\"[0-9]{10}\/[a-z\/]*\"; Path=\/$'))
+
     configs = test_utils.TestConfig()
-    configs.update('firefox36', ff36)
+    configs.update('firefox36_no_cookie', ff36_nocookie)
+    configs.update('firefox36_cookie', ff36_cookie)
     return configs.items()
 
   @test_function

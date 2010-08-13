@@ -45,6 +45,48 @@ def set_default_headers(response):
   response.headers['X-XSS-Protection'] = '0'
   return response
 
+def set_cookies(request, response):
+  browser_id = request.cookies.get('bid')
+  req_time = int(time.time())
+  set_browser_cookie = False
+  browser = None
+  key_name = None
+  if browser_id:
+    try:
+      # In most cases the browser_id is a datastore key.
+      browser = db.get(db.Key(encoded=browser_id))
+    except db.BadKeyError:
+      # But, sometimes it may be a key_name instead.
+      key_name = 'bid_'+ browser_id
+      browser = dstore.Browser.get_by_key_name(key_name)
+
+  if browser is None:
+    # Create a new browser object if it does not exist.
+    set_browser_cookie = True
+    user_agent, user_agent_str = utils.format_user_agent(request)
+    user_agent_str = (user_agent.browser and
+                      user_agent_str or user_agent.string)
+    browser = dstore.Browser(key_name=key_name, user_agent=user_agent_str)
+
+  # Add this request to the list of requests made by this browser.
+  req = dstore.format_request(req_time,
+                              request.path,
+                              request.remote_addr,
+                              request.referrer)
+  browser.requests.append(req)
+  k = str(browser.put())
+
+  # Maybe set the browser id cookie.
+  if set_browser_cookie:
+    response.set_cookie('bid',
+                        value=(key_name and key_name[4:] or k),
+                        expires=(req_time + 31556926)) # Exp in 1 year.
+
+  # Set the request id cookie nomatter what.
+  response.set_cookie('rid', value=('%d%s'% (req_time, request.path)))
+
+  return response
+
 def exception_handler(exception, request, out):
   """To be passed into the fwerks module for general exception handling.
 
@@ -116,56 +158,17 @@ class SimpleHandler(Handler):
   """
   # Prepare and send the response.
   def respond(self):
-    set_cookie = False
-    now = time.time()
-    req_time = int(now)
-    browser = None
-    key_name = None
-    bid = self.request.cookies.get('bid')
-
-    if bid:
-      try:
-        # In most cases the browser_id is a datastore key.
-        browser = db.get(db.Key(encoded=bid))
-      except db.BadKeyError:
-        # But, sometimes it may be a key_name instead.
-        key_name = 'bid_'+ bid
-        browser = dstore.Browser.get_by_key_name(key_name)
-
-    if browser is None:
-      # Create a new browser object if it does not exist.
-      set_cookie = True
-      user_agent, user_agent_str = utils.format_user_agent(self.request)
-      user_agent_str = (user_agent.browser and
-                        user_agent_str or user_agent.string)
-      browser = dstore.Browser(key_name=key_name, user_agent=user_agent_str)
-
-    # Add this request to the list of requests made by this browser.
-    req = dstore.format_request(req_time,
-                                self.request.path,
-                                self.request.remote_addr,
-                                self.request.referrer)
-    browser.requests.append(req)
-    k = str(browser.put())
-
     # Prepare the response.
     response = set_default_headers(
         self.out(
           utils.render_template(self.name)))
     response.mimetype = 'text/html'
-    response.add_etag()
 
-    # Maybe set the browser id cookie.
-    if set_cookie:
-      response.set_cookie('bid',
-                          value=(key_name and key_name[4:] or k),
-                          expires=(now + 31556926)) # Exp in 1 year.
-
-    # Set the request id nomatter what.
-    response.set_cookie('rid', value=('%d%s'% (req_time, self.request.path)))
+    response = set_cookies(self.request, response)
 
     # Expire in 4 days.
-    response.expires = now + (86400 * 4)
+    response.expires = int(time.time()) + (86400 * 4)
+    response.add_etag()
     # Caching is private because we're setting a cookie.
     response.headers['Cache-Control'] = 'private, max-age=%d' % (86400 * 4)
 
@@ -228,6 +231,7 @@ class DatastoreHandler(Handler):
       response = set_default_headers(self.html_response(template, context))
 
     # Prepare the response.
+    response = set_cookies(self.request, response)
     response.status_code = status
     response.add_etag()
 
