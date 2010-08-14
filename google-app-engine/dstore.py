@@ -1,3 +1,5 @@
+import logging
+import utils
 from google.appengine.ext import db
 
 class Member(db.Model):
@@ -11,10 +13,35 @@ class Subscriber(db.Model):
   init_date = db.IntegerProperty()
 
 class Browser(db.Model):
+  created = db.DateTimeProperty(auto_now_add=True)
   user_agent = db.StringProperty()
-  requests = db.StringListProperty(indexed=False)
-  actions = db.StringListProperty(indexed=False)
+  init_path = db.StringProperty()
+  init_referrer = db.StringProperty()
+  init_address = db.StringProperty()
 
-def format_request(timestamp, path, address, referrer):
-  return '%d;%s;%s;%s'% (timestamp, path, address, referrer)
+def browser_key(browser):
+  if isinstance(browser, basestring):
+    return 'bid_'+ browser
+  key = browser.key()
+  key_name = key.name()
+  return  key_name and key_name[4:] or str(key)
+
+class Request(db.Model):
+  created = db.DateTimeProperty(auto_now_add=True)
+  browser = db.StringProperty()
+  user_agent = db.StringProperty()
+  path = db.StringProperty()
+  referrer = db.StringProperty()
+  address = db.StringProperty()
+  status = db.IntegerProperty()
+
+class Action(db.Model):
+  created = db.DateTimeProperty(auto_now_add=True)
+  browser = db.StringProperty()
+  last_request = db.StringProperty()
+  user_agent = db.StringProperty()
+  path = db.StringProperty()
+  address = db.StringProperty()
+  client_time = db.IntegerProperty()
+  description = db.StringProperty()
 

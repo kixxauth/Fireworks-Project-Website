@@ -21,8 +21,9 @@ import logging
 
 import utils
 from fwerks import Handler
+from werkzeug.utils import http_date, cached_property
 from werkzeug.exceptions import InternalServerError
-from werkzeug.utils import http_date
+from werkzeug.useragents import UserAgent
 
 from django.utils import simplejson
 
@@ -45,47 +46,87 @@ def set_default_headers(response):
   response.headers['X-XSS-Protection'] = '0'
   return response
 
-def set_cookies(request, response):
-  browser_id = request.cookies.get('bid')
-  req_time = int(time.time())
-  new_browser = False
-  browser = None
-  key_name = None
-  if browser_id:
-    try:
-      # In most cases the browser_id is a datastore key.
-      browser = db.get(db.Key(encoded=browser_id))
-    except db.BadKeyError:
-      # But, sometimes it may be a key_name instead.
-      key_name = 'bid_'+ browser_id
-      browser = dstore.Browser.get_by_key_name(key_name)
+class BaseHandler(Handler):
 
-  if browser is None:
-    # Create a new browser object if it does not exist.
-    user_agent, user_agent_str = utils.format_user_agent(request)
-    user_agent_str = (user_agent.browser and
-                      user_agent_str or user_agent.string)
-    browser = dstore.Browser(key_name=key_name, user_agent=user_agent_str)
-    new_browser = True
+  @cached_property
+  def no_persist(self):
+    rv = self.request.headers.get('x-request-no-persist', None)
+    return (rv and rv == 'true') and True or False
 
-  # Add this request to the list of requests made by this browser.
-  req = dstore.format_request(req_time,
-                              request.path,
-                              request.remote_addr,
-                              request.referrer)
-  browser.requests.append(req)
-  k = str(browser.put())
+  @cached_property
+  def persist_user_agent(self):
+    user_agent = UserAgent(self.request.environ)
+    if user_agent.browser:
+      attrs = (
+            user_agent.platform
+          , user_agent.browser
+          , user_agent.version
+          , user_agent.language
+          )
+      return '%s;%s;%s;%s'% attrs
+    return user_agent.string
 
-  # Maybe set the browser id cookie.
-  if new_browser:
-    response.set_cookie('bid',
-                        value=(key_name and key_name[4:] or k),
-                        expires=(req_time + 31556926)) # Exp in 1 year.
+  def finalize_response(self, response, record_request=True):
+    browser_id = self.request.cookies.get('bid')
+    browser = None
+    request = None
+    user_agent = None
+    status = response.status_code 
+    status_ok = status >= 200 and status < 300 or status is 304
 
-  # Set the request id cookie nomatter what.
-  response.set_cookie('rid', value=('%d%s'% (req_time, request.path)))
+    # Used to avoid datastore writes during automated testing.
+    no_persist = self.no_persist
 
-  return response
+    response = set_default_headers(response)
+
+    # TODO
+    #if not browser_id:
+      # We also send the browser_id as an ETag in some cases
+      #etags = self.request.if_none_match
+      #etag = len(etags) and etags.pop() or None
+      # If ETag length > 32 (md5) it is a browser key and not a real ETag
+      #browser_id = len(etag) > 32 and etag or None
+    if not browser_id:
+      user_agent = self.persist_user_agent
+      browser = dstore.Browser(user_agent=user_agent
+                             , init_path=self.request.path
+                             , init_referrer=self.request.referrer
+                             , init_address=self.request.remote_addr)
+      browser.put()
+      browser_id = dstore.browser_key(browser)
+
+    # Reset the browser id cookie
+    if status_ok:
+      response.set_cookie('bid',
+                          value=browser_id,
+                          expires=(int(time.time()) + 31556926)) # Exp in 1 year.
+
+    if record_request:
+      user_agent = user_agent or self.persist_user_agent
+      request = dstore.Request(browser=browser_id
+                             , user_agent=user_agent
+                             , path=self.request.path
+                             , referrer=self.request.referrer
+                             , address=self.request.remote_addr
+                             , status=(response.status_code or 0))
+      k = request.put()
+      if status_ok:
+        response.set_cookie('rid', value=str(k))
+
+    # Delete during automated testing.
+    if browser and no_persist:
+      browser.delete()
+    if request and no_persist:
+      request.delete()
+
+    # Caching is private since we're always setting a cookie.
+    response.headers['Cache-Control'] = 'private, max-age=%d' % (86400 * 4)
+
+    # Do this last for an accurate conditional response.
+    response.add_etag()
+
+    # Only send a response body if the E-Tag does not match.
+    return response.make_conditional(self.request)
 
 def exception_handler(exception, request, out):
   """To be passed into the fwerks module for general exception handling.
@@ -114,8 +155,7 @@ def not_found(response):
   in this module. This function is designed to be passed to the FWerks
   application constructor function in `request.py`.
 
-  `request` is a Werkzeug request object.
-  `out` is a callable used to create a Werkzeug response object.
+  `response` A pre-constructed response object.
   """
   # TODO: A nice 404 response.
   response = set_default_headers(response)
@@ -130,6 +170,14 @@ def not_found(response):
   return response
 
 def request_redirect(response):
+  """To be passed into the fwerks module to handle mis-matched paths.
+
+  We define the general 'redirect' handler here for easy access to other tools
+  in this module. This function is designed to be passed to the FWerks
+  application constructor function in `request.py`.
+
+  `response` A pre-constructed response object.
+  """
   # There is no need to format a nice redirect response, since
   # browsers will automatically redirect
   response = set_default_headers(response)
@@ -140,7 +188,7 @@ def request_redirect(response):
   response.headers['Connection'] = 'close'
   return response
 
-class SimpleHandler(Handler):
+class SimpleHandler(BaseHandler):
   """General request handling class for most of the requests we get.
 
   This class is designed and written to be used by the fwerks module.  It
@@ -164,16 +212,10 @@ class SimpleHandler(Handler):
           utils.render_template(self.name)))
     response.mimetype = 'text/html'
 
-    response = set_cookies(self.request, response)
-
     # Expire in 4 days.
     response.expires = int(time.time()) + (86400 * 4)
-    response.add_etag()
-    # Caching is private because we're setting a cookie.
-    response.headers['Cache-Control'] = 'private, max-age=%d' % (86400 * 4)
 
-    # Only send a response body if the E-Tag does not match.
-    return response.make_conditional(self.request)
+    return self.finalize_response(response)
 
   def get(self):
     """Accept the HTTP GET method."""
@@ -183,7 +225,7 @@ class SimpleHandler(Handler):
     """Accept the HTTP HEAD method."""
     return self.respond()
 
-class DatastoreHandler(Handler):
+class DatastoreHandler(BaseHandler):
   """Base class for datastore handlers.
 
   This class is designed and written to be used by the fwerks module.  It
@@ -221,8 +263,11 @@ class DatastoreHandler(Handler):
     return response
 
   # Prepare and send the response.
-  def respond(self,
-      status, data=None, template='datastore_generic', context={}):
+  def respond(self, status,
+              data=None,
+              template='datastore_generic',
+              context={},
+              record_request=True):
 
     if self.request.accept_mimetypes.best_match(
         ['application/json', 'text/html']) == 'application/json':
@@ -230,18 +275,14 @@ class DatastoreHandler(Handler):
     else:
       response = set_default_headers(self.html_response(template, context))
 
-    # Prepare the response.
-    response = set_cookies(self.request, response)
     response.status_code = status
-    response.add_etag()
 
     # No caching.
-    response.headers['Expires'] = '-1'
+    response.headers['Expires'] = 'Fri, 01 Jan 1990 00:00:00 GMT'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Cache-Control'] = NO_CACHE_HEADER
 
-    # Only send a response body if the E-Tag does not match.
-    return response.make_conditional(self.request)
+    return self.finalize_response(response, record_request=record_request)
 
   def response_error(self, name, message):
     return {'name': name, 'message': message}
@@ -307,7 +348,8 @@ class DatastoreMembers(DatastoreHandler):
     new_member = dstore.Member(member_name=name
                              , uid=email
                              , init_date=int(time.time()));
-    new_member.put()
+    if not self.no_persist:
+      new_member.put()
 
     # TODO: The params for this email should not be hard coded in here.
     mail.send_mail(
@@ -359,7 +401,8 @@ class DatastoreSubscribers(DatastoreHandler):
       # Add new subscription.
       if new_sub and new_sub not in subscriber.subscriptions:
         subscriber.subscriptions.append(new_sub)
-        subscriber.put()
+        if not self.no_persist:
+          subscriber.put()
 
       json_data = {
               'email'        : subscriber.email
@@ -376,7 +419,8 @@ class DatastoreSubscribers(DatastoreHandler):
     new_subscriber = dstore.Subscriber(email=email
                                      , subscriptions=subs
                                      , init_date=int(time.time()));
-    new_subscriber.put()
+    if not self.no_persist:
+      new_subscriber.put()
 
     json_data = {
           'email'        : new_subscriber.email
@@ -400,50 +444,45 @@ class DatastoreActions(DatastoreHandler):
     entity with the given key does not exist, we create it here and append the
     passed actions.
     """
-    data = self.request.form
+    browser_id = self.request.cookies.get('bid') or 'anonymous'
+    request_id = self.request.cookies.get('rid') or 'undefined'
+    user_agent = self.persist_user_agent
+    actions = map(lambda x: tuple(str(x).split(':'))
+                , self.request.form.getlist('actions'))
 
-    browser_id = data.get('browser_id')
-    if not browser_id:
-      message = 'Missing "browser_id" property.'
+    action_models = []
+    logging.warn('actions: %r', self.request.form.getlist('actions'))
+    try:
+      for client_time, desc in actions:
+        action_models.append(dstore.Action(browser=browser_id
+                            , last_request=request_id
+                            , user_agent=user_agent
+                            , path=self.request.path
+                            , address=self.request.remote_addr
+                            , client_time=int(client_time)
+                            , description=desc))
+      if not self.no_persist:
+        db.put(action_models)
+    except ValueError, ex:
+      logging.warn('Invalid "actions" property: %s', str(ex))
+      message = 'Invalid "actions" property.'
       e = self.response_error('ValidationError', message)
       return self.respond(409,
                           data=e,
                           template='datastore_error',
                           context={'message': message})
 
-    actions = map(str, data.getlist('actions'))
-
-    key_name = None
-    try:
-      # In most cases the browser_id is a datastore key.
-      browser = db.get(db.Key(encoded=browser_id))
-    except db.BadKeyError:
-      # But, sometimes it may be a key_name instead.
-      key_name = 'bid_'+ browser_id
-      browser = dstore.Browser.get_by_key_name(key_name)
-
-    # If the browser entity does not exist, create it.
-    if not browser:
-      user_agent, user_agent_str = utils.format_user_agent(self.request)
-      user_agent_str = (user_agent.browser and
-                        user_agent_str or user_agent.string)
-      if key_name:
-        browser = dstore.Browser(key_name=key_name, user_agent=user_agent_str)
-      else:
-        browser = dstore.Browser(user_agent=user_agent_str)
-
-    # Append the actions and persist the entity.
-    browser.actions = browser.actions + actions
-    k = str(browser.put())
-
     json_data = {
-          'browser_id': key_name and key_name[4:] or k
-        , 'user_agent': browser.user_agent
-        , 'actions'   : len(browser.actions or [])
-        , 'requests'  : len(browser.requests or [])
+          'browser_id': browser_id
+        , 'request_id': request_id
+        , 'user_agent': user_agent
+        , 'address': self.request.remote_addr
+        , 'actions'   : map(lambda x: \
+            {'client_time': x.client_time, 'description': x.description}
+                          , action_models)
         }
 
-    return self.respond(200, data=json_data)
+    return self.respond(200, data=json_data, record_request=False)
 
 class TestException(Handler):
   """Handler class for '/exception' URL.

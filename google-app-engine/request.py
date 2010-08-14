@@ -63,9 +63,9 @@
 from fwerks import App
 from google.appengine.ext.webapp.util import run_bare_wsgi_app
 from handlers import handler_map, exception_handler, not_found, request_redirect
-from werkzeug import BaseRequest, CommonRequestDescriptorsMixin, BaseResponse, AcceptMixin, CommonResponseDescriptorsMixin,ETagResponseMixin
+from werkzeug import BaseRequest, CommonRequestDescriptorsMixin, BaseResponse, AcceptMixin, CommonResponseDescriptorsMixin, ETagResponseMixin, ETagRequestMixin
 
-class Request(BaseRequest, CommonRequestDescriptorsMixin, AcceptMixin):
+class Request(BaseRequest, CommonRequestDescriptorsMixin, AcceptMixin, ETagRequestMixin):
   """Request class implementing the following Werkzeug mixins:
 
       - :class:`CommonRequestDescriptorsMixin` for various HTTP descriptors.
