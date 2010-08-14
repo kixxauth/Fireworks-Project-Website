@@ -15,28 +15,18 @@
   <changefreq>daily</changefreq>
 </url>
 <url>
-  <loc>http://www.fireworksproject.com/join</loc>
+  <loc>http://www.fireworksproject.com/about</loc>
   <priority>0.80</priority>
   <changefreq>weekly</changefreq>
 </url>
 <url>
-  <loc>http://www.fireworksproject.com/about</loc>
+  <loc>http://www.fireworksproject.com/join</loc>
   <priority>0.70</priority>
   <changefreq>weekly</changefreq>
 </url>
 <url>
   <loc>http://www.fireworksproject.com/projects</loc>
   <priority>0.60</priority>
-  <changefreq>monthly</changefreq>
-</url>
-<url>
-  <loc>http://www.fireworksproject.com/projects/kixx</loc>
-  <priority>0.50</priority>
-  <changefreq>monthly</changefreq>
-</url>
-<url>
-  <loc>http://www.fireworksproject.com/projects/dcube</loc>
-  <priority>0.50</priority>
   <changefreq>monthly</changefreq>
 </url>
 </urlset>

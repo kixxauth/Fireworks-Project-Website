@@ -184,7 +184,7 @@ class Sitemap(unittest.TestCase):
     function is called.
     """
     self.firefox36 = test_utils.TestRequest(firefox36_config)
-    self.firefox36.response_body = 1225
+    self.firefox36.response_body = True
 
     if test_utils.LOCAL:
       self.firefox36.response_headers = [
@@ -194,7 +194,7 @@ class Sitemap(unittest.TestCase):
             ('expires', 'regex', test_utils.HTTP_DATE_RX),
             ('cache-control', 'eq', 'public, max-age=86400'),
             ('content-encoding', 'eq', None),
-            ('content-length', 'eq', '1225'),
+            ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'application/xml')
           ]
 
@@ -207,7 +207,7 @@ class Sitemap(unittest.TestCase):
             ('cache-control', 'eq', 'public, max-age=86400'),
             # GAE does static file servers do not gzip xml.
             ('content-encoding', 'eq', None),
-            ('content-length', 'eq', '1225'),
+            ('content-length', 'regex', re.compile('[0-9]+')),
             ('content-type', 'eq', 'application/xml')
           ]
 
@@ -258,7 +258,7 @@ class Sitemap(unittest.TestCase):
     ff36 = test_utils.TestRequest(self.firefox36)
     # GAE dev and production static file servers both set the Content-Length
     # header even when there is no content body returned.
-    ff36.response_headers[6] = ('content-length', 'eq', '1225')
+    ff36.response_headers[6] = ('content-length', 'regex', re.compile('[0-9]+'))
     ff36.response_body = None
     configs = test_utils.TestConfig()
     configs.update('firefox36', ff36)
