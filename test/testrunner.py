@@ -80,7 +80,7 @@ def checkhost(url):
   """
   cxn = httplib.HTTPConnection(url)
   try:
-    cxn.request('GET', '/')
+    cxn.request('GET', '/', None, {'User-Agent': 'testing'})
     return True
   except httplib.socket.error:
     return False

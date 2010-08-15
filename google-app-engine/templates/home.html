@@ -114,33 +114,10 @@ if (typeof console === 'undefined') {
 
     , messages = SPEC.messages
 
-    , cookies = (function () {
-        var rv = {}
-          , parts = document.cookie.split(';')
-          , i = 0
-          , c, ck
-          ;
-        for (; i < parts.length; i += 1) {
-          c = parts[i].split('=');
-          ck = c[0];
-          while (ck.charAt(0) === ' ') {
-            ck = ck.slice(1);
-          }
-          rv[ck] = c[1];
-        }
-        return rv;
-      }())
-
-    , browser_id = cookies.bid || 'anonymous'
-    , req_id = cookies.rid || 'undefined'
-
     , format_action = (function () {
-        var page_view = new Date().getTime() + window.location.pathname;
+        var page_view = new Date().getTime() +';'+ window.location.pathname;
         return function (action) {
-          return (req_id +';'+
-            page_view +';'+
-            new Date().getTime() +';'+
-            action);
+          return (page_view +';'+ new Date().getTime() +';'+ action);
         };
       }())
 
@@ -150,11 +127,7 @@ if (typeof console === 'undefined') {
   console.log('document.cookie', document.cookie);
 
   function post_actions() {
-    j.post('/datastore/actions/'
-      , j.param({
-          browser_id: browser_id
-        , actions: actions
-        }, true));
+    j.post('/datastore/actions/', j.param({actions: actions}, true));
     actions = [];
   }
 

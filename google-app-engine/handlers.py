@@ -447,19 +447,19 @@ class DatastoreActions(DatastoreHandler):
     browser_id = self.request.cookies.get('bid') or 'anonymous'
     request_id = self.request.cookies.get('rid') or 'undefined'
     user_agent = self.persist_user_agent
-    actions = map(lambda x: tuple(str(x).split(':'))
+    actions = map(lambda x: tuple(str(x).split(';'))
                 , self.request.form.getlist('actions'))
 
     action_models = []
-    logging.warn('actions: %r', self.request.form.getlist('actions'))
     try:
-      for client_time, desc in actions:
+      for page_time, path, timestamp, desc in actions:
         action_models.append(dstore.Action(browser=browser_id
                             , last_request=request_id
                             , user_agent=user_agent
-                            , path=self.request.path
+                            , path=path
                             , address=self.request.remote_addr
-                            , client_time=int(client_time)
+                            , page_time=int(page_time)
+                            , timestamp=int(timestamp)
                             , description=desc))
       if not self.no_persist:
         db.put(action_models)
@@ -472,14 +472,19 @@ class DatastoreActions(DatastoreHandler):
                           template='datastore_error',
                           context={'message': message})
 
+    def map_actions(x):
+      return {
+               'page_time': x.page_time
+             , 'timestamp': x.timestamp
+             , 'description': x.description
+             }
+
     json_data = {
           'browser_id': browser_id
         , 'request_id': request_id
         , 'user_agent': user_agent
         , 'address': self.request.remote_addr
-        , 'actions'   : map(lambda x: \
-            {'client_time': x.client_time, 'description': x.description}
-                          , action_models)
+        , 'actions'   : map(map_actions, action_models)
         }
 
     return self.respond(200, data=json_data, record_request=False)

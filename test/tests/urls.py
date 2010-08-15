@@ -1930,9 +1930,9 @@ class DatastoreActions(unittest.TestCase):
     ff36.response_headers[7] = ('set-cookie', 'regex', browser_cookie_regex)
 
     # Record some page actions.
-    ff36.body = (urllib.urlencode({'actions': '1234:clicked on something'})
+    ff36.body = (urllib.urlencode({'actions': '12;/path;1234;clicked on something'})
                  +'&'+
-                 urllib.urlencode({'actions': '12345:scrolled somewhere'}))
+                 urllib.urlencode({'actions': '12;/path;12345;scrolled somewhere'}))
     ff36.headers['Content-Length'] = str(len(ff36.body))
     ff36.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     ff36.response_status = 200

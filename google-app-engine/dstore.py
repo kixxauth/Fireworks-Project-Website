@@ -42,6 +42,7 @@ class Action(db.Model):
   user_agent = db.StringProperty()
   path = db.StringProperty()
   address = db.StringProperty()
-  client_time = db.IntegerProperty()
+  page_time = db.IntegerProperty()
+  timestamp = db.IntegerProperty()
   description = db.StringProperty()
 
