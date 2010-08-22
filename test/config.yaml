@@ -47,6 +47,16 @@ full:
     - head
     - options
 
+  - name: YahooVerify
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
   - name: NotFound
     tests:
     - get 
@@ -127,6 +137,49 @@ full:
     - options
     - trace
 
+static:
+- module: urls
+  classes:
+
+  - name: RobotsTxt
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+  - name: Sitemap
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+  - name: GoogleVerify
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+
+  - name: YahooVerify
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
 robots_txt:
 - module: urls
   classes:
@@ -160,6 +213,20 @@ google_verify:
   classes:
 
   - name: GoogleVerify
+    tests:
+    - get 
+    - put
+    - post
+    - delete
+    - head
+    - options
+    - trace
+
+yahoo_verify:
+- module: urls
+  classes:
+
+  - name: YahooVerify
     tests:
     - get 
     - put

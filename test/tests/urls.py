@@ -390,6 +390,116 @@ class GoogleVerify(unittest.TestCase):
     configs.update('firefox36', self.firefox36)
     return configs.items()
 
+class YahooVerify(unittest.TestCase):
+  url = '/y_key_36887132dd89194c.html'
+
+  def configure(self):
+    """Set up the request/response data.
+
+    The test_utils.test_function decorator will cause this method
+    to be called once for this test class, but NOT each time a test
+    function is called.
+    """
+    self.firefox36 = test_utils.TestRequest(firefox36_config)
+
+    if test_utils.LOCAL:
+      self.firefox36.response_headers = [
+            ('etag', 'eq', None),
+            ('server', 'eq', 'Development/1.0'),
+            ('date', 'regex', test_utils.HTTP_DATE_RX),
+            ('expires', 'regex', test_utils.HTTP_DATE_RX),
+            ('cache-control', 'eq', 'public, max-age=1814400'),
+            ('content-encoding', 'eq', None),
+            ('content-length', 'eq', '261'),
+            ('content-type', 'eq', 'text/html')
+          ]
+      self.firefox36.response_body = 261
+
+    else:
+      self.firefox36.response_headers = [
+            ('etag', 'len', 8),
+            ('server', 'eq', 'Google Frontend'),
+            ('date', 'regex', test_utils.HTTP_DATE_RX),
+            ('expires', 'regex', test_utils.HTTP_DATE_RX),
+            ('cache-control', 'eq', 'public, max-age=1814400'),
+            ('content-encoding', 'eq', 'gzip'),
+            ('content-length', 'eq', '141'),
+            ('content-type', 'eq', 'text/html')
+          ]
+      self.firefox36.response_body = 141
+
+  @test_function
+  def get(self):
+    """GET request for Yahoo Verify
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36)
+    return configs.items()
+
+  @test_function
+  def put(self):
+    """PUT request for Yahoo Verify
+    """
+    ff36 = test_utils.TestRequest(self.firefox36)
+    ff36.body = 'User-agent: *\nAllow: /\n'
+    ff36.headers['Content-Length'] = str(len(ff36.body))
+    ff36.headers['Content-Type'] = 'text/plain'
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', ff36)
+    return configs.items()
+
+  @test_function
+  def post(self):
+    """POST request for Yahoo Verify
+    """
+    ff36 = test_utils.TestRequest(self.firefox36)
+    ff36.body = 's=foo&num=44'
+    ff36.headers['Content-Length'] = str(len(ff36.body))
+    ff36.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', ff36)
+    return configs.items()
+
+  @test_function
+  def delete(self):
+    """DELETE request for Yahoo Verify
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36)
+    return configs.items()
+
+  @test_function
+  def head(self):
+    """HEAD request for Yahoo Verify
+    """
+    ff36 = test_utils.TestRequest(self.firefox36)
+    # GAE dev and production static file servers both set the Content-Length
+    # header even when there is no content body returned.
+    if test_utils.LOCAL:
+      ff36.response_headers[6] = ('content-length', 'eq', '261')
+    else:
+      ff36.response_headers[6] = ('content-length', 'eq', '141')
+    ff36.response_body = None
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', ff36)
+    return configs.items()
+
+  @test_function
+  def options(self):
+    """OPTIONS request for Yahoo Verify
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36)
+    return configs.items()
+
+  @test_function
+  def trace(self):
+    """TRACE request for Yahoo Verify
+    """
+    configs = test_utils.TestConfig()
+    configs.update('firefox36', self.firefox36)
+    return configs.items()
+
 class NotFound(unittest.TestCase):
   url = '/lost_city_of_atlantis'
 

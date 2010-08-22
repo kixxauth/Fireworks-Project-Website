@@ -234,10 +234,18 @@ handlers:
  
 # ### Google verification file.
 # Hooks this domain into google tools like anylitics and whatnot.
-# `/google-app-engine/static/googlef734612d306d87e6\.html`
+# `/google-app-engine/static/googlef734612d306d87e6.html`
 - url: /googlef734612d306d87e6\.html
   static_files: static/googlef734612d306d87e6.html
   upload: static/googlef734612d306d87e6.html
+  expiration: 21d
+ 
+# ### Yahoo verification file.
+# Hooks this domain into google tools like anylitics and whatnot.
+# `/google-app-engine/static/y_key_36887132dd89194c.html`
+- url: /y_key_36887132dd89194c\.html
+  static_files: static/y_key_36887132dd89194c.html
+  upload: static/y_key_36887132dd89194c.html
   expiration: 21d
 
 # ### All other requests are dynamic.
