@@ -1,0 +1,1096 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Priority Dashboard for The Fireworks Project</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="The priority todo list for The Fireworks Project." />
+<link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" media="all" href="/css/jquery-ui/ui-darkness/jquery-ui-1.8.5.custom.css"/>
+<link rel="stylesheet" media="all" href="/css/collabworks/priority.css"/>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui-1.8.5.custom.min.js"></script>
+<script type="text/javascript" src="/js/jquery.dataTables.1.7.3.min.js"></script>
+<script type="text/javascript" src="/js/raphael.1.5.2.min.js"></script>
+<script type="text/javascript" src="/js/underscore-1.0.2-min.js"></script>
+<script type="text/javascript" src="/js/collabworks/priority.js"></script>
+</head><body>
+<p class="popover"><a class="popover" href="#introduction">What is this?</a></p>
+<div id="introduction" class="popover">
+	<p class="popover-content">Well, it started out as a todo list; but now it is
+	being called a "priority dashboard". Not only does this application rank and
+	list our tasks, but puts them into the context of the whole company. The
+	major downside is that, because of the lack of a login functionality for our
+	website, this app is read only. If you have ideas for changes, please open a
+	thread on Basecamp.</p>
+	<p class="popover-content">In general, all items are classified as Components,
+	Processes, Assets, or Tasks. Each item is scored and ranked by an algorithm; the goal
+	of which is to get a more objective view of what our priorities should be.</p>
+	<p class="popover-content">The most valuable item, of course, is our "Big Hairy
+	Goal". The value of the remaining items is derived from that. Each item
+	maintains a list of items that it depends upon and how much of its value
+	depends on each one. The algorithm uses these manual scores to determine how
+	valuable each item is on the "pyramid" and which ones need to get done before
+	others. In other words, it figures out the dependency tree for us.</p>
+	<p class="popover-content">The results of the algorithm are usaully what you
+	would expect, but there are cases where unexpected results can lead to some
+	insights. For example: We would expect our Collaboration Tools to be our most
+	valuable asset, but I did not expect the Web Browsers to be our second most
+	valuable asset. In actuality, that certainly makes sense. (The web browsers are an asset
+	in the sense that we depend heavily on them, but do not own them; they are on
+	"loan" to us.)</p>
+</div>
+<div id="tabs">
+	<ul>
+		<li><a href="#lists">Priority Lists</a></li>
+		<li><a href="#model">Business Component Model</a></li>
+		<li><a href="#table">Table</a></li>
+		<li><a href="#dataview">Raw Data</a></li>
+	</ul>
+	<div id="lists" class="tabs">
+		<p class="popover"><a class="popover" href="#about-lists">Explain this tab.</a></p>
+		<div id="about-lists" class="popover">
+			<p class="popover-content">This tab only lists items from the tasks, assets, and processes
+			categories. The tasks are listed in priority rank order, while the assets and processes are
+			listed in order by value.</p>
+			<p class="popover-content">The purpose of this tab is to make it easy to see the correlation
+			between a task and the business value it supports; either an asset or a process. Just click
+			on any of these items to see which items they depend on and which items depend on them.</p>
+			<p class="popover-content">The priority ranking of the tasks means that even though some lower
+			items may be more valuable, they are not ranked as high because they depend upon another task
+			getting done first. The dependency tasks are always ranked higher for this reason.</p>
+		</div>
+		<div class="list">
+			<h2 class="list">tasks</h2>
+			<div id="todo-list"></div>
+		</div>
+		<div class="list">
+			<h2 class="list">assets</h2>
+			<div id="asset-list" class="list"></div>
+		</div>
+		<div class="list">
+			<h2 class="list">processes</h2>
+			<div id="process-list" class="list"></div>
+		</div>
+	</div>
+	<div id="model" class="tabs">
+		<p class="popover"><a class="popover" href="#about-component-diagram">Explain this tab.</a></p>
+		<div id="about-component-diagram" class="popover">
+			<p class="popover-content">This tab represents our various business components and how
+			they stack up. Each component depends on the ones below it, so it makes sense that our
+			ultimate goal, the flag in the sand, is on top.</p>
+			<p class="popover-content">Some components don&#39;t have labels, but that&#39;s just
+			because they are too small for the text. Click on any component to get more details.</p>
+		</div>
+		<div id="component-diagram"></div>
+	</div>
+	<div id="table" class="tabs">
+		<p class="popover"><a class="popover" href="#about-datatable">Explain this tab.</a></p>
+		<div id="about-datatable" class="popover">
+			<p class="popover-content">This tab is a complete listing of all the
+			items that make up the current priority dashboard. You can search them in
+			the search bar, and sort the table by column when you click on the column
+			headers.</p>
+			<p class="popover-content">The value column contains the value score for
+			each item as derived from the Big Hairy Goal, which has a value of 100.
+			The rank column value of each item is determined by our priority
+			algorithm. The highest ranking item (#1) is the one which the most
+			business value depend on.</p>
+		</div>
+		<table id="datatable" cellpadding="0" cellspacing="0" border="0"></table>
+	</div>
+	<div id="dataview" class="tabs">
+		<p class="popover"><a class="popover" href="#about-data-view">Explain this tab.</a></p>
+		<div id="about-data-view" class="popover">
+			<p class="popover-content">This tab is just a complete, unfiltered and unordered
+			list of all the items in the priority dashboard.</p>
+		</div>
+		<div id="data-view"></div>
+	</div>
+</div><!-- end #tabs -->
+
+<div id="popup"></div>
+<script id="item-popup-template" type="text/html">
+	<h3 class="item-title">${name} <em class="item-classname">(${classname})</em></h3>
+	<p class="item-description">${description}</p>
+	<p class="item-score">Value: ${value}, Rank: ${rank}</p>
+	<p class="item-content">{{html content}}</p>
+	<h4>Dependencies:</h4>
+	<ul>
+	{{each(i, item) dependencies}}
+	  <li>${item}%</li>
+	{{/each}}
+  </ul>
+	<h4>Dependents:</h4>
+	<ul>
+	{{each(i, item) dependents}}
+	  <li>${item}%</li>
+	{{/each}}
+  </ul>
+</script>
+
+<div id="error-dialog" title="Error Notification"></div>
+<script id="error-dialog-template" type="text/html">
+	<div class="ui-widget error dialog message">
+		<div class="ui-state-error ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+			<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+			${message}</p>
+		</div>
+	</div>
+	<div class="ui-widget error dialog message">
+		<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+			<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+			<strong class="break">Error message:</strong> ${err}</p>
+		</div>
+	</div>
+	<p class="error dialog action-message">
+	{{if status === 1}}
+	Unfortunately this error has brought everything to a screaching halt.
+	{{else}}
+	Luckily we'll be able to continue anyway.
+	{{/if}}
+	</p>
+</script>
+<ul id="data">
+	<li class="item">
+		<ul class="item">
+			<li class="name">Big Hairy Goal</li>
+			<li class="classname">Goal Component</li>
+			<li class="description">Make money by building, organizing, and integrating web applications.</li>
+			<li class="content">
+				<p>The Fireworks Project exists to <a
+					href="http://radar.oreilly.com/2009/01/work-on-stuff-that-matters-fir.html">
+					build something that matters</a>. This constant will
+				remain in place throughout all of our work. For the coporate middle managers;
+				you'll recognize this as a "mission statement":</p>
+				<blockquote>
+					<p>The Fireworks Project mission: to build, organize, and integrate
+					internet applications, making them universally accessible and useful
+					for everyone.</p>
+				</blockquote>
+				<p>Whatever you want to call it, it&#39;s what we&#39;re shooting for.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Business Model: 10</li>
+					<li class="dependency">Membership: 7</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Business Model</li>
+			<li class="classname">Abstract Process Component</li>
+			<li class="description">An abstract model for harvesting income from the creation of value.</li>
+			<li class="content">
+	<p>Our business model represents our grand view of
+	the world in simple terms; but it still allows us to dive into the details when
+	we need to.</p>
+	<p>As time goes on, we need to see the delivery mechanism for our business model improve.
+	Right now it is a primitive hodge podge of HTML, SVG documents, and images. If we
+	improve these tools, we can increase the speed at which we triangulate
+	a successful business model.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Assets: 10</li>
+					<li class="dependency">OODA Loop: 7</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Membership</li>
+			<li class="classname">Concrete Component</li>
+			<li class="description">Attract and sustain valuable members.</li>
+			<li class="content">
+			<p>It goes without saying that valuable people will be the enablers of
+			The Fireworks Project mission. Our corpoorate structure allows us to
+			always be on the lookout for talented individuals who would add value to
+			our organization.</p>
+			<p>Even more importantly we need to provide our membership with the tools
+			and capabilities they need to do their best work. Good people do great
+			work when they get to work with good people and good tools. That is the
+			concept behind "sustainable membership".</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Outreach: 10</li>
+					<li class="dependency">Member Support: 8</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Assets</li>
+			<li class="classname">Abstract Component</li>
+			<li class="description">An abstract class for our assets.</li>
+			<li class="content">
+			<p>The assets component includes everything from our core compentencies, to
+			our software, to our GitHub account.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Products: 10</li>
+					<li class="dependency">Brand: 8</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">OODA Loop</li>
+			<li class="classname">Abstract Process Component</li>
+			<li class="description">Observe, orient, decide, action loop.</li>
+			<li class="content">
+				<p>We want to cycle through the OODA loop as quickly and cheaply as
+				possible. Each iteraction through the loop results in improvements to
+				our business model. The faster we iterate on our business model, the
+				sooner we can find one that is scalable and repeatable.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Business Tools: 10</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Outreach</li>
+			<li class="classname">Abstract Process Component</li>
+			<li class="description">Communicating with the outside world.</li>
+			<li class="content">
+			<p>This is a a <em>very</em> broad process that envelopes many different,
+			but related concepts. Basically it includes everything that related to
+			communicating outside the our organization.</p>
+			<p>There are two facets to our outreach process: First, find and attract
+			people who may be willing to become paying customers. This is an
+			extension to marketing; but marketing is a much broader concept. Second,
+			find and attract valuable people who may want to join our membership.</p>
+			<p>This includes advertising, social
+			networking, conferences, content creation on our website, and more.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Customer Outreach: 10</li>
+					<li class="dependency">Member Outreach: 8</li>
+					<li class="dependency">Developer Outreach: 7</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Member Support</li>
+			<li class="classname">Abstract Component</li>
+			<li class="description">Great tools, documentation, and personal support for our members.</li>
+			<li class="content">
+			<p>Our members will need great software tools, complete information about the company,
+			as well as personal support from other members. Without this support infrastructure we can
+			be sure our most valuable members will go somplace else.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Collaboration Tools: 10</li>
+					<li class="dependency">Documentation: 8</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Products</li>
+			<li class="classname">Abstract Component</li>
+			<li class="description">The stuff we make.</li>
+			<li class="content">
+			<p>We will get our products wrong more often than not; that&#39;s just reality. The trick
+			is to be able to move quickly enough to find stuff that people really, really
+			want or "need".</p>
+			<p> We need to fail early and fail often. “Spend less time fantasizing
+			about ‘success’ and way more time making really cool mistakes.”</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Software Development: 10</li>
+					<li class="dependency">User Experience Design: 8</li>
+					<li class="dependency">Content Creation: 2</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Brand</li>
+			<li class="classname">Abstract Asset Component</li>
+			<li class="description">Building brand equity.</li>
+			<li class="content">
+			<p>Most of who we are and what we do depends on the value of our brand equity.
+			Everything we do and everything we touch either adds to the value of our brand or takes
+			away from it.</p>
+			<p>Peldi, the founder of Balsamiq Studios, calls it the golden puzzle;
+			everything you say and do is a piece to the golden puzzle. Each time we interact with
+			anyone we are adding a peice of value to the golden puzzle of brand equity.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Outreach: 10</li>
+					<li class="dependency">User Experience Design: 8</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Customer Outreach</li>
+			<li class="classname">Abstract Process Component</li>
+			<li class="description">Finding, attracting, and communicating with customers.</li>
+			<li class="content">
+			<p>This is an abstract class that is meant to contain all the activities that
+			could be tagged with "Customer Outreach".</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Collaboration Tools: 10</li>
+					<li class="dependency">Content Creation: 8</li>
+					<li class="dependency">EJournal: 7</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Member Outreach</li>
+			<li class="classname">Abstract Process Component</li>
+			<li class="description">Finding, attracting, and communicating with potential new members.</li>
+			<li class="content">
+			<p>This is an abstract class that is meant to contain all the activities that
+			could be tagged with "Member Outreach".</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Collaboration Tools: 10</li>
+					<li class="dependency">Content Creation: 8</li>
+					<li class="dependency">Recruiting Page: 7</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Developer Outreach</li>
+			<li class="classname">Abstract Process Component</li>
+			<li class="description">Finding, attracting, and communicating with developers.</li>
+			<li class="content">
+			<p>This is an abstract class that is meant to contain all the activities that
+			could be tagged with "Developer Outreach".</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Collaboration Tools: 10</li>
+					<li class="dependency">Content Creation: 8</li>
+					<li class="dependency">Project Pages: 7</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">User Experience Design</li>
+			<li class="classname">Concrete Process</li>
+			<li class="description">Actively design the experience of our users.</li>
+			<li class="content">
+			<p>User experience design (UX) is another loathed buzzword these days in the technology world.
+			Nevertheless, it is important for the success of our products, and our brand, to focus on
+			the emotional appeal of our products.</p>
+			<p>User experience design is having a grand vision; then eliminate the technical hurtles
+			until it becomes a reality. User experience design is all about building the future.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Collaboration Tools: 10</li>
+					<li class="dependency">User Testing: 8</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Collaboration Tools</li>
+			<li class="classname">Abstract Asset Component</li>
+			<li class="description">Internal web application suite for production and collaboration.</li>
+			<li class="content">
+			<p>Our tools boil down to a centralized suite of web applications that we
+			will use to collaborate with each other. This is basically how we plan to
+			run our company.</p>
+			<p>This suite of tools will include applications that will allow us to easily vote
+			and manage our points as well as facilitate decision making under the rules of our
+			operating agreement.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Software Development: 10</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Business Tools</li>
+			<li class="classname">Abstract Asset Component</li>
+			<li class="description">Internal web application suite for managing our business.</li>
+			<li class="content">
+			<p>Once again, our business management tools will be implemented as a suite of
+			web applications.</p>
+			<p>This suite of tools will include applications for accounting, modeling, customer relationship
+			management, resource management, and so on.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Software Development: 10</li>
+					<li class="dependency">Documentation: 7</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Documentation</li>
+			<li class="classname">Concrete Asset Component</li>
+			<li class="description">Internal documentation for our members.</li>
+			<li class="content">
+			<p>Currently this project is known as the Hackers&#39; and Hitchhikers&#39;
+			guide to The Fireworks Project. It is meant to be a sort of owner employee manual
+			for our organization.</p>
+			<p>Ultimately it should become a document collection collectively edited
+			by all of our members.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Content Creation: 10</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Software Development</li>
+			<li class="classname">Concrete Process</li>
+			<li class="description">Our software development and deployment process.</li>
+			<li class="content">
+			<p>Almost all of our processes and products involve software. (Go figure.)
+			So it goes without saying that our software development process will get
+			a lot of attention. Our core products are software tools, and the very
+			existence of our business itself depends both on our internally developed tools
+			as well as those found elsewhere.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Web Browsers: 10</li>
+					<li class="dependency">Client Codebase: 8</li>
+					<li class="dependency">Multitenant Server: 7</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Multitenant Server</li>
+			<li class="classname">Concrete Asset</li>
+			<li class="description">An application server hosting multiple customers.</li>
+			<li class="content">
+			<p>Our very own web application server with the capability to serve
+			multiple tenants from a single instance.  It will include the server side
+			portion of our JS module system as well as data persistence.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Build Multitenant Server: 100</li>
+					<li class="dependency">Google App Engine: 100</li>
+					<li class="dependency">Werkzeug: 80</li>
+					<li class="dependency">Git: 70</li>
+					<li class="dependency">Kake: 70</li>
+					<li class="dependency">Package Server: 60</li>
+					<li class="dependency">GitHub: 50</li>
+					<li class="dependency">Qunit: 20</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Build Multitenant Server</li>
+			<li class="classname">Task</li>
+			<li class="description">Build our web application server.</li>
+			<li class="content">
+			<p>The goal of this project is to build a server that can serve multiple tenants from
+			a single instance.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Build OpenID Login: 1</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Build OpenID Login</li>
+			<li class="classname">Task</li>
+			<li class="description">Integrate an OpenID login plugin into our GAE apps.</li>
+			<li class="content">
+			<p>The goal of this project is to intetgrate OpenID functionality into both
+			our website (for content management) and our multitenant server.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Client Codebase</li>
+			<li class="classname">Abstract Asset</li>
+			<li class="description">All the code that the applications clients depend on.</li>
+			<li class="content">
+			<p>This class includes any client side code libraries or utilities that our
+			applications depend on. Including code written within, or created outside
+			of The Fireworks Project.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">JS Loader: 60</li>
+					<li class="dependency">Fireworks.js: 50</li>
+					<li class="dependency">jQuery: 40</li>
+					<li class="dependency">jQuery UI: 10</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Content Creation</li>
+			<li class="classname">Abstract Process</li>
+			<li class="description">Informative content created within our domain.</li>
+			<li class="content">
+			<p>The purpose of content creation is multifaceted. Valuable content will
+			cause our pages to be linked accross the interenet, improving our search
+			results. It also helps us build brand equity, maintain good public
+			relations, and sell our awesome services.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Content Management Tools: 8</li>
+					<li class="dependency">Collaboration Tools: 6</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Website</li>
+			<li class="classname">Concrete Asset</li>
+			<li class="description">The main www.fireworksproject.com website.</li>
+			<li class="content">
+			<p>Our website is an asset that should reach a state of perpetual motion. It will
+			never be done; there will always be improvments and changes that need to be made.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Google App Engine: 100</li>
+					<li class="dependency">Werkzeug: 80</li>
+					<li class="dependency">Git: 70</li>
+					<li class="dependency">Kake: 70</li>
+					<li class="dependency">GitHub: 50</li>
+					<li class="dependency">jQuery: 40</li>
+					<li class="dependency">GoDaddy Domain Host: 20</li>
+					<li class="dependency">Qunit: 20</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Content Management Tools</li>
+			<li class="classname">Concrete Asset</li>
+			<li class="description">Software tools for managing our content on our websites.</li>
+			<li class="content">
+			<p>Content management tools will allow all of us to upload and edit content that is published
+			on our websites. This includes everything from blogs to project documentation.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Website: 10</li>
+					<li class="dependency">Software Development: 8</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">EJournal</li>
+			<li class="classname">Concrete Asset</li>
+			<li class="description">Our technology newsletter for small businesses.</li>
+			<li class="content">
+			<p>Our newsletter not only reaches a mailing list of potential customers,
+			but is also valuable content that will be placed on our website which
+			will attract backlinks; improving our Google page rank.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Write EJournal: 10</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Write EJournal</li>
+			<li class="classname">Task</li>
+			<li class="description">Write the next EJournal edition.</li>
+			<li class="content">
+			<p>The target audience for our EJournal should be the leaders of small organizations and corporate
+			department heads. The general theme is all about technology as it relates to our target
+			audience. The frequency of the Ejournal is currently 4-6 weeks, with only 1 article per issue.</p>
+			<p>If we believe that this is a valuable asset, then we should continue to invest more time in it;
+			getting guest writers and editors, and publishing more articles more frequently.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Recruiting Page</li>
+			<li class="classname">Concrete Asset</li>
+			<li class="description">http://www.fireworksproject.com/pages/extraordinary_people.html</li>
+			<li class="content">
+			<p>This is the page we send all potential members to for an introduction to The Fireworks Project.
+			We will also use it in "job" listings, freelancer listings, and link to it frequently from
+			presentation slides, twitter, etc.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Update Recruiting Page: 10</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Update Recruiting Page</li>
+			<li class="classname">Task</li>
+			<li class="description">http://www.fireworksproject.com/pages/extraordinary_people.html</li>
+			<li class="content">
+			<p>This page is good, but it would be nice to update it. The content should be edited to
+			be even more compelling for our target audience than it is now. I really like this
+			example of creative and compelling writing:
+			<a href="http://asack.typepad.com/a_sack_of_seattle/2010/09/free-beer-for-job-applicants-do-i-have-your-attention-now.html">
+				free-beer-for-job-applicants-do-i-have-your-attention-now.html</a></p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Update Recruiting Page: 10</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Google App Engine</li>
+			<li class="classname">Unowned Asset</li>
+			<li class="description">Our primary application hosting service.</li>
+			<li class="content">
+			<p>Google App Engine is our primary application hosting service because it is
+			free (up to a point) and scaleable. When finances allow, we'll look at other options.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">GitHub</li>
+			<li class="classname">Unowned Asset</li>
+			<li class="description">Our primary project hosting service.</li>
+			<li class="content">
+			<p>GitHub provides source control hosting, code review tools, and issue tracking.
+			What more could you want?</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">GoDaddy Domain Host</li>
+			<li class="classname">Unowned Asset</li>
+			<li class="description">Our primary project domain hosting service.</li>
+			<li class="content">
+			<p>Sad to say that our fireworksproject.com is parked on GoDaddy.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Project Pages</li>
+			<li class="classname">Abstract Asset</li>
+			<li class="description">The home pages and developer pages for our projects.</li>
+			<li class="content">
+			<p>This asset class includes both the home pages for our projects (some of which will
+			be customer facing) and the developer pages for our projects (which will only be targeted
+			toward developers).</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">GitHub: 10</li>
+					<li class="dependency">Content Management Tools: 10</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Git</li>
+			<li class="classname">Unowned Asset</li>
+			<li class="description">The ubiquitous distributed source control system.</li>
+			<li class="content">
+			<p>Git: The fast version control system.
+			<a href="http://git-scm.com/">http://git-scm.com/</a></p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">jQuery</li>
+			<li class="classname">Unowned Asset</li>
+			<li class="description">The ubiquitous JS DOM manipulation library.</li>
+			<li class="content">
+			<p>jQuery is a fast and concise JavaScript Library that simplifies HTML
+			document traversing, event handling, animating, and Ajax interactions for
+			rapid web development..
+			<a href="http://jquery.com/">http://jquery.com/</a></p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Qunit</li>
+			<li class="classname">Unowned Asset</li>
+			<li class="description">JS test framework.</li>
+			<li class="content">
+			<p>QUnit is a powerful, easy-to-use, JavaScript test suite. It's used by
+			the jQuery project to test its code and plugins but is capable of testing
+			any generic JavaScript code (and even capable of testing JavaScript code
+			on the server-side). </p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Web Browsers</li>
+			<li class="classname">Unowned Asset Class</li>
+			<li class="description">The commonly used web browsers.</li>
+			<li class="content">
+			<p>Whether we are building web applications or browser extensions, we thoroughly depend
+			on the quality and competition between the browser manufacturers.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Werkzeug</li>
+			<li class="classname">Unowned Asset</li>
+			<li class="description">Python WSGI framework.</li>
+			<li class="content">
+			<p>Werkzeug started as a simple collection of various utilities for WSGI
+			applications and has become one of the most advanced WSGI utility
+			modules. It includes a powerful debugger, fully featured request and
+			response objects, HTTP utilities to handle entity tags, cache control
+			headers, HTTP dates, cookie handling, file uploads, a powerful URL
+			routing system and a bunch of community contributed addon modules.
+			<a href="http://werkzeug.pocoo.org/">werkzeug.pocoo.org/</a></p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">User Testing</li>
+			<li class="classname">Concrete Process</li>
+			<li class="description">Get actual users to use our software and let us watch.</li>
+			<li class="content">
+			<p>Good user testing is invaluable to creating the user experience that we are driving
+			for on all of our software.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Kake</li>
+			<li class="classname">Concrete Asset</li>
+			<li class="description">The JS build tool with a GUI.</li>
+			<li class="content">
+			<p>This project is meant to create our primary build tool as a Firefox extension.
+			It will be able to build any project, but builds will be scripted with JS.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Firefox: 100</li>
+					<li class="dependency">Git: 80</li>
+					<li class="dependency">GitHub: 70</li>
+					<li class="dependency">Qunit: 50</li>
+					<li class="dependency">JS Loader: 40</li>
+					<li class="dependency">Fireworks.js: 30</li>
+					<li class="dependency">jQuery: 20</li>
+					<li class="dependency">jQuery UI: 16</li>
+					<li class="dependency">Underscore.js: 14</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Firefox</li>
+			<li class="classname">Unowned Asset</li>
+			<li class="description">The famous Mozilla web browser.</li>
+			<li class="content">
+			<p>This item is listed simply as a dependency to Kake.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">JS Loader</li>
+			<li class="classname">Concrete Asset</li>
+			<li class="description">Our own CommonJS compliant JS loader.</li>
+			<li class="content">
+			<p>We've been through several iterations of a JS loader, but this will
+			be the first one that is cross platform and cross browser. It will
+			also be integrated with a full JS library eventually.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Build JS Loader: 10</li>
+					<li class="dependency">Git: 9</li>
+					<li class="dependency">GitHub: 8</li>
+					<li class="dependency">Qunit: 7</li>
+					<li class="dependency">Kake: 6</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Fireworks.js</li>
+			<li class="classname">Concrete Asset</li>
+			<li class="description">Our own CommonJS compliant JS library.</li>
+			<li class="content">
+			<p>This library is meant to fill the holes left by jQuery and the rest.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Build Fireworks.js: 9</li>
+					<li class="dependency">Git: 8</li>
+					<li class="dependency">GitHub: 7</li>
+					<li class="dependency">Kake: 6</li>
+					<li class="dependency">Qunit: 5</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">jQuery UI</li>
+			<li class="classname">Unowned Asset</li>
+			<li class="description">The user interface framework for jQuery.</li>
+			<li class="content">
+			<p>jQuery UI provides abstractions for low-level interaction and
+			animation, advanced effects and high-level, themeable widgets, built on
+			top of the jQuery JavaScript Library, that you can use to build highly
+			interactive web applications.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">jQuery: 1</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Underscore.js</li>
+			<li class="classname">Unowned Asset</li>
+			<li class="description">Functional JS lib from Document Cloud.</li>
+			<li class="content">
+			<p>Underscore is a utility-belt library for JavaScript that provides a
+			lot of the functional programming support that you would expect in
+			Prototype.js  (or Ruby), but without extending any of the built-in
+			JavaScript objects. It's the tie to go along with jQuery's tux. </p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Build JS Loader</li>
+			<li class="classname">Task</li>
+			<li class="description">The all important JS loader that everything depends on.</li>
+			<li class="content">
+			<p>This is the todo list item to actually build the JS loader.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Build Fireworks.js</li>
+			<li class="classname">Task</li>
+			<li class="description">Now building: our very own JS library.</li>
+			<li class="content">
+			<p>This library is mostly interdependent with our JS loader.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Package Server</li>
+			<li class="classname">Concrete Asset</li>
+			<li class="description">A CommonJS compliant packager server.</li>
+			<li class="content">
+			<p>This project represents what I believe will be the future of web
+			applications. We are entering an era where large portions of applications
+			will be installed locally on client devices rather than fully hosted on
+			servers. In fact, we are already experiencing this shift away from hosted
+			applications with the proliferation of apps for mobile devices.
+			Unfortunately installed applications have been boxed into walled gardens
+			by Apple and the telcos. This project is meant to open up the installed
+			web appliction dynamic; bringing us back to the openness that made the
+			web so useful and popular in the first place.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Build Package Server: 100</li>
+					<li class="dependency">Django: 100</li>
+					<li class="dependency">Git: 70</li>
+					<li class="dependency">GitHub: 50</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Django</li>
+			<li class="classname">Unowned Asset</li>
+			<li class="description">The WSGI framework for Python.</li>
+			<li class="content">
+			<p>Django is a high-level Python Web framework that encourages rapid
+			development and clean, pragmatic design.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Build Package Server</li>
+			<li class="classname">Task</li>
+			<li class="description">Build the package server.</li>
+			<li class="content">
+			<p>This is the task item for working on the package server.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<!--
+	<li class="item">
+		<ul class="item">
+			<li class="name"></li>
+			<li class="classname"></li>
+			<li class="description"></li>
+			<li class="content">
+			<p></p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency"></li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	-->
+</ul>
+</body></html>

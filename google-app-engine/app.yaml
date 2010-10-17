@@ -201,6 +201,13 @@ handlers:
   mime_type: text/html
   expiration: 1d
 
+# ### The beginnings of our collabworkd application suite.
+# `/google-app-engine/static/collabworks`
+- url: /collabworks
+  static_dir: static/collabworks
+  mime_type: text/html
+  expiration: 1d
+
 # ### Mozilla package download files.
 # Must be made secure through https for the Mozilla browser extention
 # autoupdate tool to work properly .

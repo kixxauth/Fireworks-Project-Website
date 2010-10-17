@@ -1,0 +1,123 @@
+body {
+	background-color: #000;
+	color: #fff5df;
+}
+.ui-widget-content {
+	color: #fff5df;
+}
+
+strong.break {
+	display: block;
+}
+
+#popup {
+	background: #222;
+	color: #fff5df;
+	border: 1px solid #777;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	border-radius: 7px;
+	font-size: 1.1em;
+	padding: 1em 0 2em;
+}
+#popup a, #popup a:hover, #popup a:visited {
+	color: #fff5df;
+	text-decoration: underline;
+}
+#popup blockquote {
+	font-style: italic;
+}
+
+#popup h3.item-title {
+	font-size: 1.3em;
+	font-weight: bold;
+}
+#popup h3.item-title em.item-classname {
+	font-size: .8em;
+}
+#popup p {
+	margin-top: 1em;
+	font-size: .9em;
+}
+#popup p.item-score {
+	font-weight: bold;
+	font-size: 1.1em;
+}
+#popup p.item-description {
+	font-size: 1.3em;
+}
+#popup h4 {
+	margin-top: 1em;
+	font-weight: bold;
+}
+#popup ul {
+	font-size: .9em;
+	list-style: outside disc;
+	margin-left: 2em;
+}
+
+#datatable_wrapper {
+	margin: 1em 0 3em;
+}
+#datatable_filter {
+	border: 1px solid #333;
+	-moz-border-radius: .4em;
+	-webkit-border-radius: .4em;
+	border-radius: .4em;
+	background-color: #333;
+	padding: 1em;
+}
+#datatable_filter input {
+	height: 1.2em;
+	width: 16em;
+	border: 1px solid #aaa;
+	-moz-border-radius: .3em;
+	-webkit-border-radius: .3em;
+	border-radius: .3em;
+	padding: .2em .2em .3em;
+}
+#datatable {
+	margin-top: 1em;
+}
+#datatable_filter {
+}
+#datatable th, td {
+	padding: .2em 2em .3em;
+}
+#datatable th {
+	border-bottom: 2px solid #333;
+	cursor: pointer;
+}
+#datatable tr.even {
+	background-color: #222;
+}
+#datatable_info {
+	margin-top: 3em;
+	font-size: .8em;
+}
+#datatable tbody tr {
+	cursor: pointer;
+}
+
+#lists {
+	overflow: hidden;
+}
+#lists div.list {
+	float: left;
+	width: 302px;
+	margin-right: 7%;
+}
+#lists h2.list {
+	text-align: center;
+	margin-bottom: 1em;
+}
+
+#component-diagram {
+  margin-bottom: 100px;
+}
+
+#data li.item {
+	border-top: 1px solid #333;
+	padding-top: 2em;
+	margin-top: 2em;
+}
