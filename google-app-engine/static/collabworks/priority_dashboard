@@ -447,7 +447,32 @@
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
-					<li class="dependency">Software Development: 10</li>
+					<li class="dependency">Web Browsers: 100</li>
+					<li class="dependency">Website: 80</li>
+					<li class="dependency">Priority Dashboard: 10</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Priority Dashboard</li>
+			<li class="classname">Abstract Asset Component</li>
+			<li class="description">Internal web app module to prioritize our tasks.</li>
+			<li class="content">
+			<p>Not only does this application rank and list our tasks, but puts them
+			into the context of the whole company. The major downside is that,
+			because of the lack of a login functionality for our website, this app is
+			read only. If you have ideas for changes, please open a thread on
+			Basecamp.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">jQuery: 100</li>
+					<li class="dependency">Raphael: 80</li>
+					<li class="dependency">jQuery UI: 70</li>
+					<li class="dependency">jQuery DataTables: 60</li>
 				</ul>
 			</li>
 		</ul>
@@ -508,7 +533,7 @@
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
 					<li class="dependency">Web Browsers: 10</li>
-					<li class="dependency">Client Codebase: 8</li>
+					<li class="dependency">Client Side Code: 8</li>
 					<li class="dependency">Multitenant Server: 7</li>
 				</ul>
 			</li>
@@ -572,7 +597,7 @@
 	</li>
 	<li class="item">
 		<ul class="item">
-			<li class="name">Client Codebase</li>
+			<li class="name">Client Side Code</li>
 			<li class="classname">Abstract Asset</li>
 			<li class="description">All the code that the applications clients depend on.</li>
 			<li class="content">
@@ -885,13 +910,17 @@
 			<li class="classname">Concrete Asset</li>
 			<li class="description">The JS build tool with a GUI.</li>
 			<li class="content">
-			<p>This project is meant to create our primary build tool as a Firefox extension.
-			It will be able to build any project, but builds will be scripted with JS.</p>
+			<p>Kake will be our primary project build tool. It will be a Firefox
+			extension with a GUI, so it should be easy to deploy for non-developers
+			who need it to compile HTML from markup, CSS from LessCSS, or JS from JS
+			modules.  It will be able to build any project, even our largest and most
+			complex, but builds will simply be scripted with JS.</p>
 			</li>
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
-					<li class="dependency">Firefox: 100</li>
+					<li class="dependency">Build Kake: 100</li>
+					<li class="dependency">Firefox: 90</li>
 					<li class="dependency">Git: 80</li>
 					<li class="dependency">GitHub: 70</li>
 					<li class="dependency">Qunit: 50</li>
@@ -900,6 +929,29 @@
 					<li class="dependency">jQuery: 20</li>
 					<li class="dependency">jQuery UI: 16</li>
 					<li class="dependency">Underscore.js: 14</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Build Kake</li>
+			<li class="classname">Task</li>
+			<li class="description">The JS build tool with a GUI.</li>
+			<li class="content">
+			<p>Kake will be our primary project build tool. It will be a Firefox
+			extension with a GUI, so it should be easy to deploy for non-developers
+			who need it to compile HTML from markup, CSS from LessCSS, or JS from JS
+			modules.  It will be able to build any project, even our largest and most
+			complex, but builds will simply be scripted with JS.</p>
+			<p>This task is important, but it depends on several others first. Namely the
+			client side JS module loader and the new Firewroks.js library.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">JS Loader: 40</li>
+					<li class="dependency">Fireworks.js: 30</li>
 				</ul>
 			</li>
 		</ul>
@@ -923,9 +975,10 @@
 			<li class="classname">Concrete Asset</li>
 			<li class="description">Our own CommonJS compliant JS loader.</li>
 			<li class="content">
-			<p>We've been through several iterations of a JS loader, but this will
-			be the first one that is cross platform and cross browser. It will
-			also be integrated with a full JS library eventually.</p>
+			<p>I've been through several iterations of a client side JS loader, but
+			this will be the first one that is cross platform and cross browser with
+			asynchronous capabilities. It will also be integrated with a full JS
+			library eventually.</p>
 			</li>
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
@@ -945,7 +998,10 @@
 			<li class="classname">Concrete Asset</li>
 			<li class="description">Our own CommonJS compliant JS library.</li>
 			<li class="content">
-			<p>This library is meant to fill the holes left by jQuery and the rest.</p>
+			<p>The Fireworks.js library is meant to fill the holes left by jQuery and the rest.</p>
+			<p>There are some cool things going on out in JS land, and it would be great to
+			be able to use new JS ideas a la carte as JS modules. So, that is what Fireworks.js
+			will be: a collection of utility JS modules.</p>
 			</li>
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
@@ -1001,6 +1057,10 @@
 			<li class="description">The all important JS loader that everything depends on.</li>
 			<li class="content">
 			<p>This is the todo list item to actually build the JS loader.</p>
+			<p>I've been through several iterations of a client side JS loader, but
+			this will be the first one that is cross platform and cross browser with
+			asynchronous capabilities. It will also be integrated with a full JS
+			library eventually.</p>
 			</li>
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
@@ -1013,7 +1073,13 @@
 			<li class="classname">Task</li>
 			<li class="description">Now building: our very own JS library.</li>
 			<li class="content">
-			<p>This library is mostly interdependent with our JS loader.</p>
+			<p>This JavaScript library is mostly interdependent with our JS loader,
+			and the basic components will be built at the same time as the
+			loader.</p>
+			<p>The Fireworks.js library is meant to fill the holes left by jQuery and the rest.</p>
+			<p>There are some cool things going on out in JS land, and it would be great to
+			be able to use new JS ideas a la carte as JS modules. So, that is what Fireworks.js
+			will be: a collection of utility JS modules.</p>
 			</li>
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
