@@ -110,7 +110,11 @@
 	</div>
 </div><!-- end #tabs -->
 
-<div id="popup"></div>
+<div id="popup">
+	<p id="popup-control" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-closethick"></span></p>
+	<div id="popup-content"></div>
+	<p id="popup-close">Click anywhere to exit.</p>
+</div>
 <script id="item-popup-template" type="text/html">
 	<h3 class="item-title">${name} <em class="item-classname">(${classname})</em></h3>
 	<p class="item-description">${description}</p>

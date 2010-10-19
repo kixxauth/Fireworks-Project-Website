@@ -1,12 +1,11 @@
 /**
  * @fileOverview Page JavaScript for the Uber priority todo list.
  * @author Kris Walker <kris@kixx.name>
- * @version 0.1
+ * @version 0.2
  *
- * Copyright (c) 2010 Kris Walker <kris@kixx.name>
- * Some rights are reserved, but licensed to you under the MIT license.
- * See MIT-LICENSE.txt or http://opensource.org/licenses/mit-license.php
- * for more information.
+ * All source code is (c) 2010 by contributors to The Fireworks Project
+ * Inc. (http://www.fireworksproject.com) and, unless otherwise indicated, is
+ * licensed under the MIT license.
  */
 
 /*jslint
@@ -273,19 +272,18 @@
     }
 
     open = function (content) {
-      var width = jwin.width() / 2
-        , padding = width / 6
+      var width = jwin.width();
+
+      j('#popup-content')
+        .empty()
+        .append(content)
         ;
       jpopup
         .css({
             top: jwin.scrollTop() + (jwin.height() /7)
-          , left: (jwin.width() / 2) - (width /2)
-          , width: width - padding
-          , 'padding-left': padding /2
-          , 'padding-right': padding /2
+          , left: (width / 2) - (width /4)
+          , width: width / 2
           })
-        .empty()
-        .append(content)
         .show()
         ;
 
@@ -304,6 +302,13 @@
                    })
                  .hide()
                  ;
+      j('#popup-control').hover(
+          function () {
+            j(this).addClass('ui-state-hover');
+          }
+        , function () {
+            j(this).removeClass('ui-state-hover');
+          });
       do_open = open;
     });
 

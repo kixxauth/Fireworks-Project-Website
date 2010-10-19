@@ -17,40 +17,52 @@ strong.break {
 	-moz-border-radius: 7px;
 	-webkit-border-radius: 7px;
 	border-radius: 7px;
-	font-size: 1.1em;
-	padding: 1em 0 2em;
 }
-#popup a, #popup a:hover, #popup a:visited {
+#popup-control {
+	cursor: pointer;
+	float: right;
+	margin: 7px;
+	padding: 4px;
+}
+#popup-close {
+	font-size: .8em;
+	margin-left: 2em;
+}
+#popup-content {
+	font-size: 1.1em;
+	padding: 1em 2em 2em;
+}
+#popup-content a, #popup-content a:hover, #popup-content a:visited {
 	color: #fff5df;
 	text-decoration: underline;
 }
-#popup blockquote {
+#popup-content blockquote {
 	font-style: italic;
 }
 
-#popup h3.item-title {
+#popup-content h3.item-title {
 	font-size: 1.3em;
 	font-weight: bold;
 }
-#popup h3.item-title em.item-classname {
+#popup-content h3.item-title em.item-classname {
 	font-size: .8em;
 }
-#popup p {
+#popup-content p {
 	margin-top: 1em;
 	font-size: .9em;
 }
-#popup p.item-score {
+#popup-content p.item-score {
 	font-weight: bold;
 	font-size: 1.1em;
 }
-#popup p.item-description {
+#popup-content p.item-description {
 	font-size: 1.3em;
 }
-#popup h4 {
+#popup-content h4 {
 	margin-top: 1em;
 	font-weight: bold;
 }
-#popup ul {
+#popup-content ul {
 	font-size: .9em;
 	list-style: outside disc;
 	margin-left: 2em;
