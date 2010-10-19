@@ -656,6 +656,7 @@
 					<li class="dependency">jQuery: 40</li>
 					<li class="dependency">GoDaddy Domain Host: 20</li>
 					<li class="dependency">Qunit: 20</li>
+					<li class="dependency">Website Version 7: 90</li>
 				</ul>
 			</li>
 		</ul>
@@ -920,12 +921,11 @@
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
 					<li class="dependency">Build Kake: 100</li>
+					<li class="dependency">Kake Homepage: 60</li>
 					<li class="dependency">Firefox: 90</li>
 					<li class="dependency">Git: 80</li>
 					<li class="dependency">GitHub: 70</li>
 					<li class="dependency">Qunit: 50</li>
-					<li class="dependency">JS Loader: 40</li>
-					<li class="dependency">Fireworks.js: 30</li>
 					<li class="dependency">jQuery: 20</li>
 					<li class="dependency">jQuery UI: 16</li>
 					<li class="dependency">Underscore.js: 14</li>
@@ -950,8 +950,7 @@
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
-					<li class="dependency">JS Loader: 40</li>
-					<li class="dependency">Fireworks.js: 30</li>
+					<li class="dependency">Update FWP GitHub: 1</li>
 				</ul>
 			</li>
 		</ul>
@@ -983,11 +982,12 @@
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
+					<li class="dependency">Kake: 10</li>
 					<li class="dependency">Build JS Loader: 10</li>
 					<li class="dependency">Git: 9</li>
 					<li class="dependency">GitHub: 8</li>
+					<li class="dependency">Fireworks.js Homepage: 8</li>
 					<li class="dependency">Qunit: 7</li>
-					<li class="dependency">Kake: 6</li>
 				</ul>
 			</li>
 		</ul>
@@ -1006,10 +1006,11 @@
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
+					<li class="dependency">Kake: 10</li>
 					<li class="dependency">Build Fireworks.js: 9</li>
 					<li class="dependency">Git: 8</li>
 					<li class="dependency">GitHub: 7</li>
-					<li class="dependency">Kake: 6</li>
+					<li class="dependency">Fireworks.js Homepage: 6</li>
 					<li class="dependency">Qunit: 5</li>
 				</ul>
 			</li>
@@ -1064,6 +1065,9 @@
 			</li>
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Update FWP GitHub: 1</li>
+				</ul>
 			</li>
 		</ul>
 	</li>
@@ -1083,6 +1087,9 @@
 			</li>
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Update FWP GitHub: 1</li>
+				</ul>
 			</li>
 		</ul>
 	</li>
@@ -1137,6 +1144,171 @@
 			</li>
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Update FWP GitHub: 1</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Website Version 7</li>
+			<li class="classname">Task</li>
+			<li class="description">Build and release the next version of www.fireworksproject.com</li>
+			<li class="content">
+			<p>The next version of our website needs to address several issues:</p>
+			<ol>
+				<li><h6>Mobile strategy:</h6>
+				Currently our site disappears on mobile devices; which is not a good
+				strategy. What is our strategy going to be for mobile devices?
+				</li>
+				<li><h6>Content strategy:</h6>
+				Who are we selling to? What are we selling to them? What is the call to action?
+				</li>
+				<li><h6>Minor improvement to WSGI implementation:</h6>
+				I&#39;m really happy with our WSGI implemenation, but it needs a couple
+				of minor tweaks that will really bring out the awesomeness.
+				</li>
+				<li><h6>Full documentation:</h6>
+				I have realized that, because we are using a bare bones implementation of WSGI instead
+				of a framework like Django, most developers are going to need a little more direction
+				on how to contribute patches to the site besides the code comments.
+				</li>
+			</ol>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Website Mobile Strategy: 10</li>
+					<li class="dependency">Website Documentation: 9</li>
+					<li class="dependency">WSGI improvement: 8</li>
+					<li class="dependency">Website Content Strategy: 7</li>
+					<li class="dependency">Update FWP GitHub: 12</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Website Content Strategy</li>
+			<li class="classname">Task</li>
+			<li class="description">Update the content strategy for www.fireworksproject.com</li>
+			<li class="content">
+			<p>
+				Who are we selling to? What are we selling to them? What is the call to action?
+			</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Website Documentation: 2</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Website Mobile Strategy</li>
+			<li class="classname">Task</li>
+			<li class="description">Implement a mobile strategy (technical and content).</li>
+			<li class="content">
+			<p>
+				Currently our site disappears on mobile devices; which is not a good
+				strategy. What is our strategy going to be for mobile devices?
+			</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">WSGI improvement: 3</li>
+					<li class="dependency">Website Documentation: 2</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Website Documentation</li>
+			<li class="classname">Task</li>
+			<li class="description">Developer and contributor docs for working with the website code.</li>
+			<li class="content">
+			<p>
+				I have realized that, because we are using a bare bones implementation of WSGI instead
+				of a framework like Django, most developers are going to need a little more direction
+				on how to contribute patches to the site besides the code comments.
+			</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">WSGI improvement: 1</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">WSGI improvement</li>
+			<li class="classname">Task</li>
+			<li class="description">Several small changes to the WSGI implementation
+			driving www.fireworksproject.com</li>
+			<li class="content">
+			<p>
+				I&#39;m really happy with our WSGI implemenation, but it needs a couple
+				of minor tweaks that will really bring out the awesomeness.
+			</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Update FWP GitHub</li>
+			<li class="classname">Task</li>
+			<li class="description">Our central GitHub location github.com/fireworksproject</li>
+			<li class="content">
+			<p>Our GitHub location needs to be cleaned up, and the projects listed there should be
+			the canonical project roots; not forks.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Kake Homepage</li>
+			<li class="classname">task</li>
+			<li class="description">Create a homepage on www.fireworksproject.com/projects/ for Kake</li>
+			<li class="content">
+			<p>Kake is our Firefox extension build tool. It has no home... boo.
+			</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Website Version 7: 1</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Fireworks.js Homepage</li>
+			<li class="classname">task</li>
+			<li class="description">Create a homepage on www.fireworksproject.com/projects/ for Fireworks.js</li>
+			<li class="content">
+			<p>Fireworks.js is our JS library with a dynamic module loader. It would
+			be really great to be able to announce this project on Nov. 13th, and it
+			would be even better if we had a home page ready for it.</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Website Version 7: 1</li>
+				</ul>
 			</li>
 		</ul>
 	</li>
