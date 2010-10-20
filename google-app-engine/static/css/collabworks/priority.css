@@ -29,7 +29,6 @@ strong.break {
 	margin-left: 2em;
 }
 #popup-content {
-	font-size: 1.1em;
 	padding: 1em 2em 2em;
 }
 #popup-content a, #popup-content a:hover, #popup-content a:visited {
@@ -58,8 +57,8 @@ strong.break {
 #popup-content p.item-description {
 	font-size: 1.3em;
 }
-#popup-content h4 {
-	margin-top: 1em;
+#popup-content h4, #popup-content h5, #popup-content h6 {
+	margin: 1em 0 .5em;
 	font-weight: bold;
 }
 #popup-content ul {
