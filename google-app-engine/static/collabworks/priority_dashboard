@@ -596,6 +596,9 @@
 			</li>
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">WSGI improvement: 1</li>
+				</ul>
 			</li>
 		</ul>
 	</li>
@@ -660,7 +663,7 @@
 					<li class="dependency">jQuery: 40</li>
 					<li class="dependency">GoDaddy Domain Host: 20</li>
 					<li class="dependency">Qunit: 20</li>
-					<li class="dependency">Website Version 7: 90</li>
+					<li class="dependency">Website Version 7: 110</li>
 				</ul>
 			</li>
 		</ul>
@@ -1178,6 +1181,11 @@
 				of a framework like Django, most developers are going to need a little more direction
 				on how to contribute patches to the site besides the code comments.
 				</li>
+				<li><h6>Real content management:</h6>
+				Implementing a content management system on our website is no trivial matter
+				but I think we have gotten to the point where the value of it is too great to ignore
+				any longer.
+				</li>
 			</ol>
 			</li>
 			<li class="dependencies">
@@ -1188,6 +1196,28 @@
 					<li class="dependency">WSGI improvement: 8</li>
 					<li class="dependency">Website Content Strategy: 7</li>
 					<li class="dependency">Update FWP GitHub: 12</li>
+					<li class="dependency">Website CMS: 12</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Website CMS</li>
+			<li class="classname">Task</li>
+			<li class="description">Design and build a CMS for www.fireworksproject.com</li>
+			<li class="content">
+			<p>
+				Implementing a content management system on our website is no trivial matter
+				but I think we have gotten to the point where the value of it is too great to ignore
+				any longer.
+			</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Website Documentation: 10</li>
+					<li class="dependency">Build OpenID Login: 8</li>
 				</ul>
 			</li>
 		</ul>
