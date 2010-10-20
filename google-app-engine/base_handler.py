@@ -2,8 +2,7 @@ import time
 
 from werkzeug import BaseRequest, CommonRequestDescriptorsMixin, AcceptMixin, ETagRequestMixin
 from werkzeug import BaseResponse, CommonResponseDescriptorsMixin, ETagResponseMixin
-from werkzeug.useragents import UserAgent
-from werkzeug.utils import cached_property
+from werkzeug import UserAgent, cached_property
 
 from fwerks import Handler
 import dstore

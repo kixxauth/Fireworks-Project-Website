@@ -21,8 +21,13 @@ import logging
 
 from fwerks import Handler
 
-from utils import render_template
-from base_handler import Response, BaseHandler
+import utils
+import base_handler
+
+render_template = utils.render_template
+
+Response    = base_handler.Response
+BaseHandler = base_handler.BaseHandler
 
 class SimpleHandler(BaseHandler):
   """General request handling class for most of the requests we get.

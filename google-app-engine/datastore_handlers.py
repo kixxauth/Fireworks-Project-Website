@@ -5,9 +5,15 @@ from google.appengine.ext import db
 from google.appengine.api import mail
 from django.utils import simplejson
 
-from utils import render_template, NO_CACHE_HEADER
-from base_handler import Response, BaseHandler
+import utils
+import base_handler
 import dstore
+
+NO_CACHE_HEADER = utils.NO_CACHE_HEADER
+render_template = utils.render_template
+
+BaseHandler = base_handler.BaseHandler
+Response    = base_handler.Response
 
 class DatastoreHandler(BaseHandler):
   """Base class for datastore handlers.

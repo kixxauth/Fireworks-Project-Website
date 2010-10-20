@@ -1,7 +1,5 @@
-#
 # App Configuration (app.yaml)
 # ============================
-#
 # A Python App Engine application must have a configuration file named
 # `app.yaml`.  It specifies how URL paths correspond to request handlers and
 # static files among other things such as the application ID and the latest
@@ -18,42 +16,47 @@
 # It also helps to know how GAE makes applications available. From the App
 # Engine Blog on app versioning:
 #
-# "App Engine permits you to deploy multiple versions of your app and have them
-# running side-by-side. All the versions share the samedatastore and memcache,
-# but they run in separate instances and have different URLs. Your 'live'
-# version always serves off yourapp.appspot.com as well as any domains you have
-# mapped, but all your app's versions are accessible at
-# version.latest.yourapp.appspot.com. Multiple versions are particularly useful
-# for testing a new release in a production environment, on real data, before
-# making it available to all your users.
+#   "App Engine permits you to deploy multiple versions of your app and have
+#   them running side-by-side. All the versions share the samedatastore and
+#   memcache, but they run in separate instances and have different URLs. Your
+#   'live' version always serves off yourapp.appspot.com as well as any domains
+#   you have mapped, but all your app's versions are accessible at
+#   version.latest.yourapp.appspot.com. Multiple versions are particularly
+#   useful for testing a new release in a production environment, on real data,
+#   before making it available to all your users.
 #
-# Something that's less known is that the different app versions don't even
-# have to have the same runtime! It's perfectly fine to have one version of an
-# app using the Java runtime and another version of the same app using the
-# Python runtime."
+#   Something that's less known is that the different app versions don't even
+#   have to have the same runtime! It's perfectly fine to have one version of
+#   an app using the Java runtime and another version of the same app using the
+#   Python runtime."
 #
 # http://googleappengine.blogspot.com/2009/06/10-things-you-probably-didnt-know-about.html
 #
+#
+
+# Config Sections
+# ---------------
 
 # Meta
 # ----
 # The Meta section contains all the metadata for the application.
 
 # ### The Google App Engine identifier for this app.
-#
 # Everything else is relative to this identifier. For example, when you run the
 # `appconfig.py` script to configure the application it uses this identifier to
 # know which GAE application to remotely configure. The URL for the application
 # is also created from the identifier like this: http://myappid.appspot.com/
 #
 application: fireworkscomputer 
+# So the default URL for this application is
+# http://fireworkscomputer.appspot.com which can also be reached with
+# http://www.fireworksproject.com via domain mapping from our domain name host.
 
 # ### The version number for the application code.
-#
 # App Engine retains a copy of the web app for each version used. An
-# administrator can change which major version of the application is default by
-# using the Administration Console. The version specifier can contain letters,
-# digits, and hyphens.
+# administrator can change which major version of the application is served to
+# the default URL by using the Administration Console. The version specifier
+# can contain letters, digits, and hyphens.
 #
 # Each version of an application retains its own copy of app.yaml. When an
 # application is uploaded, the version mentioned in the app.yaml file being
@@ -66,21 +69,22 @@ application: fireworkscomputer
 # where `VERSION` refers to this version string.
 #
 version: 7
+# So, the URL for version 7 of this application can be found at
+# http://7.latest.fireworkscomputer.appspot.com
 
 # ### The name of the App Engine runtime environment.
-#
-# The only useful value for this directive is `python`
+# We've chosen the Python runtime for this website.
 #
 runtime: python
 
-# ### The version of the API in the given runtime environment used by this application.
-#
+# ### The version of the API in the given runtime environment.
 # When Google releases a new version of a runtime environment's API, your
 # application will continue to use the one for which it was written. To upgrade
 # your application to the new API, you change this value and upload the
 # upgraded code.
 #
-# At this time, App Engine has one version of the python runtime environment: 1
+# At this time, App Engine has one version of the python runtime environment:
+# Version 1.
 #
 api_version: 1
 
@@ -99,7 +103,7 @@ api_version: 1
 #
 # For more info see the [appconfig documentation][1].
 #
-# Patterns are evaluated in the order they appear in the app.yaml, from top to
+# Patterns are evaluated in the order they appear in app.yaml, from top to
 # bottom. The first mapping whose pattern matches the URL is the one used to
 # handle the request.
 #

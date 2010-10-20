@@ -65,9 +65,18 @@ from google.appengine.ext.webapp.util import run_bare_wsgi_app
 from werkzeug.routing import Map, Rule, RequestRedirect
 
 from fwerks import App
-from simple_handlers import SimpleHandler, TestException
-from datastore_handlers import DatastoreMembers, DatastoreActions, DatastoreSubscribers
-from exception_handlers import not_found, request_redirect, exception_handler
+import simple_handlers
+import datastore_handlers
+import exception_handlers
+
+SimpleHandler        = simple_handlers.SimpleHandler
+TestException        = simple_handlers.TestException
+DatastoreMembers     = datastore_handlers.DatastoreMembers
+DatastoreActions     = datastore_handlers.DatastoreActions
+DatastoreSubscribers = datastore_handlers.DatastoreSubscribers
+not_found            = exception_handlers.not_found
+request_redirect     = exception_handlers.request_redirect
+exception_handler   = exception_handlers.exception_handler
 
 # Create the handler map for export to the request handling script.  As you can
 # see, the map is a list of tuples. The first item in each tuple is the URL

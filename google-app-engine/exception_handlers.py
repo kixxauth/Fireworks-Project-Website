@@ -1,8 +1,14 @@
 import logging
 
-from utils import NO_CACHE_HEADER, ON_DEV_SERVER, trace_out
-from base_handler import BaseHandler
+import utils
+import base_handler
 from werkzeug.exceptions import InternalServerError
+
+NO_CACHE_HEADER = utils.NO_CACHE_HEADER
+ON_DEV_SERVER   = utils.ON_DEV_SERVER
+trace_out       = utils.trace_out
+
+BaseHandler = base_handler.BaseHandler
 
 # TODO: A more creative 404 response.
 def not_found(handler, environ):
