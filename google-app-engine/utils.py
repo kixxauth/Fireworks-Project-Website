@@ -11,9 +11,14 @@ import os
 import sys
 import cgi
 import traceback
-import hashlib
 
 from google.appengine.ext.webapp import template
+
+# Standard 'Do not cache this!' declaration for the cache-control header.
+NO_CACHE_HEADER = 'no-cache, no-store, must-revalidate, pre-check=0, post-check=0'
+
+# Determine if we are running locally or not.
+ON_DEV_SERVER = os.environ['SERVER_SOFTWARE'].startswith('Development')
 
 def get_template_path(name):
   """Return the full path of a template given its name.

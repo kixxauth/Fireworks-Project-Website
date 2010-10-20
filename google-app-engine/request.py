@@ -60,31 +60,58 @@
   :license: MIT, see LICENSE for more details.
 """
 
-from fwerks import App
 from google.appengine.ext.webapp.util import run_bare_wsgi_app
-from handlers import handler_map, exception_handler, not_found, request_redirect
-from werkzeug import BaseRequest, CommonRequestDescriptorsMixin, BaseResponse, AcceptMixin, CommonResponseDescriptorsMixin, ETagResponseMixin, ETagRequestMixin
 
-class Request(BaseRequest, CommonRequestDescriptorsMixin, AcceptMixin, ETagRequestMixin):
-  """Request class implementing the following Werkzeug mixins:
+from werkzeug.routing import Map, Rule, RequestRedirect
 
-      - :class:`CommonRequestDescriptorsMixin` for various HTTP descriptors.
-      - :class:`AcceptMixin` for the HTTP Accept header.
-  """
+from fwerks import App
+from simple_handlers import SimpleHandler, TestException
+from datastore_handlers import DatastoreMembers, DatastoreActions, DatastoreSubscribers
+from exception_handlers import not_found, request_redirect, exception_handler
 
-class Response(BaseResponse, CommonResponseDescriptorsMixin, ETagResponseMixin):
-  """Response class implementing the following Werkzeug mixins:
+# Create the handler map for export to the request handling script.  As you can
+# see, the map is a list of tuples. The first item in each tuple is the URL
+# rule for Werkzeug to match. The second item in each tuple is the name of the
+# endpoint for Werkzeug. The third item in each tuple is a reference to the
+# handler class for the fwerks module to use.
+#
+# Consult the Werkzeug rule formatting documentation for more info on
+# constructing rules:
+# http://werkzeug.pocoo.org/documentation/0.6.2/routing.html#rule-format
+#
+url_map = Map([
+      Rule('/', endpoint='home')
+    , Rule('/projects', endpoint='projects')
+    , Rule('/projects/', endpoint='projects')
+    , Rule('/join', endpoint='join')
+    , Rule('/about', endpoint='about')
+    , Rule('/datastore/members/', endpoint='datastore_members')
+    , Rule('/datastore/subscribers/', endpoint='datastore_subscribers')
+    , Rule('/datastore/actions/', endpoint='datastore_actions')
+    , Rule('/exception', endpoint='exception')
+    ])
 
-      - :class:`CommonResponseDescriptorsMixin` for various HTTP descriptors.
-      - :class:`ETagResponseMixin` ETag and conditional response utilities.
-  """
+handlers = {
+      'home': SimpleHandler
+    , 'projects': SimpleHandler
+    , 'join': SimpleHandler
+    , 'about': SimpleHandler
+    , 'datastore_members': DatastoreMembers
+    , 'datastore_subscribers': DatastoreSubscribers
+    , 'datastore_actions': DatastoreActions
+    , 'exception': TestException
+    }
+
+exception_handlers = {
+      'Not Found': not_found
+    , 'Moved Permanently': request_redirect
+    , '*': exception_handler
+    }
+
 
 # Create a fwerks WSGI application object. Fwerks is our quick and dirty WSGI
 # framework built with Werkzeug.
-fireworks_project_website = App(handler_map, Request, Response
-                              , exception_handler=exception_handler
-                              , not_found=not_found
-                              , request_redirect=request_redirect)
+fireworks_project_website = App(url_map, handlers, exception_handlers)
 
 def main():
   """Called by App Engine for incoming requests.

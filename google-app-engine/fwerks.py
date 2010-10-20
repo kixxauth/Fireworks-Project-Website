@@ -9,9 +9,9 @@
   :license: MIT, see LICENSE for more details.
 """
 
-from werkzeug.routing import Map, Rule, RequestRedirect
-from werkzeug.exceptions import HTTPException, MethodNotAllowed
-from werkzeug.exceptions import NotFound, InternalServerError
+import logging
+
+from werkzeug.exceptions import HTTPException, MethodNotAllowed, InternalServerError
 
 class App(object):
   """Create a WSGI conforming callable application.
@@ -53,65 +53,52 @@ class App(object):
   application:  http://werkzeug.pocoo.org/
 
   """
-  def __init__(self, mapping, Request, Response
-      , exception_handler=None
-      , not_found=None
-      , request_redirect=None):
-    self.handlers = {}
-    self.Request = Request
-    self.Response = Response
-    self.exception_handler = exception_handler
-    self.not_found = not_found
-    self.request_redirect = request_redirect
+  def __init__(self, url_map, handlers, error_handlers={}):
+    self.url_map = url_map
+    self.handlers = handlers
+    self.error_handlers = error_handlers
 
-    def combiner(x):
-      string, ep, handler_class = x
-      self.handlers[ep] = handler_class
-      return Rule(string, endpoint=ep)
-
-    # Use a list comprehension and combiner function to create both the handler
-    # dict and Werkzeug url_map list at the same time.
-    self.url_map = Map([combiner(x) for x in mapping], redirect_defaults=False)
-
-  def __call__(self, env, start_response):
-    # Construct a Werkzeug request object.
-    request = self.Request(env)
-
-    # Construct a Werkzeug adapter object.
-    url_adapter = self.url_map.bind_to_environ(env)
-
-    # There are two Werkzeug exceptions we are particularly interested in
-    # catching: `NotFound` and `RequestRedirect`. Both of which are
-    # subclasses of HTTPException.  One particularly interesting thing about
-    # Werkzeug is that these exception objects are callable and return a
-    # value that can be passed back as WSGI app runner.
+  def __call__(self, environ, start_response):
     try:
-      # Dispatch the request to the correct handler and method.
-      endpoint, arguments = url_adapter.match()
-      handler_constructor = self.handlers.get(endpoint)
-      handler = handler_constructor(endpoint, request, self.Response)
+      # Construct a Werkzeug adapter object.
+      url_adapter = self.url_map.bind_to_environ(environ)
 
-      # If all goes well, the handler will return the callable response object
-      # which we will return to the WSGI app runner that invoked us.
-      response = handler(arguments)
-    except NotFound, e:
-      if callable(self.not_found):
-        response = self.not_found(e.get_response(request.environ))
-      else:
-        response = e
-    except RequestRedirect, e:
-      if callable(self.request_redirect):
-        response = self.request_redirect(e.get_response(request.environ))
-      else:
-        response = e
+      # Dispatch the request to the correct handler and method.
+      endpoint, matched_values = url_adapter.match()
+      response = self.handlers.get(endpoint)(endpoint, environ)(matched_values)
+
+    # One particularly interesting thing about Werkzeug is that HTTPException
+    # objects are WSGI conforming callable objects.
     except HTTPException, e:
-      response = e
-    except Exception, e:
-      if callable(self.exception_handler):
-        response = self.exception_handler(e, request, self.Response)
+      error_handler = self.error_handlers.get(e.name, None)
+      if error_handler and callable(error_handler):
+        try:
+          response = error_handler(e, environ)
+        except Exception, handlerex:
+          logging.warn('Caught exception in error handler %.', e.name)
+          logging.exception(handlerex)
+          response = e
       else:
+        logging.debug('No exception handler for %s.', e.name)
+        response = e
+
+    except Exception, e:
+      logging.warn('Caught unexpected exception.')
+      logging.exception(e)
+      error_handler = self.error_handlers.get('*', None)
+      if error_handler and callable(error_handler):
+        logging.debug('Calling error handler.')
+        try:
+          response = error_handler(e, environ)
+        except Exception, handlerex:
+          logging.warn('Caught exception in error handler.')
+          logging.exception(handlerex)
+          response = InternalServerError()
+      else:
+        logging.debug('Using default error handler.')
         response = InternalServerError()
-    return response(env, start_response)
+
+    return response(environ, start_response)
 
 class Handler(object):
   """Request handler base class.
@@ -139,10 +126,10 @@ class Handler(object):
 
   """
   methods = ['get', 'post', 'put', 'delete', 'head', 'options']
-  def __init__(self, endpoint, request, response_constructor):
+
+  def __init__(self, endpoint, environ):
     self.name = endpoint
-    self.request = request
-    self.out = response_constructor
+    self.environ = environ
 
   def __call__(self, arguments):
     method_handler = getattr(self, self.request.method.lower(), None)

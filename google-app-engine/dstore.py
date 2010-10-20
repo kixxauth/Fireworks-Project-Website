@@ -1,5 +1,6 @@
+# TODO: Remove on production.
 import logging
-import utils
+
 from google.appengine.ext import db
 
 class Member(db.Model):
