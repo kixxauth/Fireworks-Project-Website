@@ -1,10 +1,9 @@
 """
-    @file FWPWebsite.Google_App_Engine.handlers
-    ===========================================
-    Contains the BaseHandler class for subclassing, and the SimpleHandler class
-    for basic web page requests.  All handlers must be subclasses of `Handler`
-    from the fwerks `fwerks.py` module. See `fwerks.py` for documentation
-    regarding request handlers.
+    @file FWPWebsite.Google_App_Engine.base_handler
+    ===============================================
+    Contains the BaseHandler class for subclassing handlers in other modules.
+    All handlers must be subclasses of `Handler` from the fwerks `fwerks.py`
+    module. See `fwerks.py` for documentation regarding request handlers.
 
     @author Kris Walker <kixxauth@gmail.com>
     @copyright (c) 2010 by The Fireworks Project.
