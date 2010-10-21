@@ -1,3 +1,18 @@
+"""
+    @file FWPWebsite.Google_App_Engine.datastore_handlers
+    =====================================================
+    This module is home to the request handlers designed to interface with the
+    datastore. Most of them are capable of returning multiple response mimetypes
+    for Ajax interactivity.
+    
+    All handlers must be subclasses of `Handler` from the fwerks `fwerks.py`
+    module. See [FWPWebsite.Google_App_Engine.fwerks] for documentation regarding request handlers.
+
+    @author Kris Walker <kixxauth@gmail.com>
+    @copyright (c) 2010 by The Fireworks Project.
+    @license MIT, see LICENSE for more details.
+"""
+
 import logging
 import time
 
@@ -21,18 +36,17 @@ class DatastoreHandler(BaseHandler):
   This class is designed and written to be used by the fwerks module.  It
   handles typical GET, PUT, and HEAD requests for the datastore URL space.
 
-  Two objects are bound to all instances of this class by FWerks. The first,
-  referenced by 'self.request' is a Werkzeug request object. The second,
-  'self.out' is a callable object that will return a Werkzeug response object
-  when invoked.
+  Response handler instances of this class are capable of responding to the
+  client with both HTML and JSON. This allows both Ajax interaction as well as
+  compatibility with clients which are not implementing JS.
 
-  Consult the Werkzeug reference documentation at
-  http://werkzeug.pocoo.org/documentation/0.6.2/wrappers.html or in
-  `werkzeug/wrappers.py` for more information about the request and response
-  objects.
+  The main utility method of instances of this class is `respond()`. That method
+  is designed to be called by subclasses to send a response after the datastore
+  interaction is complete.
   """
-  # Create a JSON response.
+
   def json_response(self, data=None):
+    """Prepare a JSON HTTP response."""
     if data is None:
       response = Response()
     else:
@@ -41,8 +55,8 @@ class DatastoreHandler(BaseHandler):
     response.mimetype = 'application/json'
     return response
 
-  # Create an HTML response.
   def html_response(self, template, context):
+    """Prepare an HTML HTTP response."""
     if template is None:
       response = Response()
     else:
@@ -52,12 +66,19 @@ class DatastoreHandler(BaseHandler):
     response.mimetype = 'text/html'
     return response
 
-  # Prepare and send the response.
   def respond(self, status,
               data=None,
               template='datastore_generic',
               context={},
               record_request=True):
+    """Prepare and send the HTTP response.
+
+    This is the workhorse method for instances of this class. It is designed to
+    centralize the functionality needed to prepare and send the proper HTTP
+    response back to the client. This way, the handler methods ('post', 'put',
+    'get', etc.) only have to worry about their own interaction with the
+    datastore instead of formatting the response.
+    """
 
     if self.request.accept_mimetypes.best_match(
         ['application/json', 'text/html']) == 'application/json':
@@ -75,15 +96,29 @@ class DatastoreHandler(BaseHandler):
     return self.finalize_response(response, record_request=record_request)
 
   def response_error(self, name, message):
+    """Return standardized error data based on passed arguments.
+    
+    @param {str} The name of the error.
+    @param {message} A message associated with the error.
+    @returns {dict} Return value has a 'name' value and a 'message' value
+    corresponding with the given parameters.
+    """
     return {'name': name, 'message': message}
 
   def head(self):
-    """Accept the HTTP HEAD method."""
+    """Accept the HTTP HEAD method.
+
+    This method is really just a stub.
+    """
     return self.respond(200)
 
   def get(self):
-    """Accept the HTTP GET method."""
-    # Querying is not yet implemented.
+    """Accept the HTTP HEAD method.
+
+    TODO: This method is really just a stub; Datastore queries are not yet
+    implemented.
+    """
+    # TODO Datastore queries.
     return self.respond(200)
 
 class DatastoreMembers(DatastoreHandler):

@@ -1,3 +1,15 @@
+"""
+    @file FWPWebsite.Google_App_Engine.handlers
+    ===========================================
+    Contains the BaseHandler class for subclassing, and the SimpleHandler class
+    for basic web page requests.  All handlers must be subclasses of `Handler`
+    from the fwerks `fwerks.py` module. See `fwerks.py` for documentation
+    regarding request handlers.
+
+    @author Kris Walker <kixxauth@gmail.com>
+    @copyright (c) 2010 by The Fireworks Project.
+    @license MIT, see LICENSE for more details.
+"""
 import time
 
 from werkzeug import BaseRequest, CommonRequestDescriptorsMixin, AcceptMixin, ETagRequestMixin
@@ -9,32 +21,62 @@ import dstore
 
 class Request(BaseRequest, CommonRequestDescriptorsMixin, AcceptMixin, ETagRequestMixin):
   """Request class implementing the following Werkzeug mixins:
+  ------------------------------------------------------------
 
-      - :class:`CommonRequestDescriptorsMixin` for various HTTP descriptors.
-      - :class:`AcceptMixin` for the HTTP Accept header.
-      - :class:`ETagRequestMixin` for easier ETag access.
+  * `CommonRequestDescriptorsMixin` for various HTTP descriptors.
+  * `AcceptMixin` for the HTTP Accept header.
+  * `ETagRequestMixin` for easier ETag access.
+
+  See the werkzeug [wrapper documentation]() for more information about Request
+  objects and the methods and properties available.
   """
 
 class Response(BaseResponse, CommonResponseDescriptorsMixin, ETagResponseMixin):
   """Response class implementing the following Werkzeug mixins:
+  -------------------------------------------------------------
 
-      - :class:`CommonResponseDescriptorsMixin` for various HTTP descriptors.
-      - :class:`ETagResponseMixin` ETag and conditional response utilities.
+  * `CommonResponseDescriptorsMixin` for various HTTP descriptors.
+  * `ETagResponseMixin` ETag and conditional response utilities.
+
+  See the werkzeug [wrapper documentation]
+  (http://werkzeug.pocoo.org/documentation/0.6.2/wrappers.html)
+  for more information about Request objects and the methods and properties
+  available.
   """
 
 class BaseHandler(Handler):
+  """The handler class that most other handlers inherit from.
+  -----------------------------------------------------------
+
+  The main purpose of this class is to properly handle and persist our
+  analytical data for the website before the response is returned to the
+  client.
+  """
 
   @cached_property
   def request(self):
+    """### Werkzeug request object.
+
+    This property is lazily created and cached the first time it is accessed.
+    """
     return Request(self.environ)
 
   @cached_property
   def no_persist(self):
+    """### Detect the `x-request-no-persist` header.
+
+    The `x-request-no-persist` request header is used by a client to indicate that
+    analytics data should not actually be persisted. This is handy for testing.
+    """
     rv = self.request.headers.get('x-request-no-persist', None)
     return (rv and rv == 'true') and True or False
 
   @cached_property
   def user_agent_repr(self):
+    """### String representation of the user agent suitable for the datastore.
+
+    The returned string is of the form `platform;browser;version;language`.
+    """
     user_agent = UserAgent(self.request.environ)
     if user_agent.browser:
       attrs = (
@@ -49,13 +91,34 @@ class BaseHandler(Handler):
   @classmethod
   def set_default_headers(cls, response):
     """Helper to quickly set some default headers.
+
+    @param {object} response: The Werkzeug Response object.
+    @returns {object}: The Werkzeug Response object.
     """
-    # We don't want IE munging our response, so we set
-    # X-XSS-Protection to 0
+    # We don't want IE munging our response, so we set X-XSS-Protection to 0
     response.headers['X-XSS-Protection'] = '0'
     return response
 
   def finalize_response(self, response, record_request=True):
+    """Handle and persist analytics data.
+
+    @param {object} response: The Werkzeug Response object.
+    @param {bool} record_request: Should this request be persisted?
+    @returns {object}: A WSGI callable response object.
+
+    If a 'bid' cookie (browser id) has not been set on this browser, we record
+    the new browser in the datastore and set a bid cookie on this browser for
+    future use. If the response is not an HTTP error, we set the cookie to expire
+    a year from now.
+
+    If `record_request` is True, we persist this request meta data in the datastore and
+    reset the 'rid' (request id) cookie on the browser; which will expire at the end of
+    the browser session.
+
+    The cache header is set to tell the browser to cache the returned page for
+    4 days and keep an ETag for it. Lastly, we conditionally return a response
+    body only if the ETag is not a match.
+    """
     browser_id = self.request.cookies.get('bid')
     browser = None
     request = None

@@ -1,12 +1,14 @@
 """
-  FWPWebsite.fwerks
-  ~~~~~~~~~~~~~~~~~
-  FWerks is a framework for creating a quick and dirty WSGI application using
-  the Werkzeug utilities. The WSGI application constructor is built by the
-  class `App` defined in this file.
+    @file FWPWebsite.Google_App_Engine.fwerks
+    =========================================
+    FWerks is a quick and dirty framework for creating WSGI application callables
+    using the Werkzeug utilities. The WSGI application constructor is built by
+    the class `App` defined in this file. Check out the docs string for `App` to
+    learn a lot more about how this process works.
 
-  :copyright: (c) 2010 by The Fireworks Project.
-  :license: MIT, see LICENSE for more details.
+    @author Kris Walker <kixxauth@gmail.com>
+    @copyright (c) 2010 by The Fireworks Project.
+    @license MIT, see LICENSE for more details.
 """
 
 import logging
@@ -15,9 +17,7 @@ from werkzeug.exceptions import HTTPException, MethodNotAllowed, InternalServerE
 
 class App(object):
   """Create a WSGI conforming callable application.
-
-  See PEP 333 for more info:
-  http://www.python.org/dev/peps/pep-0333/
+  -------------------------------------------------
 
   From PEP 333:
   The application object is simply a callable object that accepts two
@@ -29,15 +29,16 @@ class App(object):
   required to have these names.
 
   In our case, to create the application the `App` constructor needs to be
-  passed a handler map. The resulting `App` callable is designed to be passed
-  to the Google App Engine `run_bare_wsgi_app()` function like this::
+  passed a url map, handler dictionary, and exception handler dictionary. The
+  resulting `App` callable is designed to be passed to the Google App Engine
+  `run_bare_wsgi_app()` function like this::
 
     from fwerks import App, Handler
     from google.appengine.ext.webapp.util import run_bare_wsgi_app
 
     class IndexHandler(Handler):
       def get(self):
-        return self.out('Hello World!')
+        return werkzeug.Response('Hello World!')
 
     handler_map = [('/', 'index', IndexHandler)]
     my_awesome_app = App(handler_map)
@@ -48,6 +49,7 @@ class App(object):
     if __name__ == "__main__":
       main()
 
+  See [PEP 333](http://www.python.org/dev/peps/pep-0333/) for more info:
 
   As you can see we're using the Werkzeug utility framework to create the WSGI
   application:  http://werkzeug.pocoo.org/
@@ -60,7 +62,8 @@ class App(object):
 
   def __call__(self, environ, start_response):
     try:
-      # Construct a Werkzeug adapter object.
+      # Construct a Werkzeug adapter object that is bound to the CGI
+      # environment for this request.
       url_adapter = self.url_map.bind_to_environ(environ)
 
       # Dispatch the request to the correct handler and method.
@@ -68,7 +71,8 @@ class App(object):
       response = self.handlers.get(endpoint)(endpoint, environ)(matched_values)
 
     # One particularly interesting thing about Werkzeug is that HTTPException
-    # objects are WSGI conforming callable objects.
+    # objects are WSGI conforming callable objects. So, if we can catch them,
+    # we can use them to form the response.
     except HTTPException, e:
       error_handler = self.error_handlers.get(e.name, None)
       if error_handler and callable(error_handler):
@@ -102,27 +106,23 @@ class App(object):
 
 class Handler(object):
   """Request handler base class.
+  ------------------------------
 
   All request handlers should be subclasses of this class.  Handler subclasses
   should define any HTTP methods they wish to support by defining methods named
   'get', 'post', 'put', 'delete', 'head', or 'options'.
 
   Handler methods will be called when a request matching their path rule and
-  method name arrives. Any parameters defined in the routing rule will be
-  passed to the handler method. See the Werkzeug documentation on rule formatting
+  method name arrives. Any parameters defined in the routing rule which was
+  passed to `werkzeug.Rule()` will be passed to the handler method. See the
+  [Werkzeug documentation on rule
+  formatting](http://werkzeug.pocoo.org/documentation/0.6.2/routing.html#rule-format)
   to see how rules work.
 
-  http://werkzeug.pocoo.org/documentation/0.6.2/routing.html#rule-format
-
-  Two addition object will be bound to the handler instance as well.The first,
-  referenced by 'self.request' is a Werkzeug request object. The second,
-  'self.out' is a callable object that will return a Werkzeug response object
-  when invoked.
-
-  Consult the Werkzeug reference documentation at
-  http://werkzeug.pocoo.org/documentation/0.6.2/wrappers.html or in
-  `werkzeug/wrappers.py` for more information about the request and response
-  objects.
+  @property {string} name: The name of a Handler instance is simply the endpoint
+  string which was set by the url map and was routed here by the dispatcher.
+  @property {dict} environ: The CGI environment dictionary in case the instance
+  needs access to it.
 
   """
   methods = ['get', 'post', 'put', 'delete', 'head', 'options']

@@ -1,23 +1,4 @@
-"""
-  FWPWebsite.handlers
-  ~~~~~~~~~~~~~~~~~~~
-  WSGI application request handlers for FWerks (see fwerks.py for more info)
-  which use the Werkzeug utilities. All handlers must be subclasses of
-  `Handler` from the fwerks `fwerks.py` module. See `fwerks.py` for
-  documentation regarding request handlers.
-
-  Werkzeug Response and Request objects are exposed to request handlers and the
-  documentation for those Werkzeug classes is at
-  http://werkzeug.pocoo.org/documentation/0.6.2/wrappers.html (The source code
-  can be found in `werkzeug/wrappers.py`.
-
-  :copyright: (c) 2010 by The Fireworks Project.
-  :license: MIT, see LICENSE for more details.
-"""
-
 import time
-# TODO: remove for production
-import logging
 
 from fwerks import Handler
 
@@ -30,20 +11,12 @@ Response    = base_handler.Response
 BaseHandler = base_handler.BaseHandler
 
 class SimpleHandler(BaseHandler):
-  """General request handling class for most of the requests we get.
+  """General request handling class for web pages.
 
   This class is designed and written to be used by the fwerks module.  It
-  handles typical GET and HEAD requests.
-
-  Two objects are bound to all instances of this class by FWerks. The first,
-  referenced by 'self.request' is a Werkzeug request object. The second,
-  'self.out' is a callable object that will return a Werkzeug response object
-  when invoked.
-
-  Consult the Werkzeug reference documentation at
-  http://werkzeug.pocoo.org/documentation/0.6.2/wrappers.html or in
-  `werkzeug/wrappers.py` for more information about the request and response
-  objects.
+  handles typical GET and HEAD requests. Instances of this class return a
+  response by rendering a template matching the name property of this instance.
+  See [FWPWebsite.Google_App_Engine.fwerks.Handler] for more info about this.
   """
 
   def get(self):

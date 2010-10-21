@@ -1,3 +1,15 @@
+"""
+    @file FWPWebsite.Google_App_Engine.exception_handlers
+    =====================================================
+
+    This module defines function used to handle common HTTP errors.  These
+    functions are imported into [FWPWebsite.Google_App_Engine.request] and
+    passed to the WSGI application constructor.
+
+    @author Kris Walker <kixxauth@gmail.com>
+    @copyright (c) 2010 by The Fireworks Project.
+    @license MIT, see LICENSE for more details.
+"""
 import logging
 
 import utils
@@ -14,11 +26,11 @@ BaseHandler = base_handler.BaseHandler
 def not_found(handler, environ):
   """To be passed into the fwerks module to handle unmatched paths.
 
-  We define the general 'not found' handler here for easy access to other tools
-  in this module. This function is designed to be passed to the FWerks
-  application constructor function in `request.py`.
+  @param {callable} handler A Werkzeug callable HTTPException object.
+  @returns {callable} A WSGI complient response callable object.
 
-  `response` A pre-constructed response object.
+  This function is designed to be passed to the FWerks application constructor
+  function in `request.py`.
   """
   response = BaseHandler.set_default_headers(handler.get_response(environ))
 
@@ -34,11 +46,11 @@ def not_found(handler, environ):
 def request_redirect(handler, environ):
   """To be passed into the fwerks module to handle mis-matched paths.
 
-  We define the general 'redirect' handler here for easy access to other tools
-  in this module. This function is designed to be passed to the FWerks
-  application constructor function in `request.py`.
+  @param {callable} handler A Werkzeug callable HTTPException object.
+  @returns {callable} A WSGI complient response callable object.
 
-  `response` A pre-constructed response object.
+  This function is designed to be passed to the FWerks application constructor
+  function in `request.py`.
   """
   # There is no need to format a nice redirect response, since
   # browsers will automatically redirect
@@ -55,13 +67,11 @@ def request_redirect(handler, environ):
 def exception_handler(exception, env):
   """To be passed into the fwerks module for general exception handling.
 
-  We define the general exception handling function here for easy access to
-  other tools in this module. This function is designed to be passed to the
-  FWerks application constructor function in `request.py`.
+  @param {exception} exception The Python Exception object.
+  @returns {callable} A WSGI complient response callable object.
 
-  `exception` is the exception object that was caught.
-  `request` is a Werkzeug request object.
-  `out` is a callable used to create a Werkzeug response object.
+  This function is designed to be passed to the FWerks application constructor
+  function in `request.py`.
   """
   logging.exception(exception)
   response = InternalServerError()
