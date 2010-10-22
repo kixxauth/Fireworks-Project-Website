@@ -26,8 +26,10 @@ class Request(BaseRequest, CommonRequestDescriptorsMixin, AcceptMixin, ETagReque
   * `AcceptMixin` for the HTTP Accept header.
   * `ETagRequestMixin` for easier ETag access.
 
-  See the werkzeug [wrapper documentation]() for more information about Request
-  objects and the methods and properties available.
+  See the werkzeug
+  [wrapper documentation](http://werkzeug.pocoo.org/documentation/0.6.2/wrappers.html)
+  for more information about Request objects and the methods and properties
+  available.
   """
 
 class Response(BaseResponse, CommonResponseDescriptorsMixin, ETagResponseMixin):
@@ -37,8 +39,8 @@ class Response(BaseResponse, CommonResponseDescriptorsMixin, ETagResponseMixin):
   * `CommonResponseDescriptorsMixin` for various HTTP descriptors.
   * `ETagResponseMixin` ETag and conditional response utilities.
 
-  See the werkzeug [wrapper documentation]
-  (http://werkzeug.pocoo.org/documentation/0.6.2/wrappers.html)
+  See the werkzeug
+  [wrapper documentation](http://werkzeug.pocoo.org/documentation/0.6.2/wrappers.html)
   for more information about Request objects and the methods and properties
   available.
   """

@@ -1,0 +1,35 @@
+### Merging a Contributor via Pull
+
+* Preserve history: don’t squash to a single commit.
+* Provide a paper trail of which core committer merged the contribution.
+* Add a $VERSION_CHANGES entry.
+
+The first thing we want to do is bring our master branch up to date. The
+assumption here is that we don’t have any local work done in master; it’s a
+clean branch tracking the upstream, so that git pull will simply fast forward
+the latest changes.
+
+    $ git checkout master
+    $ git pull
+
+Next, let’s pull in our contributor’s branch.
+
+    $ git pull --no-ff --no-commit git://github.com/someone/rails.git branch
+
+We use --no-ff to disallow fast forwarding, even if the remote branch is up to
+date. This ensures there will always be a merge commit, providing for the paper
+trail requirement mentioned earlier. The --no-commit option gives us a chance
+to alter the work tree as part of the merge commit. Putting hefty changes here
+would be confusing, but it is the perfect chance to make $VERSION_CHANGES edits.
+
+$ edit $VERSION_CHANGES
+$ git add $VERSION_CHANGES
+
+Once the $VERSION_CHANGES is to your liking, we are ready to finalize it. The commit
+message is already in place but feel free to replace it if it doesn’t give a
+clear picture of what changed.
+
+$ git commit
+$ git push
+
+
