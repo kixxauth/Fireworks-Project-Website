@@ -2,10 +2,12 @@ Root of the Google App Engine application
 =========================================
 
 This folder is the root folder of www.fireworksproject.com as it exists on
-Google App Engine.  This is the only folder that GAE cares about. You can run
-this web application on your local dev_appserver by pointing it at this
-directory (as long as it contains app.yaml). Have a look at the [Google
-documentation][1] before getting started.
+Google App Engine. This folder and the children under it are the thing that GAE
+cares about. You can run this web application on your local dev_appserver by
+pointing it at this directory (as long as it contains app.yaml). Have a look at
+the
+[Google documentation](http://code.google.com/appengine/docs/python/tools/devserver.html)
+before getting started.
 
 Important files in this folder include:
 ---------------------------------------
@@ -16,9 +18,22 @@ Important files in this folder include:
 modified by hand unless you really know what you are doing.)
 
 Your next stop should be to `/google-app-engine/app.yaml`, which is the
-configuration file for this application. Or you could have a look at
-`request.py` instead. Both are good places to actually start hacking on the
-code.
+application configuration file. Or you could have a look at `request.py`
+instead. Both are good places to start hacking on the code.
 
-  [1]: http://code.google.com/appengine/docs/python/tools/devserver.html
+Copyright and License
+---------------------
+copyright: (c) 2009 - 2010 by Fireworks Technology Projects Inc.
+
+Unless otherwise indicated, all source code is licensed under the MIT license.
+See MIT-LICENSE for details.
+
+And, unless otherwise indicated, all content, including written copy and images
+but not including source code, is licensed under a Creative Commons
+Attribution-ShareAlike 3.0 Unported license. All derivatives of this content
+must be attributed to
+["The Fireworks Project"](http://www.fireworksproject.com/). See
+[creativecommons.org/licenses/by-sa/3.0/](http://creativecommons.org/licenses/by-sa/3.0/)
+for more details.
+
 

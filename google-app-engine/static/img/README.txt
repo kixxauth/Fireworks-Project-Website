@@ -1,16 +1,20 @@
 Img
 ===
 
-This folder is where most, if not all, of the static images for the website
-may be found.
+This folder contains statically served image files.
 
-Each image can be referenced in HTML by a URL like
+The purpose of this directory is to contain **all** image files for the entire
+website and all of the contained pages, subdirectories, and applications.
 
-  `http://www.fireworksproject.com/css/FILENAME.css`
+Image folders for individual projects should be maintained within this folder.
 
-or the relative shortcuts
+This folder can be referenced in HTML by an absolute URL like:
 
-  `/css/FILENAME.css` and `css/FILENAME.css`
+    `http://www.fireworksproject.com/img/`
+
+or the relative URLs like:
+
+    `/img/` and `../img/`
 
 License
 -------

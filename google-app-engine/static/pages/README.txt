@@ -2,12 +2,18 @@ Static Pages
 ============
 
 This directory contains a random collection of statically served content.
-It is a good place for general HTML publication.
+It is a good place for general HTML publication. Unfortunately it has become
+a catch all for anything that needs to get published quickly.
 
-Each file can be referenced with a URL like
+There is an ticket registered ([#8](http://github.com/FireworksProject/www.fireworksproject.com/issues/issue/8)) to resolve this issue.
 
-  `http://www.fireworksproject.com/pages/FILENAME`
+This folder can be referenced in HTML by an absolute URL like:
 
+    `http://www.fireworksproject.com/pages/`
+
+or the relative URLs like:
+
+    `/pages/` and `../pages/`
 
 License
 -------

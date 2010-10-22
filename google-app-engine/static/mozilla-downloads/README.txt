@@ -6,9 +6,9 @@ xpi packages and automatic update configuration files in RDF.  Everything
 served from this directory goes onto the wire under HTTPS to be compatable with
 Mozilla's install system.
 
-Each file can be referenced with a URL like
+Each file can be referenced with a URL like:
 
-  `http://www.fireworksproject.com/mozilla-downloads/FILENAME.js`
+  `http://www.fireworksproject.com/mozilla-downloads/`
 
 License
 -------

@@ -1,15 +1,20 @@
-JavaScript
-==========
+JS
+==
 
-This folder contains statically served JavaScript files.
+This folder contains statically served JS files.
 
-Each file can be referenced in HTML by a URL like
+The purpose of this directory is to contain **all** JS files for the entire
+website and all of the contained pages, subdirectories, and applications.
 
-  `http://www.fireworksproject.com/css/FILENAME.js`
+JS folders for individual projects should be maintained within this folder.
 
-or the relative shortcuts
+This folder can be referenced in HTML by an absolute URL like:
 
-  `/css/FILENAME.js` and `css/FILENAME.js`
+    `http://www.fireworksproject.com/js/`
+
+or the relative URLs like:
+
+    `/js/FILENAME.css` and `../js/`
 
 License
 -------

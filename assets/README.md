@@ -2,7 +2,8 @@ Asset Directory
 ===============
 
 This directory should contain all parts of the project that need to be in
-source control, but should not be deployed on the web servers.
+source control, but should not be deployed on the web servers. This should
+be the home of vector art, design documents, etc.
 
 License
 -------
