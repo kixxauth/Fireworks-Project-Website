@@ -1,6 +1,7 @@
 * # 7.1
 
   * Updated README files across the board.
+  * Upadate copyright and license notifications.
 
 * # 7.0 Improved WSGI implementation.
 
