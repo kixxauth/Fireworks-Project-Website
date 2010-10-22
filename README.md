@@ -4,12 +4,14 @@ Fireworks Project Website
 This is the source code repository for the [www.fireworksproject.com][1] website.
 It is hosted on the [Google App Engine platform in the Python runtime][2].
 
+For more information, check out the [project wiki](http://github.com/FireworksProject/www.fireworksproject.com/wiki)
+
 Quickstart for hackers and explorers:
 -------------------------------------
 
 #### 1. Make sure you have Python installed on your computer.
 
-Keep in mind that the App Engine environment runs python 2.5.2 and you might want to run the same version. [code.google.com/appengine/docs/python/runtime.html#Pure_Python][3]
+Keep in mind that the App Engine environment runs python 2.5.2 and you might want to run the same version. [code.google.com/appengine/docs/python/runtime.html#Pure_Python]([http://code.google.com/appengine/docs/python/runtime.html#Pure_Python)
 
 #### 2. Download and install the App Engine SDK.
 
@@ -20,10 +22,10 @@ For Python: (Linux, Mac, and Windows) [code.google.com/appengine/downloads.html]
 You can do this 1 of 2 ways. The best way is to learn how to use Git and create
 a GitHub user account if you don't have one already. Fork the repository
 into your GitHub account by clicking the 'Fork' button at
-[github.com/FireworksProject/Fireworks-Project-Website](http://github.com/FireworksProject/Fireworks-Project-Website).
+[github.com/FireworksProject/www.fireworksproject.com](http://github.com/FireworksProject/www.fireworksproject.com).
 Then, clone the repository from GitHub on your local machine with
 
-  `git clone http://github.com/USERNAME/Fireworks-Project-Website.git`
+  `git clone http://github.com/USERNAME/www.fireworksproject.com.git`
 
 where USERNAME is your GitHub username. Make sure to do this while you are in
 the directory you wish to clone the repo to. GitHub has [great instructions][6] on
@@ -31,7 +33,7 @@ how to complete the forking operation.
 
 The second best way to get the source code is to download the latest package
 from
-[github.com/FireworksProject/Fireworks-Project-Website/downloads](http://github.com/FireworksProject/Fireworks-Project-Website/downloads).
+[github.com/FireworksProject/www.fireworksproject.com/downloads](http://github.com/FireworksProject/www.fireworksproject.com/downloads).
 Then unpack it in a local directory on your machine.
 
 ### 4. Run it.
@@ -39,10 +41,10 @@ Then unpack it in a local directory on your machine.
 To fire up the local development server from the SDK, you need to point it at
 the application configuration file like this:
 
-  `google_appengine/dev_appserver.py Fireworks-Project-Website/google-app-engine/`
+  `google_appengine/dev_appserver.py www.fireworksproject.com/google-app-engine/`
 
 The dev\_appserver will look for `app.yaml` in
-`Fireworks-Project-Website/google-app-engine/`. For more information about
+`www.fireworksproject.com/google-app-engine/`. For more information about
 running the App Engine dev\_appserver consult the GAE docs
 [code.google.com/appengine/docs/python/tools/devserver.html][5]
 
@@ -55,7 +57,8 @@ running.
 
 ### 6. Start hacking.
 
-The best way to start is by actually reading `google-app-engine/README.md`.
+The best way to start is by actually reading through [the wiki](http://github.com/FireworksProject/www.fireworksproject.com/wiki) and then read the documentation
+in `google-app-engine/README.md`.
 
 __If you have any questions please contact me, the project manager, at kixxauth@gmail.com__
 
@@ -78,7 +81,6 @@ See CC-LICENSE in this folder for more details.
 
   [1]: http://www.fireworksproject.com
   [2]: http://code.google.com/appengine/docs/python/overview.html
-  [3]: http://code.google.com/appengine/docs/python/runtime.html#Pure_Python
   [4]: http://code.google.com/appengine/downloads.html
   [5]: http://code.google.com/appengine/docs/python/tools/devserver.html
   [6]: http://help.github.com/forking/

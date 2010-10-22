@@ -3,13 +3,18 @@ CSS
 
 This folder contains statically served CSS files.
 
-Each file can be referenced in HTML by a URL like
+The purpose of this directory is to contain **all** CSS files for the entire
+website and all of the contained pages, subdirectories, and applications.
 
-  `http://www.fireworksproject.com/css/FILENAME.css`
+CSS folders for individual projects should be maintained within this folder.
 
-or the relative shortcuts
+This folder can be referenced in HTML by an absolute URL like:
 
-  `/css/FILENAME.css` and `css/FILENAME.css`
+    `http://www.fireworksproject.com/css/`
+
+or the relative URLs like:
+
+    `/css/` and `../css/`
 
 License
 -------
