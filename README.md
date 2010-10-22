@@ -62,26 +62,18 @@ in `google-app-engine/README.md`.
 
 __If you have any questions please contact me, the project manager, at kixxauth@gmail.com__
 
-License
--------
+Copyright and License
+---------------------
+copyright: (c) 2009 - 2010 by Fireworks Technology Projects Inc.
 
-All source code is (c) 2009 - 2010 by contributors to The Fireworks Project
-Inc. (http://www.fireworksproject.com) and, unless otherwise indicated, is
-licensed under the MIT license.
+Unless otherwise indicated, all source code is licensed under the MIT license.
+See MIT-LICENSE for details.
 
-See MIT-LICENSE in this directory for details.
-
-All content and images are (c) 2009 - 2010 by contributors to The Fireworks
-Project Inc. (http://www.fireworksproject.com) and, unless otherwise indicated,
-are licensed under a Creative Commons Attribution-Share Alike 3.0 Unported
-License (http://creativecommons.org/licenses/by-sa/3.0/).
-
-See CC-LICENSE in this folder for more details.
-
-
-  [1]: http://www.fireworksproject.com
-  [2]: http://code.google.com/appengine/docs/python/overview.html
-  [4]: http://code.google.com/appengine/downloads.html
-  [5]: http://code.google.com/appengine/docs/python/tools/devserver.html
-  [6]: http://help.github.com/forking/
+And, unless otherwise indicated, all content, including written copy and images
+but not including source code, is licensed under a Creative Commons
+Attribution-ShareAlike 3.0 Unported license. All derivatives of this content
+must be attributed to
+["The Fireworks Project"](http://www.fireworksproject.com/). See
+[creativecommons.org/licenses/by-sa/3.0/](http://creativecommons.org/licenses/by-sa/3.0/)
+for more details.
 
