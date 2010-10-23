@@ -1,7 +1,8 @@
 * # 7.1
 
-  * Updated README files across the board.
+  * Changed Python indent from 2 to 4 spaces.
   * Upadate copyright and license notifications.
+  * Updated README files across the board.
 
 * # 7.0 Improved WSGI implementation.
 

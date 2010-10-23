@@ -56,7 +56,7 @@
 
     @author Kris Walker <kixxauth@gmail.com>
     @copyright (c) 2010 by The Fireworks Project.
-    @license MIT, see LICENSE for more details.
+    @license MIT, see MIT-LICENSE for more details.
 """
 
 from google.appengine.ext.webapp.util import run_bare_wsgi_app
@@ -87,16 +87,16 @@ exception_handler    = exception_handlers.exception_handler
 # constructing rules:
 # http://werkzeug.pocoo.org/documentation/0.6.2/routing.html#rule-format
 url_map = Map([
-      Rule('/', endpoint='home')
-    , Rule('/projects', endpoint='projects')
-    , Rule('/projects/', endpoint='projects')
-    , Rule('/join', endpoint='join')
-    , Rule('/about', endpoint='about')
-    , Rule('/datastore/members/', endpoint='datastore_members')
-    , Rule('/datastore/subscribers/', endpoint='datastore_subscribers')
-    , Rule('/datastore/actions/', endpoint='datastore_actions')
-    , Rule('/exception', endpoint='exception')
-    ])
+          Rule('/', endpoint='home')
+        , Rule('/projects', endpoint='projects')
+        , Rule('/projects/', endpoint='projects')
+        , Rule('/join', endpoint='join')
+        , Rule('/about', endpoint='about')
+        , Rule('/datastore/members/', endpoint='datastore_members')
+        , Rule('/datastore/subscribers/', endpoint='datastore_subscribers')
+        , Rule('/datastore/actions/', endpoint='datastore_actions')
+        , Rule('/exception', endpoint='exception')
+        ])
 
 # ### Request handlers.
 # The WSGI application matches the `url_map` endpoints with these handler
@@ -104,15 +104,15 @@ url_map = Map([
 # class matching the endpoint is invoked and the newly created handler instance
 # is returned to the WSGI handler.
 handlers = {
-      'home': SimpleHandler
-    , 'projects': SimpleHandler
-    , 'join': SimpleHandler
-    , 'about': SimpleHandler
-    , 'datastore_members': DatastoreMembers
-    , 'datastore_subscribers': DatastoreSubscribers
-    , 'datastore_actions': DatastoreActions
-    , 'exception': TestException
-    }
+          'home': SimpleHandler
+        , 'projects': SimpleHandler
+        , 'join': SimpleHandler
+        , 'about': SimpleHandler
+        , 'datastore_members': DatastoreMembers
+        , 'datastore_subscribers': DatastoreSubscribers
+        , 'datastore_actions': DatastoreActions
+        , 'exception': TestException
+        }
 
 
 # ### Exception handlers work a little differently.
@@ -122,10 +122,10 @@ handlers = {
 # Werkzeug HTTP exception object and the environment dictionary and return a
 # WSGI application (callable object).
 exception_handlers = {
-      'Not Found': not_found
-    , 'Moved Permanently': request_redirect
-    , '*': exception_handler
-    }
+          'Not Found': not_found
+        , 'Moved Permanently': request_redirect
+        , '*': exception_handler
+        }
 
 
 # ### Create a fwerks WSGI application object.
@@ -135,17 +135,17 @@ exception_handlers = {
 fireworks_project_website = App(url_map, handlers, exception_handlers)
 
 def main():
-  """Called by App Engine for incoming requests.
+    """Called by App Engine for incoming requests.
 
-  Since this handler script defines a function named main(), then the script and
-  its global environment will be cached like an imported module. The first
-  request for the script on a given web server evaluates the script normally.
-  For subsequent requests, App Engine calls the main() function in the cached
-  environment.
-  """
-  # Use GAE helper function to run the WSGI app.
-  run_bare_wsgi_app(fireworks_project_website)
+    Since this handler script defines a function named main(), then the script and
+    its global environment will be cached like an imported module. The first
+    request for the script on a given web server evaluates the script normally.
+    For subsequent requests, App Engine calls the main() function in the cached
+    environment.
+    """
+    # Use GAE helper function to run the WSGI app.
+    run_bare_wsgi_app(fireworks_project_website)
 
 if __name__ == "__main__":
-  main()
+    main()
 
