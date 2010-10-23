@@ -266,9 +266,9 @@
     do_open = function () {};
 
     function handle_close(ev) {
-      jwin.unbind('click', handle_close);
       jpopup.hide();
       do_open = open;
+      j(window.document).unbind('click', handle_close);
     }
 
     open = function (content) {
@@ -289,7 +289,7 @@
 
       do_open = j.noop;
       setTimeout(function () {
-        jwin.click(handle_close);
+        j(window.document).click(handle_close);
       }, 100);
     };
 
@@ -329,7 +329,8 @@
     function do_open(err, msg, status) {
       var buttons = {}
         , data = {
-            err: err +' ('+ err.fileName +':'+ err.lineNumber +')'
+            err: err.name +': '+ err.message +
+                 ' ('+ err.fileName +':'+ err.lineNumber +')'
           , message: msg
           , status: status
           }
@@ -364,6 +365,9 @@
         })
         .dialog('open')
         ;
+
+      // IE needs help.
+      setTimeout(function () { throw err; }, 0);
     }
 
     return function (err, msg, status) {
@@ -1078,5 +1082,5 @@
   });
 }(window, {
 
-  waiting_img_loc: 'css/img/loading-000000.gif'
+  waiting_img_loc: '/css/img/loading-000000.gif'
 }));
