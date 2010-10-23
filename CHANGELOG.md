@@ -1,5 +1,6 @@
 * # 7.1
 
+  * Fix collabworks priority dashboard popup issue in IE8.
   * Changed Python indent from 2 to 4 spaces.
   * Upadate copyright and license notifications.
   * Updated README files across the board.
