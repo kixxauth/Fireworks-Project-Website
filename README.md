@@ -1,8 +1,9 @@
 Fireworks Project Website
 =========================
 
-This is the source code repository for the [www.fireworksproject.com][1] website.
-It is hosted on the [Google App Engine platform in the Python runtime][2].
+This is the source code repository for the
+[www.fireworksproject.com][http://www.fireworksproject.com] website.
+It is hosted on the [Google App Engine platform in the Python runtime](http://code.google.com/appengine/docs/python/overview.html).
 
 For more information, check out the [project wiki](http://github.com/FireworksProject/www.fireworksproject.com/wiki)
 
@@ -15,7 +16,7 @@ Keep in mind that the App Engine environment runs python 2.5.2 and you might wan
 
 #### 2. Download and install the App Engine SDK.
 
-For Python: (Linux, Mac, and Windows) [code.google.com/appengine/downloads.html][4]
+For Python: (Linux, Mac, and Windows) [code.google.com/appengine/downloads.html](http://code.google.com/appengine/downloads.html)
 
 #### 3. Get the source code.
 
@@ -28,8 +29,9 @@ Then, clone the repository from GitHub on your local machine with
   `git clone http://github.com/USERNAME/www.fireworksproject.com.git`
 
 where USERNAME is your GitHub username. Make sure to do this while you are in
-the directory you wish to clone the repo to. GitHub has [great instructions][6] on
-how to complete the forking operation.
+the directory you wish to clone the repo to. GitHub has [great
+instructions](http://help.github.com/forking/) on how to complete the forking
+operation.
 
 The second best way to get the source code is to download the latest package
 from
@@ -46,7 +48,7 @@ the application configuration file like this:
 The dev\_appserver will look for `app.yaml` in
 `www.fireworksproject.com/google-app-engine/`. For more information about
 running the App Engine dev\_appserver consult the GAE docs
-[code.google.com/appengine/docs/python/tools/devserver.html][5]
+[code.google.com/appengine/docs/python/tools/devserver.html](http://code.google.com/appengine/docs/python/tools/devserver.html)
 
 ### 5. Have a look.
 
