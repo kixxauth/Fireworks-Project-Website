@@ -70,6 +70,7 @@ import exception_handlers
 
 SimpleHandler        = simple_handlers.SimpleHandler
 TestException        = simple_handlers.TestException
+ShowEnvirons         = simple_handlers.ShowEnvirons
 DatastoreMembers     = datastore_handlers.DatastoreMembers
 DatastoreActions     = datastore_handlers.DatastoreActions
 DatastoreSubscribers = datastore_handlers.DatastoreSubscribers
@@ -95,6 +96,7 @@ url_map = Map([
         , Rule('/datastore/members/', endpoint='datastore_members')
         , Rule('/datastore/subscribers/', endpoint='datastore_subscribers')
         , Rule('/datastore/actions/', endpoint='datastore_actions')
+        , Rule('/cgi-env', endpoint='environs')
         , Rule('/exception', endpoint='exception')
         ])
 
@@ -111,6 +113,7 @@ handlers = {
         , 'datastore_members': DatastoreMembers
         , 'datastore_subscribers': DatastoreSubscribers
         , 'datastore_actions': DatastoreActions
+        , 'environs': ShowEnvirons
         , 'exception': TestException
         }
 

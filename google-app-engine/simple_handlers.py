@@ -10,16 +10,18 @@
     @license MIT, see MIT-LICENSE for more details.
 """
 
+import os
 import time
 
-from fwerks import Handler
+from werkzeug import cached_property
 
+from fwerks import Handler
 import utils
 import base_handler
 
 render_template = utils.render_template
 
-Response        = base_handler.Response
+Response    = base_handler.Response
 BaseHandler = base_handler.BaseHandler
 
 class SimpleHandler(BaseHandler):
@@ -45,6 +47,35 @@ class SimpleHandler(BaseHandler):
     def head(self):
         """Accept the HTTP HEAD method."""
         return self.get()
+
+
+class ShowEnvirons(Handler):
+    """Show the CGI environment variables in human readable form.
+    """
+
+    # TODO: Remove this after #12 is fixed.
+    @cached_property
+    def request(self):
+        """### Werkzeug request object.
+
+        This property is lazily created and cached the first time it is
+        accessed.
+        """
+        return base_handler.Request(self.environ)
+    
+    def get(self):
+        """Handler class for '/cgi-env' URL.
+
+        This handler simply prints the CGI environment vars in plain text
+        format.
+        """
+        rv = ''
+        for name in os.environ.keys():
+            rv += ('%s = %s\n'% (name, os.environ[name]))
+
+        response = Response(rv)
+        response.mimetype = 'text/html'
+        return response
 
 
 class TestException(Handler):
