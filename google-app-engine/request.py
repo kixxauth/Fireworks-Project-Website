@@ -98,6 +98,9 @@ url_map = Map([
         , Rule('/datastore/actions/', endpoint='datastore_actions')
         , Rule('/cgi-env', endpoint='environs')
         , Rule('/exception', endpoint='exception')
+
+        # TODO: Temporary; remove.
+        , Rule('/openid', endpoint='openid')
         ])
 
 # ### Request handlers.
@@ -115,6 +118,9 @@ handlers = {
         , 'datastore_actions': DatastoreActions
         , 'environs': ShowEnvirons
         , 'exception': TestException
+
+        # TODO: Temporary; remove.
+        , 'openid': simple_handlers.TestOpenID
         }
 
 

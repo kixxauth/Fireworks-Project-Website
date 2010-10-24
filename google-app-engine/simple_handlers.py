@@ -13,6 +13,7 @@
 import os
 import time
 
+from google.appengine.api import users
 from werkzeug import cached_property
 
 from fwerks import Handler
@@ -74,6 +75,35 @@ class ShowEnvirons(Handler):
             rv += ('%s = %s\n'% (name, os.environ[name]))
 
         response = Response(rv)
+        response.mimetype = 'text/plain'
+        return response
+
+# TODO: Temporary; remove.
+class TestOpenID(Handler):
+
+    # TODO: Remove this after #12 is fixed.
+    @cached_property
+    def request(self):
+        """### Werkzeug request object.
+
+        This property is lazily created and cached the first time it is
+        accessed.
+        """
+        return base_handler.Request(self.environ)
+
+    def get(self):
+        providers = ['aol.com', 'yahoo.com', 'myopenid.com', 'gmail.com']
+
+        def create_login_url(url):
+            return users.create_login_url(
+                    dest_url='/cgi_env', federated_identity=url)
+
+        context = {
+              'post_to': '/openid'
+            , 'login_urls': map(create_login_url, providers)
+            }
+
+        response = Response(render_template('federated_login', context))
         response.mimetype = 'text/html'
         return response
 

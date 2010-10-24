@@ -1,0 +1,44 @@
+{% comment %}
+
+Federated Login
+===============
+
+This is the template for the standard login page for all
+www.fireworksproject.com paths.
+
+For more information regarding the Django template syntax, have a look at the
+documentation.
+http://docs.djangoproject.com/en/1.2/topics/templates/#topics-templates
+
+License
+-------
+
+All source code in this file is licensed under the MIT license unless
+otherwise noted in the source file itself.
+
+See MIT-LICENSE in this directory for details.
+
+All text content in this file is (c) 2009 - 2010 by contributors to The
+Fireworks Project Inc. (http://www.fireworksproject.com) and, unless otherwise
+indicated, is licensed under a Creative Commons Attribution-Share Alike 3.0
+Unported License (http://creativecommons.org/licenses/by-sa/3.0/).
+
+See CC-LICENSE in this folder for more details.
+
+{% endcomment %}{% extends "base.html" %}
+
+{% block head %}<style type="text/css">
+</style>{% endblock %}
+
+{% block body %}<div id="federated-login" class="inner-content-container">
+	<ul>
+		{% for url in login_urls %}
+		<li><a href="{{url}}">{{url}}</a></li>
+		{% endfor %}
+	</ul>
+	<form action="{{post_to}}" method="post">
+		<p class="input-line"><input type="text" name="federated_id" /></p>
+		<p class="form-submit"><input type="submit" value="Redirect me." /></p>
+	</form>
+  </div><!-- end #federated-login -->{% endblock %}
+
