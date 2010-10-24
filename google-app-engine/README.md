@@ -2,12 +2,20 @@ Root of the Google App Engine application
 =========================================
 
 This folder is the root folder of www.fireworksproject.com as it exists on
-Google App Engine. This folder and the children under it are the thing that GAE
-cares about. You can run this web application on your local dev_appserver by
-pointing it at this directory (as long as it contains app.yaml). Have a look at
-the
+Google App Engine. This folder and the children under it contain the actual
+code that runs this application and are the only things that GAE cares about.
+You can run this web application on your local dev_appserver by pointing it at
+this directory (as long as it contains app.yaml). Have a look at the
 [Google documentation](http://code.google.com/appengine/docs/python/tools/devserver.html)
 before getting started.
+
+There are several directories in this directory which contain third party
+libraries which are not maintained by The Fireworks Project and may be licensed
+under different terms. These include:
+
+* `werkzeug/`: The WSGI utility
+* `openid/`: The OpenID federated authentication library for Python.
+* `beaker/`: The WSGI session management utility.
 
 Important files in this folder include:
 ---------------------------------------
