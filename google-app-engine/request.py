@@ -60,23 +60,25 @@
 """
 
 from google.appengine.ext.webapp.util import run_bare_wsgi_app
-
+from beaker.middleware import SessionMiddleware
 from werkzeug.routing import Map, Rule, RequestRedirect
 
 from fwerks import App
+import base_handler
 import simple_handlers
 import datastore_handlers
 import exception_handlers
 
-SimpleHandler        = simple_handlers.SimpleHandler
-TestException        = simple_handlers.TestException
-ShowEnvirons         = simple_handlers.ShowEnvirons
-DatastoreMembers     = datastore_handlers.DatastoreMembers
-DatastoreActions     = datastore_handlers.DatastoreActions
-DatastoreSubscribers = datastore_handlers.DatastoreSubscribers
-not_found            = exception_handlers.not_found
-request_redirect     = exception_handlers.request_redirect
-exception_handler    = exception_handlers.exception_handler
+beaker_session_configs = base_handler.beaker_session_configs
+SimpleHandler          = simple_handlers.SimpleHandler
+TestException          = simple_handlers.TestException
+ShowEnvirons           = simple_handlers.ShowEnvirons
+DatastoreMembers       = datastore_handlers.DatastoreMembers
+DatastoreActions       = datastore_handlers.DatastoreActions
+DatastoreSubscribers   = datastore_handlers.DatastoreSubscribers
+not_found              = exception_handlers.not_found
+request_redirect       = exception_handlers.request_redirect
+exception_handler      = exception_handlers.exception_handler
 
 # ### The handler map for export to the request handling script.
 # As you can see, the url map is a Werkzeug Map object made up of a list of
@@ -141,7 +143,9 @@ exception_handlers = {
 # Fwerks is our quick and dirty WSGI framework built with Werkzeug utilities.
 # Check out the docs for [FWPWebsite.Google_App_Engine.fwerks.py] to learn all
 # about it.
-fireworks_project_website = App(url_map, handlers, exception_handlers)
+wsgi_app = App(url_map, handlers, exception_handlers)
+wsgi_app = SessionMiddleware(wsgi_app, config=beaker_session_configs)
+
 
 def main():
     """Called by App Engine for incoming requests.
@@ -153,7 +157,7 @@ def main():
     environment.
     """
     # Use GAE helper function to run the WSGI app.
-    run_bare_wsgi_app(fireworks_project_website)
+    run_bare_wsgi_app(wsgi_app)
 
 if __name__ == "__main__":
     main()

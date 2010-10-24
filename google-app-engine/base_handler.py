@@ -18,6 +18,13 @@ from werkzeug import UserAgent, cached_property
 from fwerks import Handler
 import dstore
 
+BEAKER_ENV_KEY = 'beaker.session'
+
+beaker_session_configs = {
+      'session.type': 'ext:google'
+    , 'session.key': 'fpsession'
+}
+
 class Request(BaseRequest, CommonRequestDescriptorsMixin, AcceptMixin, ETagRequestMixin):
     """Request class implementing the following Werkzeug mixins:
     ------------------------------------------------------------
@@ -55,6 +62,12 @@ class BaseHandler(Handler):
     """
 
     @cached_property
+    def session(self):
+        """### The Beaker session management dict.
+        """
+        return self.environ[BEAKER_ENV_KEY]
+
+    @cached_property
     def request(self):
         """### Werkzeug request object.
 
@@ -81,7 +94,7 @@ class BaseHandler(Handler):
         user_agent = UserAgent(self.request.environ)
         if user_agent.browser:
             attrs = (
-											user_agent.platform
+                      user_agent.platform
                     , user_agent.browser
                     , user_agent.version
                     , user_agent.language
@@ -141,27 +154,30 @@ class BaseHandler(Handler):
             #browser_id = len(etag) > 32 and etag or None
         if not browser_id:
             user_agent = self.user_agent_repr
-            browser = dstore.Browser(user_agent=user_agent
-																	 , init_path=self.request.path
-																	 , init_referrer=self.request.referrer
-																	 , init_address=self.request.remote_addr)
+            browser = dstore.Browser( user_agent=user_agent
+                                    , init_path=self.request.path
+                                    , init_referrer=self.request.referrer
+                                    , init_address=self.request.remote_addr
+                                    )
             browser.put()
             browser_id = dstore.browser_key(browser)
 
         # Reset the browser id cookie
         if status_ok:
-            response.set_cookie('bid',
-																value=browser_id,
-																expires=(int(time.time()) + 31556926)) # Exp in 1 year.
+            response.set_cookie( 'bid'
+                               , value=browser_id
+                               , expires=(int(time.time()) + 31556926) # Exp in 1 year.
+                               )
 
         if record_request:
             user_agent = user_agent or self.user_agent_repr
-            request = dstore.Request(browser=browser_id
-																	 , user_agent=user_agent
-																	 , path=self.request.path
-																	 , referrer=self.request.referrer
-																	 , address=self.request.remote_addr
-																	 , status=(response.status_code or 0))
+            request = dstore.Request( browser=browser_id
+                                    , user_agent=user_agent
+                                    , path=self.request.path
+                                    , referrer=self.request.referrer
+                                    , address=self.request.remote_addr
+                                    , status=(response.status_code or 0)
+                                    )
             k = request.put()
             if status_ok:
                 response.set_cookie('rid', value=str(k))

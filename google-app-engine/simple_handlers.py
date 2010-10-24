@@ -79,30 +79,10 @@ class ShowEnvirons(Handler):
         return response
 
 # TODO: Temporary; remove.
-class TestOpenID(Handler):
-
-    # TODO: Remove this after #12 is fixed.
-    @cached_property
-    def request(self):
-        """### Werkzeug request object.
-
-        This property is lazily created and cached the first time it is
-        accessed.
-        """
-        return base_handler.Request(self.environ)
+class TestOpenID(BaseHandler):
 
     def get(self):
-        providers = ['aol.com', 'yahoo.com', 'myopenid.com', 'gmail.com']
-
-        def create_login_url(url):
-            return users.create_login_url(
-                    dest_url='/cgi_env', federated_identity=url)
-
-        context = {
-              'post_to': '/openid'
-            , 'login_urls': map(create_login_url, providers)
-            }
-
+        #providers = ['aol.com', 'yahoo.com', 'myopenid.com', 'gmail.com']
         response = Response(render_template('federated_login', context))
         response.mimetype = 'text/html'
         return response
