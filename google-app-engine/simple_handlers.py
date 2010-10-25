@@ -78,18 +78,6 @@ class ShowEnvirons(Handler):
         response.mimetype = 'text/plain'
         return response
 
-# TODO: Temporary; remove after better testing is implemented (issue #1).
-class TestOpenID(BaseHandler):
-
-    def get(self):
-        #providers = ['aol.com', 'yahoo.com', 'myopenid.com', 'gmail.com']
-        #response = Response(render_template('federated_login', context))
-
-        me = ('%r'% self.user)
-        response = Response(me +'\n')
-        response.mimetype = 'text/plain'
-        return response
-
 
 class TestException(Handler):
     """Handler class for '/exception' URL.

@@ -68,7 +68,7 @@ application: fireworkscomputer
 #
 # where `VERSION` refers to this version string.
 #
-version: 7
+version: 8
 # So, the URL for version 7 of this application can be found at
 # http://7.latest.fireworkscomputer.appspot.com
 
