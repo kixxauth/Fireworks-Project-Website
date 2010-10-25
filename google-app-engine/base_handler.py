@@ -5,7 +5,7 @@
     All handlers must be subclasses of `Handler` from the fwerks `fwerks.py`
     module. See `fwerks.py` for documentation regarding request handlers.
 
-    @author Kris Walker <eixxauth@gmail.com>
+    @author Kris Walker <kixxauth@gmail.com>
     @copyright (c) 2010 by The Fireworks Project.
     @license MIT, see MIT-LICENSE for more details.
 """
@@ -18,6 +18,7 @@ from werkzeug import BaseResponse, CommonResponseDescriptorsMixin, ETagResponseM
 from werkzeug import UserAgent, cached_property
 
 from openid.consumer.consumer import Consumer, FAILURE, SUCCESS, CANCEL
+from openid.yadis.discover import DiscoveryFailure
 import aeoid_store
 
 import utils
@@ -106,7 +107,6 @@ class BaseHandler(Handler):
         # This is a redirected federated login attempt.  If this raises an
         # exception it will be caught by the fwerks dispatcher.
         # TODO: Find a nicer way to handle exceptions.
-        logging.warn('self.request.url: %s', self.request.url) # TODO: remove DEBUG
         auth_reponse = Consumer( session
                                , aeiod_store.AppEngineStore()
                                ).complete(self.request.args, self.request.url)
@@ -261,7 +261,7 @@ class AuthRequestHandler(BaseHandler):
     def get(self):
         federated_id = self.request.args.get(AUTH_REQUEST_FIELD)
         if not federated_id:
-            response = Response()
+            response = Response('missing %s field\n'% AUTH_REQUEST_FIELD)
             # Since we only care about Ajax requests we don't have to do
             # anything more informative than a 409.
             response.status_code = 409
@@ -269,18 +269,23 @@ class AuthRequestHandler(BaseHandler):
 
         session = self.environ.get(BEAKER_ENV_KEY)
 
-        # If this raises an exception it will be caught by the fwerks dispatcher.
+        try:
+            auth_request = Consumer( session
+                                   , aeoid_store.AppEngineStore()
+                                   ).begin(federated_id)
+        except DiscoveryFailure:
+            response = Response('discovery failure\n')
+            # Since we only care about Ajax requests we don't have to do
+            # anything more informative than a 409.
+            response.status_code = 409
+            return self.respond(response)
+
+        # If this raises a different exception it will be caught by the fwerks dispatcher.
         # TODO: We need a nicer way of handling exceptions here.
-        auth_request = Consumer( session
-                               , aeoid_store.AppEngineStore()
-                               ).begin(federated_id)
 
         host_url = self.request.host_url
         cont = self.request.args.get('continuation', '/')
         return_to = urlparse.urljoin(host_url, cont)
-
-        # TODO: remove DEBUG
-        logging.warn('return_to: %s', return_to)
 
         redirect_url = auth_request.redirectURL(host_url, return_to)
         # The Ajax request wants the redirect url as plain text, not an actual

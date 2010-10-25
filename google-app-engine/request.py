@@ -102,9 +102,6 @@ url_map = Map([
         , Rule('/auth_request', endpoint='auth_request')
         , Rule('/cgi-env', endpoint='environs')
         , Rule('/exception', endpoint='exception')
-
-        # TODO: Temporary; remove.
-        , Rule('/openid', endpoint='openid')
         ])
 
 # ### Request handlers.
@@ -123,9 +120,6 @@ handlers = {
         , 'auth_request': AuthRequestHandler
         , 'environs': ShowEnvirons
         , 'exception': TestException
-
-        # TODO: Temporary; remove.
-        , 'openid': simple_handlers.TestOpenID
         }
 
 
