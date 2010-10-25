@@ -16,6 +16,7 @@ under different terms. These include:
 * `werkzeug/`: The WSGI utility
 * `openid/`: The OpenID federated authentication library for Python.
 * `beaker/`: The WSGI session management utility.
+* `aeoid_store.py`: An backend implementation for Python OpenID module.
 
 Important files in this folder include:
 ---------------------------------------
