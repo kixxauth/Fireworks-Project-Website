@@ -70,6 +70,7 @@ import datastore_handlers
 import exception_handlers
 
 beaker_session_configs = base_handler.beaker_session_configs
+AuthRequestHandler     = base_handler.AuthRequestHandler
 SimpleHandler          = simple_handlers.SimpleHandler
 TestException          = simple_handlers.TestException
 ShowEnvirons           = simple_handlers.ShowEnvirons
@@ -98,6 +99,7 @@ url_map = Map([
         , Rule('/datastore/members/', endpoint='datastore_members')
         , Rule('/datastore/subscribers/', endpoint='datastore_subscribers')
         , Rule('/datastore/actions/', endpoint='datastore_actions')
+        , Rule('/auth_request', endpoint='auth_request')
         , Rule('/cgi-env', endpoint='environs')
         , Rule('/exception', endpoint='exception')
 
@@ -118,6 +120,7 @@ handlers = {
         , 'datastore_members': DatastoreMembers
         , 'datastore_subscribers': DatastoreSubscribers
         , 'datastore_actions': DatastoreActions
+        , 'auth_request': AuthRequestHandler
         , 'environs': ShowEnvirons
         , 'exception': TestException
 
@@ -144,6 +147,10 @@ exception_handlers = {
 # Check out the docs for [FWPWebsite.Google_App_Engine.fwerks.py] to learn all
 # about it.
 wsgi_app = App(url_map, handlers, exception_handlers)
+
+# ### Add WSGI middleware for session management.
+# We're using the Beaker module for user session management.
+# Find out more at http://beaker.groovie.org/
 wsgi_app = SessionMiddleware(wsgi_app, config=beaker_session_configs)
 
 

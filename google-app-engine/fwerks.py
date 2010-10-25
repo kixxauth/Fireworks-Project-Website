@@ -142,3 +142,15 @@ class Handler(object):
                 for m in Handler.methods if getattr(self, m, None)]
         raise MethodNotAllowed(allowed)
 
+
+class User(object):
+
+    def __init__(self, session):
+        pass
+
+
+class AuthRequest(object):
+
+    def __init__(self, federated_id):
+        pass
+

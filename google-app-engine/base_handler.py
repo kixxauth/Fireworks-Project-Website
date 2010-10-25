@@ -9,21 +9,42 @@
     @copyright (c) 2010 by The Fireworks Project.
     @license MIT, see MIT-LICENSE for more details.
 """
+import logging
 import time
+import urlparse
 
 from werkzeug import BaseRequest, CommonRequestDescriptorsMixin, AcceptMixin, ETagRequestMixin
 from werkzeug import BaseResponse, CommonResponseDescriptorsMixin, ETagResponseMixin
 from werkzeug import UserAgent, cached_property
 
-from fwerks import Handler
+from openid.consumer.consumer import Consumer, FAILURE, SUCCESS, CANCEL
+import aeoid_store
+
+import fwerks
 import dstore
 
+Handler = fwerks.Handler
+User =    fwerks.User
+
+# ### The Beaker session object is stored on the WSGI environs.
+# This is the dict key to access the session object.
 BEAKER_ENV_KEY = 'beaker.session'
 
+# ### The Beaker session cookie key.
+BEAKER_COOKIE_KEY = 'fpsession'
+
+# ### Beaker module configuration options.
 beaker_session_configs = {
-      'session.type': 'ext:google'
-    , 'session.key': 'fpsession'
+      'session.type': 'ext:google' # Beaker implements a GAE backend.
+    , 'session.key': BEAKER_COOKIE_KEY # The session cookie id.
 }
+
+# ### The URL query param used for the federated identifier.
+AUTH_REQUEST_FIELD = 'federated_id'
+
+# ### The URL query param signalling a federated login process is active.
+AUTH_PROCESS_FIELD = 'federated_authentication'
+
 
 class Request(BaseRequest, CommonRequestDescriptorsMixin, AcceptMixin, ETagRequestMixin):
     """Request class implementing the following Werkzeug mixins:
@@ -62,18 +83,45 @@ class BaseHandler(Handler):
     """
 
     @cached_property
-    def session(self):
-        """### The Beaker session management dict.
-        """
-        return self.environ[BEAKER_ENV_KEY]
-
-    @cached_property
     def request(self):
         """### Werkzeug request object.
 
         This property is lazily created and cached the first time it is accessed.
         """
         return Request(self.environ)
+
+    @cached_property
+    def user(self):
+        """### The `fwerks.User` object for this request on this session.
+        """
+        session = self.environ.get(BEAKER_ENV_KEY)
+        if session is None:
+            return
+
+        if 'authenticated' in session:
+            # TODO: Check session access time and maybe invalidate or delete an
+            # expired session, creating a new one or prompting another login.
+            return User(session)
+
+        if self.values.get(AUTH_PROCESS_FIELD) is None:
+            return
+
+        # This is a redirected federated login attempt.  If this raises an
+        # exception it will be caught by the fwerks dispatcher.
+        logging.warn('self.request.url: %s', self.request.url)
+        auth_reponse = Consumer( session
+                               , aeiod_store.AppEngineStore()
+                               ).complete(self.request.args, self.request.url)
+
+        if response.status == SUCCESS:
+            session['authenticated'] = True
+            return User(session)
+
+        elif response.status in (FAILURE, CANCEL):
+            return
+        else:
+            logging.error('Unexpected error in OpenID authentication: %s', response)
+
 
     @cached_property
     def no_persist(self):
@@ -93,8 +141,7 @@ class BaseHandler(Handler):
         """
         user_agent = UserAgent(self.request.environ)
         if user_agent.browser:
-            attrs = (
-                      user_agent.platform
+            attrs = ( user_agent.platform
                     , user_agent.browser
                     , user_agent.version
                     , user_agent.language
@@ -196,4 +243,50 @@ class BaseHandler(Handler):
 
         # Only send a response body if the E-Tag does not match.
         return response.make_conditional(self.request)
+
+
+class AuthRequestHandler(BaseHandler):
+
+    def respond(self, response):
+        response.mimetype = 'text/plain'
+
+        # No caching.
+        response.headers['Expires'] = 'Fri, 01 Jan 1990 00:00:00 GMT'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Cache-Control'] = NO_CACHE_HEADER
+
+        return self.finalize_response(response)
+
+    def get(self):
+        federated_id = self.request.args.get(AUTH_REQUEST_FIELD)
+        if not federated_id:
+            response = Response()
+            # Since we only care about Ajax requests we don't have to do
+            # anything more informative than a 409.
+            response.status_code = 409
+            return self.respond(response)
+
+        session = self.environ.get(BEAKER_ENV_KEY)
+
+        # If this raises an exception it will be caught by the fwerks dispatcher.
+        auth_request = Consumer( session
+                               , aeiod_store.AppEngineStore()
+                               ).begin(federated_id)
+
+        cont = list(urlparse.urlparse(self.args.get('continuation', '/')))
+        qstr = AUTH_PROCESS_FIELD +'=true'
+        cont[4] = cont[4] and (cont[4] + ('&'+ qstr)) or ('?'+ qstr)
+
+        return_to = urlparse.urljoin( self.request.host
+                                    , urlparse.urlunparse(cont)
+                                    )
+
+        logging.warn('return_to: %s', return_to)
+
+        redirect_url = auth_request.redirectURL(self.request.host, return_to)
+        # The Ajax request wants the redirect url as plain text, not an actual
+        # HTTP redirect.
+        response = self.respond(Response(redirect_url))
+        session.save()
+        return response
 
