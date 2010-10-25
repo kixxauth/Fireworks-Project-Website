@@ -580,24 +580,43 @@
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
-					<li class="dependency">Build OpenID Login: 1</li>
+					<li class="dependency">Test OpenID Login: 1</li>
 				</ul>
 			</li>
 		</ul>
 	</li>
 	<li class="item">
 		<ul class="item">
-			<li class="name">Build OpenID Login</li>
+			<li class="name">Test OpenID Login</li>
 			<li class="classname">Task</li>
-			<li class="description">Integrate an OpenID login plugin into our GAE apps.</li>
+			<li class="description">Build automated testing for our login mechanism.</li>
 			<li class="content">
-			<p>The goal of this project is to intetgrate OpenID functionality into both
-			our website (for content management) and our multitenant server.</p>
+			<p>OpenID is implemented, but it is hard to know how well it works (if at
+			all) without testing.</p>
 			</li>
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
-					<li class="dependency">WSGI improvement: 1</li>
+					<li class="dependency">Website Testing: 1</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li class="item">
+		<ul class="item">
+			<li class="name">Website Testing</li>
+			<li class="classname">Task</li>
+			<li class="description">Build automated testing for our website.</li>
+			<li class="content">
+			<p>Our current automated testing framework needs to be able to do more
+			than just make HTTP requests and check headers. I propose integrating
+			testing into our build tool (a Firefox addon like Firebug). See issue #1
+			at http://github.com/FireworksProject/www.fireworksproject.com/issues</p>
+			</li>
+			<li class="dependencies">
+				<h5 class="dependencies">Dependencies:</h5>
+				<ul class="dependencies">
+					<li class="dependency">Build Kake: 1</li>
 				</ul>
 			</li>
 		</ul>
@@ -663,7 +682,7 @@
 					<li class="dependency">jQuery: 40</li>
 					<li class="dependency">GoDaddy Domain Host: 20</li>
 					<li class="dependency">Qunit: 20</li>
-					<li class="dependency">Website Version 7: 110</li>
+					<li class="dependency">Website Version 8: 110</li>
 				</ul>
 			</li>
 		</ul>
@@ -956,9 +975,6 @@
 			</li>
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
-				<ul class="dependencies">
-					<li class="dependency">Update FWP GitHub: 1</li>
-				</ul>
 			</li>
 		</ul>
 	</li>
@@ -1073,7 +1089,7 @@
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
-					<li class="dependency">Update FWP GitHub: 1</li>
+					<li class="dependency">Build Kake: 1</li>
 				</ul>
 			</li>
 		</ul>
@@ -1095,7 +1111,7 @@
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
-					<li class="dependency">Update FWP GitHub: 1</li>
+					<li class="dependency">Build Kake: 1</li>
 				</ul>
 			</li>
 		</ul>
@@ -1151,15 +1167,12 @@
 			</li>
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
-				<ul class="dependencies">
-					<li class="dependency">Update FWP GitHub: 1</li>
-				</ul>
 			</li>
 		</ul>
 	</li>
 	<li class="item">
 		<ul class="item">
-			<li class="name">Website Version 7</li>
+			<li class="name">Website Version 8</li>
 			<li class="classname">Task</li>
 			<li class="description">Build and release the next version of www.fireworksproject.com</li>
 			<li class="content">
@@ -1191,12 +1204,9 @@
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
-					<li class="dependency">Website Mobile Strategy: 10</li>
-					<li class="dependency">Website Documentation: 9</li>
-					<li class="dependency">WSGI improvement: 8</li>
-					<li class="dependency">Website Content Strategy: 7</li>
-					<li class="dependency">Update FWP GitHub: 12</li>
-					<li class="dependency">Website CMS: 12</li>
+					<li class="dependency">Website Mobile Strategy: 20</li>
+					<li class="dependency">Website Content Strategy: 15</li>
+					<li class="dependency">Website CMS: 5</li>
 				</ul>
 			</li>
 		</ul>
@@ -1216,8 +1226,7 @@
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
-					<li class="dependency">Website Documentation: 10</li>
-					<li class="dependency">Build OpenID Login: 8</li>
+					<li class="dependency">Website Testing: 8</li>
 				</ul>
 			</li>
 		</ul>
@@ -1235,7 +1244,7 @@
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
-					<li class="dependency">Website Documentation: 2</li>
+					<li class="dependency">Website Mobile Strategy: 8</li>
 				</ul>
 			</li>
 		</ul>
@@ -1250,61 +1259,6 @@
 				Currently our site disappears on mobile devices; which is not a good
 				strategy. What is our strategy going to be for mobile devices?
 			</p>
-			</li>
-			<li class="dependencies">
-				<h5 class="dependencies">Dependencies:</h5>
-				<ul class="dependencies">
-					<li class="dependency">WSGI improvement: 3</li>
-					<li class="dependency">Website Documentation: 2</li>
-				</ul>
-			</li>
-		</ul>
-	</li>
-	<li class="item">
-		<ul class="item">
-			<li class="name">Website Documentation</li>
-			<li class="classname">Task</li>
-			<li class="description">Developer and contributor docs for working with the website code.</li>
-			<li class="content">
-			<p>
-				I have realized that, because we are using a bare bones implementation of WSGI instead
-				of a framework like Django, most developers are going to need a little more direction
-				on how to contribute patches to the site besides the code comments.
-			</p>
-			</li>
-			<li class="dependencies">
-				<h5 class="dependencies">Dependencies:</h5>
-				<ul class="dependencies">
-					<li class="dependency">WSGI improvement: 1</li>
-				</ul>
-			</li>
-		</ul>
-	</li>
-	<li class="item">
-		<ul class="item">
-			<li class="name">WSGI improvement</li>
-			<li class="classname">Task</li>
-			<li class="description">Several small changes to the WSGI implementation
-			driving www.fireworksproject.com</li>
-			<li class="content">
-			<p>
-				I&#39;m really happy with our WSGI implemenation, but it needs a couple
-				of minor tweaks that will really bring out the awesomeness.
-			</p>
-			</li>
-			<li class="dependencies">
-				<h5 class="dependencies">Dependencies:</h5>
-			</li>
-		</ul>
-	</li>
-	<li class="item">
-		<ul class="item">
-			<li class="name">Update FWP GitHub</li>
-			<li class="classname">Task</li>
-			<li class="description">Our central GitHub location github.com/fireworksproject</li>
-			<li class="content">
-			<p>Our GitHub location needs to be cleaned up, and the projects listed there should be
-			the canonical project roots; not forks.</p>
 			</li>
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
@@ -1323,7 +1277,7 @@
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
-					<li class="dependency">Website Version 7: 1</li>
+					<li class="dependency">Website Version 8: 1</li>
 				</ul>
 			</li>
 		</ul>
@@ -1341,7 +1295,7 @@
 			<li class="dependencies">
 				<h5 class="dependencies">Dependencies:</h5>
 				<ul class="dependencies">
-					<li class="dependency">Website Version 7: 1</li>
+					<li class="dependency">Website Version 8: 1</li>
 				</ul>
 			</li>
 		</ul>
