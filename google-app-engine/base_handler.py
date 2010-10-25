@@ -20,8 +20,11 @@ from werkzeug import UserAgent, cached_property
 from openid.consumer.consumer import Consumer, FAILURE, SUCCESS, CANCEL
 import aeoid_store
 
+import utils
 import fwerks
 import dstore
+
+NO_CACHE_HEADER = utils.NO_CACHE_HEADER
 
 Handler = fwerks.Handler
 User =    fwerks.User
@@ -41,9 +44,6 @@ beaker_session_configs = {
 
 # ### The URL query param used for the federated identifier.
 AUTH_REQUEST_FIELD = 'federated_id'
-
-# ### The URL query param signalling a federated login process is active.
-AUTH_PROCESS_FIELD = 'federated_authentication'
 
 
 class Request(BaseRequest, CommonRequestDescriptorsMixin, AcceptMixin, ETagRequestMixin):
@@ -103,21 +103,22 @@ class BaseHandler(Handler):
             # expired session, creating a new one or prompting another login.
             return User(session)
 
-        if self.values.get(AUTH_PROCESS_FIELD) is None:
-            return
-
         # This is a redirected federated login attempt.  If this raises an
         # exception it will be caught by the fwerks dispatcher.
-        logging.warn('self.request.url: %s', self.request.url)
+        # TODO: Find a nicer way to handle exceptions.
+        logging.warn('self.request.url: %s', self.request.url) # TODO: remove DEBUG
         auth_reponse = Consumer( session
                                , aeiod_store.AppEngineStore()
                                ).complete(self.request.args, self.request.url)
 
         if response.status == SUCCESS:
             session['authenticated'] = True
+            session.save()
             return User(session)
 
-        elif response.status in (FAILURE, CANCEL):
+        session.delete()
+
+        if response.status in (FAILURE, CANCEL):
             return
         else:
             logging.error('Unexpected error in OpenID authentication: %s', response)
@@ -269,21 +270,19 @@ class AuthRequestHandler(BaseHandler):
         session = self.environ.get(BEAKER_ENV_KEY)
 
         # If this raises an exception it will be caught by the fwerks dispatcher.
+        # TODO: We need a nicer way of handling exceptions here.
         auth_request = Consumer( session
-                               , aeiod_store.AppEngineStore()
+                               , aeoid_store.AppEngineStore()
                                ).begin(federated_id)
 
-        cont = list(urlparse.urlparse(self.args.get('continuation', '/')))
-        qstr = AUTH_PROCESS_FIELD +'=true'
-        cont[4] = cont[4] and (cont[4] + ('&'+ qstr)) or ('?'+ qstr)
+        host_url = self.request.host_url
+        cont = self.request.args.get('continuation', '/')
+        return_to = urlparse.urljoin(host_url, cont)
 
-        return_to = urlparse.urljoin( self.request.host
-                                    , urlparse.urlunparse(cont)
-                                    )
-
+        # TODO: remove DEBUG
         logging.warn('return_to: %s', return_to)
 
-        redirect_url = auth_request.redirectURL(self.request.host, return_to)
+        redirect_url = auth_request.redirectURL(host_url, return_to)
         # The Ajax request wants the redirect url as plain text, not an actual
         # HTTP redirect.
         response = self.respond(Response(redirect_url))
