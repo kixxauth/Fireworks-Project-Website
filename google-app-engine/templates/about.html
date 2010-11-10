@@ -29,10 +29,12 @@ See CC-LICENSE in this folder for more details.
 
 {% block title %}Better software - The Fireworks Project{% endblock %}
 {% block head %}<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+{% comment %}
+This script is only used locally for development when working offline.
 <!--
 <script type="text/javascript" src="/js/jquery.js"></script>
 -->
-<style type="text/css">
+{% endcomment %}<style type="text/css">
   #about-page {
     width: 700px;
     overflow: visible;
