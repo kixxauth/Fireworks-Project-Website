@@ -2,7 +2,7 @@ Fireworks Project Website
 =========================
 
 This is the source code repository for the
-[www.fireworksproject.com][http://www.fireworksproject.com] website.
+[www.fireworksproject.com](http://www.fireworksproject.com) website.
 It is hosted on the [Google App Engine platform in the Python runtime](http://code.google.com/appengine/docs/python/overview.html).
 
 For more information, check out the [project wiki](http://github.com/FireworksProject/www.fireworksproject.com/wiki)
@@ -12,7 +12,7 @@ Quickstart for hackers and explorers:
 
 #### 1. Make sure you have Python installed on your computer.
 
-Keep in mind that the App Engine environment runs python 2.5.2 and you might want to run the same version. [code.google.com/appengine/docs/python/runtime.html#Pure_Python]([http://code.google.com/appengine/docs/python/runtime.html#Pure_Python)
+Keep in mind that the App Engine environment runs python 2.5.2 and you might want to run the same version. [code.google.com/appengine/docs/python/runtime.html#Pure_Python](http://code.google.com/appengine/docs/python/runtime.html#Pure_Python)
 
 #### 2. Download and install the App Engine SDK.
 
