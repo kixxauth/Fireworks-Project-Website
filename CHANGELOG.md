@@ -1,3 +1,8 @@
+* # 7.2
+
+  * Disabled JS webfont loading and removed slideshow to fix rendering bug
+    on mobile browsers.
+
 * # 7.1
 
   * Fix collabworks priority dashboard popup issue in IE8.
