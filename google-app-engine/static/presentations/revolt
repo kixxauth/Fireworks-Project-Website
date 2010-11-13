@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-US">
+<head>
+<meta name="generator" content=
+"custom" />
+<title>Get your Internet back.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- Copyright notice will show on every slide -->
+<meta name="copyright" content=
+"Copyright &#169; 2010 The Fireworks Project Inc. (CC Attribution-Share Alike 3.0)" />
+<!-- total duration in minutes -->
+<meta name="duration" content="50" />
+<meta name="font-size-adjustment" content="-2" />
+<link rel="stylesheet" href="../css/presentations/slidy.css" type="text/css" />
+<link rel="stylesheet" href="../css/presentations/revolt.css" type="text/css" />
+<script src="../js/slidy.js" charset="utf-8" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="slide">
+	<img width="80%" src="../img/presentations/wired_cover.jpg" alt="Wired Magazine cover" title="" />
+</div>
+
+<div class="slide cover title">
+	<!-- Hide style graphics to ensure they are saved with other content like this
+  <img class="hidden" src="graphics/bullet.png" alt="" />
+	-->
+
+	<!-- title image
+	<img src="graphics/keys2.jpg" alt="Cover page images (keys)"
+	 class="cover" /><br clear="all" />
+	-->
+
+	<h1>How to get your Internet back:</h1>
+	<h2>The war for the Internet and how you can win it.</h2>
+
+	<p id="hcard-Kris-Walker" class="vcard">
+	 <a class="url fn"
+			href="http://www.kixx.name"
+      title="Kris Walker's website.">Kris Walker</a>
+	 <a class="url twitter"
+			href="http://twitter.com/kixxauth"
+      title="Follow Kris Walker on Twitter.">@kixxauth</a>
+	 <a class="email"
+			href="mailto:kixxauth@gmail.com"
+      title="email Kris Walker">kixxauth@gmail.com</a>
+	 <a class="org url"
+			href="http://www.fireworksproject.com"
+      title="The Fireworks Project website.">The Fireworks Project</a>
+	</p>
+</div>
+
+<div class="slide">
+	<h1>It's the end of the Web as we know it.</h1>
+
+	<p class="big center">(But I feel fine.)</p>
+</div>
+
+<div class="slide">
+	<h1>Timeline</h1>
+	<ul class="big center">
+	<li>How the Web began.</li>
+	<li>How it died.</li>
+	<li>What do we do now?</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>Act I</h1>
+	<p class="center big">From a wonderful document delivery platform to an awful hack in less than 20
+	years.</p>
+</div>
+
+<div class="slide">
+	<h1>1990</h1>
+	<p><img class="left" width="35%" src="../img/presentations/Tim_Berners-Lee_CP.jpg" alt="Tim Berners-Lee" title="" /></p>
+	<p class="big center">Tim Barners Lee.</p>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/Tim_Berners-Lee">Wikipedia Tim Berners-Lee</a></li>
+	<li><a href="http://en.wikipedia.org/wiki/World_wide_web">Wikipedia World Wide Web</a></li>
+	<li><a href="http://commons.wikimedia.org/wiki/File:Tim_Berners-Lee_CP.jpg">photo credit</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<img width="80%" src="../img/presentations/First_Web_Server.jpg" alt="The first web server." title="" />
+	<p>First Web Server.</p>
+
+	<ul class="citations">
+	<li><a href="http://commons.wikimedia.org/wiki/File:First_Web_Server.jpg">photo credit</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>1993</h1>
+	<h2>The Web almost died at birth.</h2>
+	<p class="huge center"><code>&lt;img src="" /&gt;</code></p>
+
+	<ul class="citations">
+	<li><a href="http://diveintomark.org/archives/2009/11/02/why-do-we-have-an-img-element">diveintomark.org/archives</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>1993</h1>
+	<p><img class="left" src="../img/presentations/Mosaic_browser_plaque_ncsa.jpg" alt="Mosaic web browser placard." title="" /></p>
+	<p class="big center">This is where Al Gore comes in.</p>
+  <p class="incremental">
+  The funding for Marc's web browser project at U of Illinois came from the
+  High Performance Computing and Communication Act of 1991, one of several
+  computing developments initiated by <span class="highlight">U.S. Senator Al Gore</span>.
+  </p>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/Mosaic_%28web_browser%29">Wikipedia Mosaic Web Browser</a></li>
+	<li><a href="http://commons.wikimedia.org/wiki/File:Mosaic_browser_plaque_ncsa.jpg">photo credit</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>1995</h1>
+	<h2>The infamous bubble.</h2>
+	<p><img class="left" width="50%"src="../img/presentations/NASDAQ_IXIC_-_dot-com_bubble_small.png" alt="The dot com bubble chart." title="" /></p>
+	<p>Netscape was founded in 1994 by Marc Andreesen.</p>
+	<p>The Navigator browser was released on November 14th, 1994.</p>
+	<p>Netscape went public in 1995</p>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/Netscape">Wikipedia Netscape</a></li>
+	<li><a href="http://commons.wikimedia.org/wiki/File:NASDAQ_IXIC_-_dot-com_bubble_small.png">photo credit</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>1995</h1>
+	<p><img class="left" width="40%"src="../img/presentations/Bill_Gates_-_World_Economic_Forum_Annual_Meeting_New_York_2002.jpg" alt="Bill Gates" title="" /></p>
+	<p class="big">His Billness.</p>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/History_of_Internet_Explorer">Wikipedia Internet Explorer</a></li>
+	<li><a href="http://commons.wikimedia.org/wiki/File:Bill_Gates_-_World_Economic_Forum_Annual_Meeting_New_York_2002.jpg">photo credit</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>1995</h1>
+	<p><img class="left" width="35%" src="../img/presentations/brendan_eich.jpg" alt="Brendan Eich" title="" /></p>
+	<p class="big">JavaWhat?</p>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/Javascript">Wikipedia JavaScript</a></li>
+	<li><a href="http://www.flickr.com/photos/equanimity/4055148344/">photo credit</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>1996</h1>
+	<h2>No, really; we didn't copy it.</h2>
+	<p>"JavaScript" and "JScript" are perceived to be so similar that the terms are
+	often used interchangeably.</p>
+	<p>Microsoft, however, notes dozens of ways in which JScript is not
+	ECMA-compliant.</p>
+
+	<ul class="citations">
+	<li><a href="http://msdn2.microsoft.com/en-us/library/4tc5a343.aspx">Microsoft JScript</a></li>
+	<li><a href="http://en.wikipedia.org/wiki/Javascript">Wikipedia JavaScript</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>1997</h1>
+	<p><img class="left" width="50%" src="../img/presentations/SS-15_ICBM.JPEG" alt="SS15 ICBM" title="" /></p>
+	<p class="center big">Browser War I</p>
+
+	<ul class="citations">
+	<li><a href="http://commons.wikimedia.org/wiki/File:SS-15_ICBM.JPEG">photo credit</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<img width="80%" src="../img/presentations/stupid_web_pages.png" alt="Stupid web pages." title="" />
+
+	<ul class="citations">
+	<li><a href="http://toastytech.com/evil/onlyie.html">photo credit</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<img width="60%" src="../img/presentations/big_e.jpg" alt="Internet Explorer on Netscape front lawn." title="" />
+
+	<ul class="citations">
+	<li><a href="http://www.flickr.com/photos/phoneboy/2116016112/">photo credit</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>1998 - 2004</h1>
+	<h2>The dark ages.</h2>
+	<p>Microsoft IE market share peaks in 2002 - 2003 at 95%!</p>
+	<p>IE 6 (2001 - we're still trying to kill it.)</p>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/Internet_Explorer">Wikipedia Internet Explorer</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>2003</h1>
+	<h2>And though we walked through the valley...</h2>
+	<p><img class="left" width="30%" src="../img/presentations/Matt_Mullenweg.jpg" alt="Matt Mullenweg" title="" /></p>
+	<p>There was <em>some</em> light in the dark ages. For example: Matt Mullenweg introduced
+	Wordpress in 2003.</p>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/File:Matt_Mullenweg.jpg">photo credit</a></li>
+	<li><a href="http://en.wikipedia.org/wiki/WordPress">Wikipedia Wordpress</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>2004</h1>
+	<h2>The age of user generated content begins.</h2>
+	<p><em>Game Neverending</em> becomes <em>Flickr</em> in February 2004.</p>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/Flickr">Wikipedia Flickr</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>2004 continued.</h1>
+	<h2>Web 2.whatever</h2>
+	<p><img width="40%" class="left" src="../img/presentations/ajax.jpg" alt="Ajax juxtoposition." title="" /></p>
+	<p>Gmail and Google Maps introduce Ajax.</p>
+
+	<ul class="citations">
+	<li><a href="http://www.flickr.com/photos/daveynin/1672745911/in/photostream/">photo credit</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>A Mark Zuckerberg production.</h2>
+	<p><img width="70%" src="../img/presentations/Thefacebook.png" alt="Screenshot of The Facebook" title="" /></p>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/File:Thefacebook.png">photo credit</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>2006</h1>
+	<h2>JavaScript libraries emerge.</h2>
+	<p>jQuery is introduced in 2006.</p>
+
+	<ul class="citations">
+	<li><a href="http://jquery.org/history">jQuery Project history</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>2010</h1>
+	<h2>Web FOO</h2>
+	<p class="big center">Flickr, Facebook, Twitter, YouTube.</p>
+</div>
+
+<div class="slide">
+	<h1>2010 continued</h1>
+	<ul>
+	<li>There are about 252 million people in the US between the ages 10 - 79.</li>
+	<li>There are probably about <a href="http://www.facebook.com/press/info.php?statistics">165 million Facebook users in the US</a></li>
+	<li>There are about <a href="http://mashable.com/2010/01/11/twitter-growth-stats/">23 million Twitter users in the US</a></li>
+	<li>In the US Yahoo! email has 106 million users, Windows Live 47 million, Gmail
+	37 million, and AOL 36.4 million. This all accounts for
+	<a href="http://www.email-marketing-reports.com/metrics/email-statistics.htm">226 million total web email users in the US</a></li>
+	<li>3 million businesses (which account for more than 30 million user accounts) have
+	<a href="http://www.google.com/apps/intl/en/business/gogoogle.html">"gone Google"</a>.</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>2010 continued</h1>
+	<p><img class="left" width="30%"src="../img/presentations/Mark_Zuckerberg_-_South_by_Southwest_2008_-_2-crop.jpg" alt="Mark Zuckerberg" title="" /></p>
+	<p>Zuck announces that Facebook has 500 million users on July 21st, 2010.</p>
+
+	<ul class="citations">
+	<li><a href="http://blog.facebook.com/blog.php?post=409753352130">Zuckerberg blog post</a></li>
+	<li><a href="http://commons.wikimedia.org/wiki/File:Mark_Zuckerberg_-_South_by_Southwest_2008_-_2-crop.jpg">photo credit</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>Act II</h1>
+	<p class="center big">You spend your day on the Internet; but <strong>not</strong> on the web.</p>
+  <p class="center big">This is not a trivial distinction.</p>
+</div>
+
+<div class="slide">
+	<h1>2002</h1>
+	<p><img width="40%" class="left" src="../img/presentations/Blackberry7250.jpg" alt="BlackBerry device" title="" /></p>
+	<p class="center big">The new crack cocaine.</h2>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/File:Blackberry7250.jpg">photo credit</a></li>
+	<li><a href="http://en.wikipedia.org/wiki/BlackBerry">Wikipedia BlackBerry</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>2007</h1>
+	<h2>iPhone</h2>
+	<p><img width="40%" class="left" src="../img/presentations/Waiting_for_iPhones_NYC.jpg" alt="The line for the iPhone in NYC." title="" /></p>
+	<p>The iPhone went on sale in the United States on June 29, 2007, at 6:00 pm local time.</p>
+
+	<ul class="citations">
+	<li><a href="http://commons.wikimedia.org/wiki/File:Waiting_for_iPhones_NYC.jpg">photo credit</a></li>
+	<li><a href="http://en.wikipedia.org/wiki/IPhone">Wikipedia iPhone</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>2007 continued</h1>
+	<h2>Not to be left behind...</h2>
+	<p>The Android distribution was announced on 5 November 2007.</p>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/Android_%28operating_system%28">Wikipedia Android</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>2010</h1>
+	<h2>The landscape has shifted.</h2>
+	<table>
+	<thead>
+		<tr><th>Store</th><th>App Count</th><th>Users</th></tr>
+	</thead>
+	<tbody>
+			<tr><td>App Store (Apple)</td><td>300,000</td><td>120 million</td></tr>
+			<tr><td>Android Market (Google)</td><td>156,000</td><td>13 million</td></tr>
+			<tr><td>App World (BlackBerry)</td><td>9,808</td><td>46 million</td></tr>
+			<tr><td>Ovi Store (Nokia)</td><td>6,118</td><td>250 million</td></tr>
+			<tr><td>App Catalog (Palm/HP)</td><td>5,184</td><td>2.6 million</td></tr>
+	</tbody>
+	</table>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/List_of_digital_distribution_platforms_for_mobile_devices">Wikipedia Distribution platforms</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>2010 continued</h1>
+	<h2>The Internet is <em>not</em> the Web.</h2>
+	<p>The Web is just one Internet application out of many.</p>
+	<p>Facebook, Twitter, Foursquare, Google Docs, Salesforce.com, Zimbra, etc.</p>
+	<p>We're spilling over from the web onto the Internet.</p>
+</div>
+
+<div class="slide">
+	<h1>Act III</h1>
+	<p class="big">This is all out war for Internet 2.0.</p>
+	<p class="big">Will it be open, or controlled by gatekeepers?</p>
+</div>
+
+<div class="slide">
+	<h1>The stockades are built and the nukes are pointed.</h1>
+	<h2>Control of the whole Internet is too valuable not to fight for.</h2>
+	<p>The space race during the cold war was not about controlling space, but
+	<em>preventing anyone else</em> from controlling it alone.</p>
+</div>
+
+<div class="slide">
+	<h1>It is <em>not</em> a zero-sum game this time.</h1>
+	<h2>There is short window of opportunity for you to exploit as the nukes fly overhead.</h2>
+	<table>
+	<caption>World wide usage share of browsers for October 2010</caption>
+	<tr>
+	<th>Source</th><th>Internet Explorer</th><th>Firefox</th><th>Chrome</th><th>Safari</th><th>Opera</th><th>Mobile</th>
+	</tr>
+	<tr>
+	<th><a href="http://w3counter.com/globalstats.php" class="external text" rel="nofollow">W3Counter</a></th>
+	<td>41.6%</td> <td>29.9%</td><td>11.9%</td><td>5.5%</td><td>1.9%</td>
+	</tr>
+	<tr>
+	<th><a href="http://gs.statcounter.com/" class="external text" rel="nofollow">Stat Counter</a></th>
+	<td>49.21%</td><td>31.24%</td><td>12.39%</td><td>4.56%</td><td>2.00%</td>
+	<td><a href="http://gs.statcounter.com/#mobile_vs_desktop-ww-monthly-201010-201010-bar" class="external text" rel="nofollow">3.81%</a></td>
+	</tr>
+	<tr>
+	<th><a href="http://www.getclicky.com/marketshare/global/web-browsers/" class="external text" rel="nofollow">Clicky</a></th>
+	<td>47.74%</td><td>29.67%</td><td>12.69%</td><td>8.46%</td><td>1.26%</td>
+	</tr>
+	<tr>
+	<th><a href="http://stats.wikimedia.org/archive/squid_reports/2010-10/SquidReportClients.htm" class="external text" rel="nofollow">Wikimedia</a></th>
+	<td>44.72%</td><td>29.67%</td><td>9.71%</td><td>5.57%</td><td>3.48%</td><td>4.70%</td>
+	</tr>
+	</table>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/Usage_share_of_web_browsers">Wikipedia Web Browser Usage</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>Not even the iPhone holds a majority.</h1>
+	<p><img class="left" width="33%" src="../img/presentations/Smartphone_share_current.png" alt="Smartphone market share pie chart." title="" /></p>
+	<p class="big">(Contrary to popular belief).</p>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/File:Smartphone_share_current.png">photo credit</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>Full circle.</h1>
+	<h2>This is not your Grandma's web browser.</h2>
+	<p><img src="../img/presentations/youtube_ie6.png" alt="YouTube update screenshot" title="" /></p>
+</div>
+
+<div class="slide">
+	<h1><strike>Web</strike> Browsers.</h1>
+	<h2>Web browsers used to be only for Web browsing.</h2>
+	<p><strong>You</strong> can win the war for the internet.</p>
+	<p>Make the web browser <strong>your</strong> application delivery platform.</p>
+</div>
+
+<div class="slide">
+	<h1>The JavaScript renaissance.</h1>
+	<h2>A diamond is emerging from the rough.</h2>
+	<p class="left"><a href='https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/RegExp' title='JS RegExp .constructor'><img src='http://static.jsconf.us/promotejsh.gif' height='150' width='180' alt='JS RegExp .constructor'/></a></p>
+	<h4>Some things you should know:</h4>
+	<ul class="right">
+	<li>Java is to Javascript what car is to carpet.</li>
+	<li>Oracle now owns the trademark; so we'll call it JS from now on.</li>
+	<li>JS is the most widely deployed programming environment in the World.</li>
+	<li>JS got fast at some point along the way.</li>
+	<li>Full stack JS is now possible (client, server, and database).</li>
+	</ul>
+
+	<ul class="citations">
+	<li><a href="http://en.wikipedia.org/wiki/ECMAScript">Wikipedia ECMAScript</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h1>This kind of competition is good:</h1>
+	<p><img width="80%" src="../img/presentations/are_we_fast_yet.png" alt="arewefastyet.com screenshot" title="" /></p>
+	<p><a href="http://arewefastyet.com/">arewefastyet.com</a></p>
+</div>
+
+<div class="slide">
+	<h1>Give them a reason to compete.</h1>
+	<p class="center big">If we don't start building awesome apps in the next generation web browsers; our
+	opportunity will be lost forever.</p>
+</div>
+
+<div class="slide">
+	<h1>Awesomeness: jQuery Mobile</h1>
+	<p class="center huge"><a href="http://jquerymobile.com/">jquerymobile.com</a></p>
+	<p class="center big">Check it out from a mobile device: <a href="http://jquerymobile.com/demos/1.0a2/">jquerymobile.com/demos/1.0a2/</a></p>
+</div>
+
+<div class="slide">
+	<h1>Awesomeness: Phone Gap</h1>
+	<p class="center huge"><a href="http://www.phonegap.com/">www.phonegap.com</a></p>
+</div>
+
+<div class="slide">
+	<h1>Awesomeness: Node.js</h1>
+	<p class="center huge"><a href="http://nodejs.org/">nodejs.org</a></p>
+</div>
+
+<div class="slide">
+	<h1>Awesomeness: CouchDB</h1>
+	<p class="center huge"><a href="http://couchdb.apache.org/">couchdb.apache.org</a></p>
+</div>
+
+<div class="slide">
+	<h1>Awesomeness: CommonJS</h1>
+	<p class="center big"><code>require()</code> is comming to JS!</p>
+</div>
+
+<div class="slide">
+	<h1>Awesomeness: Sprout Core and Cappucino</h1>
+	<p class="center huge"><a href="http://www.sproutcore.com/">www.sproutcore.com</a></p>
+	<p class="center huge"><a href="http://www.cappuccino.org/">www.cappuccino.org</a></p>
+</div>
+
+<div class="slide">
+	<h1>Awesomeness: Raphael</h1>
+	<p class="center huge"><a href="http://raphaeljs.com/">raphaeljs.com</a></p>
+</div>
+
+<div class="slide">
+	<h1>Awesomeness: Google Web Toolkit</h1>
+	<p class="center big">Build complex web applications with a Java SDK</p>
+	<p class="center big"><a href="http://code.google.com/webtoolkit/">code.google.com/webtoolkit/</a></p>
+</div>
+
+<div class="slide">
+	<h1>Awesomeness: YQL</h1>
+	<p class="center big"><code>SELECT * FROM Internet</code> with Yahoo! Query Language</p>
+	<p class="center huge"><a href="http://developer.yahoo.com/yql/">developer.yahoo.com/yql/</a></p>
+</div>
+
+<div class="slide">
+	<h1>Awesomeness: Installable Web Apps</h1>
+	<p class="center big">Mozilla: <a href="https://apps.mozillalabs.com/">apps.mozillalabs.com</a></p>
+	<p class="center big">Google: <a href="http://code.google.com/chrome/apps/">code.google.com/chrome/apps/</a></p>
+</div>
+
+<div class="slide">
+	<p class="huge center">IE 6 Must Die!</p>
+</div>
+
+<div class="slide">
+	<h1>Addendum</h1>
+	<p>We're The Fireworks Project and we'll be working to make
+	<strong>Open Internet 2.0</strong> a reality. Get your fight on and come join us.</p>
+	<p><a href="http://www.fireworksproject.com/pages/extraordinary_people.html">www.fireworksproject.com/pages/extraordinary_people.html</a></p>
+	<p id="hcard-Kris-Walker" class="vcard">
+	 <a class="url twitter"
+			href="http://twitter.com/kixxauth"
+      title="Follow Kris Walker on Twitter.">@kixxauth</a>
+	 <a class="email"
+			href="mailto:kixxauth@gmail.com"
+      title="email Kris Walker">kixxauth@gmail.com</a>
+	</p>
+</div>
+
+<div class="slide">
+	<!-- extended copyright notice -->
+	<div class="copyright">
+		<a id="creative-commons-image" href="http://creativecommons.org/licenses/by-sa/3.0/">
+		<img alt="Creative Commons License" height="31" width="88"
+		style="float: left; padding-right: 1em;"
+		src="/img/creativecommons_88x31.png" />
+		</a>
+		<p>
+		Portions of this content are &copy; 2010 by contributors to
+		<a href="http://www.fireworksproject.com">The Fireworks Project Inc.</a>
+		and, unless otherwise indicated, the content of this presentation is licensed under a
+		<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
+			Creative Commons Attribution-Share Alike 3.0 Unported License</a>.
+		</p>
+	</div>
+</div>
+
+</body>
+</html>

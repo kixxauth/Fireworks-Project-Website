@@ -205,6 +205,13 @@ handlers:
   mime_type: text/html
   expiration: 1d
 
+# ### Presenations in HTML format.
+# `/google-app-engine/static/presentations`
+- url: /presentations
+  static_dir: static/presentations
+  mime_type: text/html
+  expiration: 4d
+
 # ### The beginnings of our collabworkd application suite.
 # `/google-app-engine/static/collabworks`
 - url: /collabworks
