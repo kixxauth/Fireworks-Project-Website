@@ -31,7 +31,9 @@ class SimpleHandler(BaseHandler):
     This class is designed and written to be used by the fwerks module.  It
     handles typical GET and HEAD requests. Instances of this class return a
     response by rendering a template matching the name property of this instance.
-    See [FWPWebsite.Google_App_Engine.fwerks.Handler] for more info about this.
+
+    See [FWPWebsite.Google_App_Engine.base_handler.BaseHandler] for more info
+    about this.
     """
 
     def get(self):

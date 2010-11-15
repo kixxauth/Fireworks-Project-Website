@@ -294,3 +294,10 @@ class AuthRequestHandler(BaseHandler):
         session.save()
         return response
 
+
+class AuthenticatedEntry(BaseHandler):
+
+    def get(self):
+        response = Response(self.__class__.__name__)
+        return response
+

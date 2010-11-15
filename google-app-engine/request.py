@@ -69,6 +69,8 @@ import simple_handlers
 import datastore_handlers
 import exception_handlers
 
+import crown_construction
+
 beaker_session_configs = base_handler.beaker_session_configs
 AuthRequestHandler     = base_handler.AuthRequestHandler
 SimpleHandler          = simple_handlers.SimpleHandler
@@ -77,6 +79,7 @@ ShowEnvirons           = simple_handlers.ShowEnvirons
 DatastoreMembers       = datastore_handlers.DatastoreMembers
 DatastoreActions       = datastore_handlers.DatastoreActions
 DatastoreSubscribers   = datastore_handlers.DatastoreSubscribers
+CrownConstruction      = crown_construction.Entry
 not_found              = exception_handlers.not_found
 request_redirect       = exception_handlers.request_redirect
 exception_handler      = exception_handlers.exception_handler
@@ -102,6 +105,7 @@ url_map = Map([
         , Rule('/auth_request', endpoint='auth_request')
         , Rule('/cgi-env', endpoint='environs')
         , Rule('/exception', endpoint='exception')
+        , Rule('/crown_construction', endpoint='crown_construction')
         ])
 
 # ### Request handlers.
@@ -120,6 +124,7 @@ handlers = {
         , 'auth_request': AuthRequestHandler
         , 'environs': ShowEnvirons
         , 'exception': TestException
+        , 'crown_construction': CrownConstruction
         }
 
 
