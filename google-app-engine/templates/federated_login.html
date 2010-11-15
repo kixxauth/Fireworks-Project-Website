@@ -27,18 +27,57 @@ See CC-LICENSE in this folder for more details.
 
 {% endcomment %}{% extends "base.html" %}
 
-{% block head %}<style type="text/css">
-</style>{% endblock %}
+{% block head %}<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>{% comment %}
+This script is only used locally for development when working offline.
+<!--
+<script type="text/javascript" src="/js/jquery.js"></script>
+-->
+{% endcomment %}
+<style type="text/css">
+</style>
+<script type="text/javascript">
+//<![CDATA[
+/*jslint
+	browser: true
+, onevar: true
+, undef: true
+, nomen: true
+, eqeqeq: true
+, plusplus: true
+, bitwise: true
+, regexp: true
+, newcap: true
+, immed: true
+, strict: true
+, maxlen: 80
+*/
+
+/*global
+	window: false
+, console: true
+*/
+
+// Page script is composed inside a closure.
+(function (window) {
+	// ECMAScript 5 strict mode.
+	"use strict";
+
+	// jQuery is assigned to j
+	var j = window.jQuery.noConflict()
+		;
+
+	j(function () {
+	});
+}(window));
+//]]>
+</script>{% endblock %}
 
 {% block body %}<div id="federated-login" class="inner-content-container">
-	<ul>
-		{% for url in login_urls %}
-		<li><a href="{{url}}">{{url}}</a></li>
-		{% endfor %}
-	</ul>
-	<form action="{{post_to}}" method="post">
-		<p class="input-line"><input type="text" name="federated_id" /></p>
-		<p class="form-submit"><input type="submit" value="Redirect me." /></p>
-	</form>
-  </div><!-- end #federated-login -->{% endblock %}
+		<ul>
+			<li><a href="#">OpenID</a></li>
+			<li><a href="#http://google.com/accounts/o8/id">Google</a></li>
+		</ul>
+		<p><input type="text" name="federated_id" /></p>
+		<p><button>Redirect me.</button></p>
+	</div><!-- end #federated-login -->{% endblock %}
 

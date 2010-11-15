@@ -290,7 +290,7 @@ class AuthRequestHandler(BaseHandler):
         redirect_url = auth_request.redirectURL(host_url, return_to)
         # The Ajax request wants the redirect url as plain text, not an actual
         # HTTP redirect.
-        response = self.respond(Response(redirect_url))
+        response = self.respond(Response(redirect_url +'\n'))
         session.save()
         return response
 
@@ -298,6 +298,6 @@ class AuthRequestHandler(BaseHandler):
 class AuthenticatedEntry(BaseHandler):
 
     def get(self):
-        response = Response(self.__class__.__name__)
+        response = Response(utils.render_template('federated_login'))
         return response
 
