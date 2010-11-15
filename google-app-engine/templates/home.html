@@ -28,11 +28,12 @@ See CC-LICENSE in this folder for more details.
 {% endcomment %}{% extends "base.html" %}
 
 {% block top %}<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+{% comment %}
+This script is only used locally for development when working offline.
 <!--
 <script type="text/javascript" src="/js/jquery.js"></script>
 -->
-<script type="text/javascript" src="js/jquery.fireworks-impression.js"></script>
-<script type="text/javascript">
+{% endcomment %}<script type="text/javascript">
 //<![CDATA[
 /*jslint
   browser: true
@@ -52,7 +53,6 @@ See CC-LICENSE in this folder for more details.
 /*global
   window: false
 , console: true
-, WebFontConfig: true
 */
 
 // ECMAScript 5 strict mode.
@@ -61,21 +61,6 @@ See CC-LICENSE in this folder for more details.
 // Page specifications.
 var SPEC = {};
 
-// Presentation slide show timing.
-SPEC.slideShowIntervals = [
-  8000
-, 5500
-, 9000
-, 7000
-, 6500
-, 7000
-, 8000
-, 10500
-, 7500
-, 9500
-, 7500
-];
-
 // Notice messages.
 SPEC.messages = {};
 SPEC.messages.unexpected  = 'Awww darn! There was some kind of unexpected '+
@@ -83,7 +68,6 @@ SPEC.messages.unexpected  = 'Awww darn! There was some kind of unexpected '+
                     'refreshing the page and submit it again.';
 
 SPEC.messages.success = 'Great! Your subscription has been received.';
-
 
 // Create a console object if there is not an ambient one.
 if (typeof console === 'undefined') {
@@ -101,16 +85,6 @@ if (typeof console === 'undefined') {
 (function (window) {
   // jQuery is assigned to j
   var j = window.jQuery.noConflict()
-
-    // Flag set to true when the DOM is loaded.
-    , DOM_loaded = true
-
-    // Flag set to true when web fonts have loaded.
-    , WF_loaded = false
-
-    , presentation
-
-    , presentation_intervals = window.SPEC.slideShowIntervals
 
     , messages = SPEC.messages
 
@@ -130,9 +104,6 @@ if (typeof console === 'undefined') {
     j.post('/datastore/actions/', j.param({actions: actions}, true));
     actions = [];
   }
-
-  // Configure web font loader to load TypeKit font for slide show.
-  WebFontConfig.typekit = {id: 'fcq2zzl'};
 
   // The server will respond with HTML for form submissions 
   // if we don't specify application/json.
@@ -307,201 +278,11 @@ if (typeof console === 'undefined') {
     };
   }
 
-  // The slide show must be set up after the DOM has loaded and all
-  // web fonts have also loaded.
-  function slide_show_setup() {
-    console.log('slide_show_setup() triggered');
-    if (!DOM_loaded || !WF_loaded) {
-      console.log('DOM_loaded =', DOM_loaded);
-      console.log('WF_loaded =', WF_loaded);
-      return;
-    }
-    console.log('slide_show_setup() executing');
-
-    var presentation_player = j('#about-presentation')
-      , slide_height = 0
-      , controls = j('#presentation-controls')
-      , controls_height
-      , controls_padding = 12 // top + bottom padding
-      , controls_margins = 40 // left + right margin
-      , controls_widths = 60 // forward + back controls
-      , border_width = 2 // Presentation border
-      ;
-
-    // Calculate the height of the slide show.
-    j('div.presentation-slide')
-      .each(function (i) {
-        var h = j(this).show().height();
-        if (h > slide_height) {
-          slide_height = h;
-        }
-      })
-      .hide()
-      .css('height', slide_height +'px')
-      ;
-
-    // Set up slide show controls.
-    controls_height = controls.height() + controls_padding;
-    j('#player-controls-notice')
-      .width(presentation_player.width()
-             - controls_margins
-             - controls_widths);
-
-    console.log('Slide show height', slide_height);
-    console.log('Controls height', controls_height);
-
-    // Set up presentation player.
-    presentation_player
-      .css('border', '2px dashed #aaa')
-      .height(slide_height + controls_height);
-
-    // Show player intro.
-    j('#presentation-player-intro')
-      // Start slide show presentation on click.
-      .click(function () {
-        var controls_notice_action = j('#controls-notice-action')
-          , controls_notice_index = j('#controls-notice-index')
-          ;
-
-        j('#controls-notice-length').text(presentation_intervals.length);
-
-        j(this).hide();
-        controls.css({
-            'top': (slide_height + border_width) +'px'
-          , 'visibility': 'visible'
-          });
-        presentation
-          .bind('impressPlaying', function () {
-              controls_notice_action.text('playing: ');
-            })
-          .bind('impressStopped', function () {
-              controls_notice_action.text('stopped on: ');
-              actions.push(format_action('slide_show_stopped'));
-              post_actions();
-            })
-          .impression('play')
-          .css('cursor', 'pointer')
-          .toggle(
-            function () {
-              presentation.impression('stop');
-            },
-            function () {
-              presentation.impression('play');
-            })
-          .bind('impressShowing', function (ev, i) {
-            controls_notice_index.text(i +' ');
-            actions.push(format_action('showing_slide:'+ i));
-          })
-          ;
-        controls_notice_index.text('0 ');
-        return false;
-      })
-      .css('visibility', 'visible');
-
-    // Set up player controls.
-    j('#player-back-control').click(function () {
-      presentation.impression('back');
-      actions.push(format_action('slideshow_back'));
-      return false;
-    });
-    j('#player-forward-control').click(function () {
-      presentation.impression('next');
-      actions.push(format_action('slideshow_next'));
-      return false;
-    });
-
-    // Show the form again.
-    j('#journal-form').css('visibility', 'visible');
-    actions.push(format_action('slide_show_set_up'));
-  }
-
-  // Set up slide show countdown.
-  j(function (j) {
-    var counter = presentation_intervals[0] / 1000
-      , interval
-      ;
-
-    function stopped_handler() {
-      window.clearInterval(interval);
-    }
-
-    function resume_countdown(ev, i, duration) {
-      if (duration) {
-        counter = duration / 1000;
-      }
-      interval = window.setInterval(function () {
-        j('#slide-a-content-3').text(counter -= 1);
-        if (counter === 0) {
-          window.clearInterval(interval);
-          j('#slide-a')
-            .unbind('impressPlaying', resume_countdown)
-            .unbind('impressStopped', stopped_handler)
-            ;
-          console.log('Cleared presentation countdown.');
-        }
-      }, 1000);
-    }
-
-    j('#slide-a')
-      .bind('impressPlaying', resume_countdown)
-      .bind('impressStopped', stopped_handler)
-      ;
-
-    j('#slide-a-content-3').text(counter);
-  });
-
-  // Web fonts loaded event.
-  WebFontConfig.active = function () {
-    console.log('WebFont active event');
-    WF_loaded = true;
-    slide_show_setup();
-  };
-
   // DOM loaded event.
   j(function (j) {
-    presentation = j('#presentation').impression({
-      intervals: presentation_intervals 
-    });
-
-    // Hide the form while we set up the slide show.
-    j('#journal-form').css('visibility', 'hidden');
-
-    // Reset CSS from non-JavaScript page defaults.
-    j('#about').css('text-align', 'left');
-    j('#about-introduction').css({
-        width          : '48%'
-      , overflow       : 'hidden'
-      , 'margin-top'   : '5em'
-      , 'margin-right' : '0'
-      , 'margin-left'  : '0'
-      , 'margin-bottom': '0'
-      , 'float'        : 'left'
-      });
-    j('#about-presentation')
-      .html(j('#presentation-player-template').html())
-      .append(presentation)
-      ;
-    j('div.presentation-slide')
-      .css({
-        'width': '100%'
-      , 'height': '100%'
-      , 'font-size': '24px'
-      , 'float': 'none'
-      , 'border-top': 'none'
-      , 'border-right': 'none'
-      , 'border-left': 'none'
-      , 'margin-top': '0'
-      , 'margin-left': '0'
-      , 'margin-bottom': '0'
-      , 'margin-right': '0'
-      });
-
     // Set submit event handler to intercept form submissions.
     j('#journal-form')
       .submit(make_submitter(make_submit_notice(), make_ajax_notice()));
-
-    DOM_loaded = true;
-    slide_show_setup();
 
     actions.push(format_action('DOM_loaded'));
     post_actions();
@@ -530,39 +311,9 @@ if (typeof console === 'undefined') {
     margin-top: 1em;
   }
   #about-presentation {
-    font-family: "good-dog-1", "good-dog-2", monospace;
     margin-left: 50%;
     position: relative;
     width: 49%;
-  }
-  #presentation-player-intro {
-    text-align: center;
-    font-size: 32px;
-    margin: 2em 1em 0;
-    cursor: pointer;
-  }
-  #player-intro-content {
-    margin-bottom: 1em;
-  }
-  #player-intro-notice {
-    margin-top: 1em;
-    font-size: 60%;
-  }
-  #presentation-controls {
-    position: absolute;
-    font-size: 24px;
-    padding: 6px 0;
-    line-height: 1.5;
-    margin-left: 20px;
-  }
-  #player-back-control, #player-forward-control {
-    display: block;
-    float: left;
-    line-height: 0;
-  }
-  #player-controls-notice {
-    float: left;
-    text-align: center;
   }
   #journal-form {
     overflow: hidden;
@@ -660,120 +411,6 @@ if (typeof console === 'undefined') {
     -webkit-border-radius: 0.3em;
     border-radius: 0.3em;
   }
-  /* ---
-   * Presentation *
-   * ---
-   */
-  #presentation {
-    margin-bottom: 3em;
-  }
-  div.presentation-slide {
-    width: 22em;
-    height: 18em;
-    float: left;
-    border: 2px dashed #aaa;
-    margin-left: 2em;
-    margin-top: 2em;
-    font-family: "good-dog-1", "good-dog-2", monospace;
-    font-size: 16px;
-    line-height: 1.2;
-    color: #555;
-  }
-  #slide-a {
-    text-align: center;
-  }
-  #slide-a-content-1, #slide-a-content-2, #slide-a-content-3 {
-    font-family: sans-serif;
-    font-size: 20px;
-    margin: 2em auto 0;
-    width: 80%;
-  }
-  #slide-a-content-3 {
-    padding: .5em;
-    background: #222;
-    color: #fff;
-    width: 1em;
-  }
-  #slide-1-content-1, #slide-1-content-2 {
-    font-size: 150%;
-    text-align: center;
-    margin-top: 1.5em;
-    width: 90%;
-    margin-left: 5%;
-  }
-  #slide-2-content-1 {
-    font-size: 120%;
-    margin: 1em 1em .5em;
-  }
-  #slide-2-image {
-    margin-left: 35%;
-  }
-  #slide-2-content-2 {
-    margin: .5em 1em 1em;
-  }
-  #slide-3-content-1 {
-    margin: 1em 1em 1em;
-  }
-  #slide-3-image {
-    margin-left: 18%;
-  }
-  #slide-3-content-2 {
-    margin: 2em 1em 1em;
-  }
-  #slide-4-content-1 {
-    margin: .5em 1em 1em;
-  }
-  #slide-4-image {
-    margin-left: 14%;
-  }
-  #slide-5-content-1 {
-    margin-top: 2em;
-    width: 80%;
-    text-align: center;
-    margin-left: 9%;
-    font-size: 130%;
-  }
-  #slide-55-content-1 {
-    margin: .5em;
-  }
-  #slide-55-image {
-    margin-left: 25%;
-  }
-  #slide-7-content-1 {
-    margin: .5em;
-  }
-  #slide-7-image {
-    margin-left: 18%;
-  }
-  #slide-6-content-1 {
-    margin: 1em;
-  }
-  #slide-6-image {
-    margin-left: 18%;
-  }
-  #slide-8-content-1 {
-    margin: 1em 1em 0;
-    font-size: 120%;
-  }
-  #slide-8-content-2 {
-    margin: 1em 0 0 3em;
-  }
-  #slide-8-content-3 {
-    margin: 2em 1em 0;
-    font-size: 120%;
-  }
-  #slide-10-content-1 {
-    margin: .5em 1em 1em;
-  }
-  #slide-10-image {
-    margin-left: 18%;
-  }
-  #slide-12-content-1 {
-    margin: .5em 1em 1em;
-  }
-  #slide-12-image {
-    margin-left: 18%;
-  }
 </style>{% endblock %}
 
 {% block body %}<div id="home-page" class="inner-content-container">
@@ -788,157 +425,7 @@ if (typeof console === 'undefined') {
           </p>
         </div><!-- end #about-introduction -->
         <div id="about-presentation"></div>
-        <script id="presentation-player-template" type="text/html">
-          <div id="presentation-controls" style="visibility:hidden">
-            <a id="player-back-control" href="#" title="Go back one slide.">
-              <img id="player-controls-back" src="/img/presentation/left-arrow-30.gif"
-                title="Left arrow control." alt="Back arrow." width="30" height="30" />
-            </a>
-            <p id="player-controls-notice">
-            <span id="controls-notice-action"></span>
-            <span id="controls-notice-index"></span>
-            of <span id="controls-notice-length"></span>
-            </p>
-            <a id="player-forward-control" href="#" title="Go forward one slide.">
-              <img id="player-controls-next" src="/img/presentation/right-arrow-30.gif"
-                title="Right arrow control." alt="Next arrow." width="30" height="30" />
-            </a>
-          </div>
-          <div id="presentation-player-intro" style="visibility:hidden">
-            <p id="player-intro-content">Press play to find out how.</p>
-            <a id="presentation-play-button" href="#" title="Play slide show.">
-              <img src="/img/presentation/play-button-30.gif"
-                alt="Play button." />
-            </a>
-            <p id="player-intro-notice">(No sound will play.)</p>
-          </div>
-        </script>
       </div><!-- end #about -->
-      <div id="presentation">
-        <div id="slide-a" class="presentation-slide" style="display:none">
-          <p id="slide-a-content-1">
-          Click in here any time to pause the slide show, and click again
-          to continue playing.
-          </p>
-          <p id="slide-a-content-2">
-          Use the arrow buttons below to move back and forward.
-          </p>
-          <p id="slide-a-content-3"></p>
-        </div>
-        <div id="slide-1" class="presentation-slide">
-          <p id="slide-1-content-1">
-          Customized software is complicated and expensive.
-          </p>
-          <p id="slide-1-content-2">
-          Right?
-          </p>
-        </div>
-        <div id="slide-2" class="presentation-slide">
-          <p id="slide-2-content-1">
-          But maybe it doesn&#39;t have to be.
-          </p>
-          <img id="slide-2-image" src="img/presentation/thinking_man.png" width="25%"
-            alt="Thinking man illustration." />
-          <p id="slide-2-content-2">
-          Thinking a little differently, we&#39;ve found a way to make it
-          simple and affordable.
-          </p>
-        </div>
-        <div id="slide-3" class="presentation-slide">
-          <p id="slide-3-content-1" >
-          Imagine an artisan software bakery,
-          </p>
-          <img id="slide-3-image" src="img/presentation/light-bulb.gif" width="60%"
-            alt="Light bulb idea illustration." />
-          <p id="slide-3-content-2" >
-          where each batch of software is crafted with personal attention.
-          </p>
-        </div>
-        <div id="slide-4" class="presentation-slide">
-          <p id="slide-4-content-1">
-          Then borrow some ideas from the assembly lines used to build the
-          first affordable automobiles.
-          </p>
-          <img id="slide-4-image" src="img/presentation/assembly_line.png" width="70%"
-            alt="Automobile assembly line illustration." />
-        </div>
-        <div id="slide-5" class="presentation-slide">
-          <p id="slide-5-content-1">
-          Inspired as only geeks can be, we designed our own digital nuts and
-          bolts for building interchangeable software components.
-          </p>
-        </div>
-        <div id="slide-55" class="presentation-slide">
-          <p id="slide-55-content-1">
-          As it turns out, interchangeable parts have been the key to
-          making affordable goods since the industrial revolution.
-          </p>
-          <img id="slide-55-image" src="img/presentation/factory.png" width="50%"
-            alt="Factory illustration." />
-        </div>
-        <div id="slide-7" class="presentation-slide">
-          <p id="slide-7-content-1">
-          By building software this way, we can all afford customized programs
-          that were once only affordable to very large companies.
-          </p>
-          <img id="slide-7-image" src="img/presentation/custom_software_choice.png" width="60%"
-            alt="Illustration of waiter with choice of dishes." />
-        </div>
-        <!-- yes, slide 6 comes after slide 7 -->
-        <div id="slide-6" class="presentation-slide">
-          <p id="slide-6-content-1">
-          And, you&#39;ll be able to add the software components you
-          need, without getting stuck with the ones you don&#39;t.
-          </p>
-          <img id="slide-6-image"src="img/presentation/software_components.png" width="60%"
-            alt="Software components illustration." />
-        </div>
-        <div id="slide-8" class="presentation-slide">
-          <h4 id="slide-8-content-1">
-            Think of all the possibilities!
-          </h4>
-          <ul id="slide-8-content-2">
-            <li>
-            Customer service management.
-            </li>
-            <li>
-            Contact and sales lists.
-            </li>
-            <li>
-            Project management.
-            </li>
-            <li>
-            Inventory control.
-            </li>
-            <li>
-            Scheduling.
-            </li>
-            <li>
-            Logistics.
-            </li>
-          </ul>
-          <p id="slide-8-content-3">
-          Your imagination is the limit.
-          </p>
-        </div>
-        <div id="slide-10" class="presentation-slide">
-          <p id="slide-10-content-1">
-          Our software bakery is not quite operational yet, but we&#39;re
-          working day and night to get it ready for the grand opening.
-          </p>
-          <img id="slide-10-image" src="img/presentation/software_factory_grand_opening.png" width="60%"
-            alt="Software bakery grand opening illustration." />
-        </div>
-        <div id="slide-12" class="presentation-slide">
-          <p id="slide-12-content-1">
-          Until then you should kick back with a copy of our e-journal. Just
-          scroll down to our subscription form and you can get on board with
-          one click.
-          </p>
-          <img id="slide-12-image" src="img/presentation/resting_software_engineer.png" width="60%"
-            alt="Resting on the beach illustration." />
-        </div>
-      </div><!-- end #presentation -->
       <form id="journal-form" class="journal" action="/datastore/subscribers/" method="post">
         <h3 id="journal-form-header" class="journal">
           Don&#39;t leave without subscribing to our free technology e-journal

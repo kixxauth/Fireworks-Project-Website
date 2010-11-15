@@ -3,6 +3,11 @@
   * OpenID endpoint discovery has been implemented with Python OpenID library.
   * Authentication session management added with the Beaker library.
 
+* # 7.2
+
+  * Disabled JS webfont loading and removed slideshow to fix rendering bug
+    on mobile browsers.
+
 * # 7.1
 
   * Fix collabworks priority dashboard popup issue in IE8.

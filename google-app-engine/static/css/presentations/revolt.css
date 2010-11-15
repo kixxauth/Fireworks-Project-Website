@@ -1,0 +1,78 @@
+body {
+	color: #fff;
+	background-color: #000;
+}
+
+div.slide {
+	font-size: 150%;
+}
+div.slide a {
+	color: #cc6600;
+}
+div.slide h1 {
+	font-size: 200%;
+	background-color: #cc6600;
+	border-bottom: 5px solid #777;
+	border-right: 5px solid #777;
+	border-left: 5px solid #777;
+	padding: .3em 1em .5em;
+	margin-bottom: 1.5em;
+	text-align: center;
+	-moz-border-radius-bottomleft: 1em;
+	-webkit-border-bottom-left-radius: 1em;
+	border-bottom-left-radius: 1em;
+	-moz-border-radius-bottomright: 1em;
+	-webkit-border-bottom-right-radius: 1em;
+	border-bottom-right-radius: 1em;
+}
+div.slide h2 {
+	font-size: 160%;
+	text-align: center;
+	margin: 0 0 1em;
+	line-height: 1.5em;
+}
+img.left, p.left {
+	float: left;
+	margin: 0 2em 1em 0;
+}
+ul.right {
+	float: right;
+}
+ul.big {
+	font-size: 180%;
+	font-weight: bold;
+}
+div.slide p {
+	line-height: 1.5;
+}
+div.slide p.big {
+	font-size: 180%;
+	font-weight: bold;
+}
+div.slide p.big strong {
+	color: #cc6600;
+}
+div.slide p.huge {
+	font-size: 280%;
+	font-weight: bold;
+}
+div.slide ul.citations {
+	clear: both;
+	margin-top: 2em;
+}
+div.slide table {
+	width: 90%;
+	text-align: left;
+}
+div.slide table td {
+	border-bottom: 1px dashed #777;
+}
+
+#hcard-Kris-Walker {
+	text-align: center;
+}
+#hcard-Kris-Walker a {
+	display: block;
+	line-height: 2;
+	font-size: 180%;
+}
