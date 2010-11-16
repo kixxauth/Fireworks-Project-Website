@@ -107,18 +107,18 @@ class BaseHandler(Handler):
         # This is a redirected federated login attempt.  If this raises an
         # exception it will be caught by the fwerks dispatcher.
         # TODO: Find a nicer way to handle exceptions.
-        auth_reponse = Consumer( session
-                               , aeiod_store.AppEngineStore()
+        auth_response = Consumer( session
+                               , aeoid_store.AppEngineStore()
                                ).complete(self.request.args, self.request.url)
 
-        if response.status == SUCCESS:
+        if auth_response.status == SUCCESS:
             session['authenticated'] = True
             session.save()
             return User(session)
 
         session.delete()
 
-        if response.status in (FAILURE, CANCEL):
+        if auth_response.status in (FAILURE, CANCEL):
             return
         else:
             logging.error('Unexpected error in OpenID authentication: %s', response)
@@ -159,6 +159,21 @@ class BaseHandler(Handler):
         """
         # We don't want IE munging our response, so we set X-XSS-Protection to 0
         response.headers['X-XSS-Protection'] = '0'
+        return response
+
+    @classmethod
+    def no_cache_response(cls, response):
+        response.headers['Expires'] = 'Fri, 01 Jan 1990 00:00:00 GMT'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Cache-Control'] = NO_CACHE_HEADER
+        return response
+
+    @classmethod
+    def federated_login_response(cls, continuation):
+        content = utils.render_template( 'federated_login'
+                                       , {'continuation': continuation})
+        response = Response(content)
+        response.mimetype = 'text/html'
         return response
 
     def finalize_response(self, response, record_request=True):
@@ -249,13 +264,9 @@ class BaseHandler(Handler):
 class AuthRequestHandler(BaseHandler):
 
     def respond(self, response):
-        response.mimetype = 'text/plain'
-
         # No caching.
-        response.headers['Expires'] = 'Fri, 01 Jan 1990 00:00:00 GMT'
-        response.headers['Pragma'] = 'no-cache'
-        response.headers['Cache-Control'] = NO_CACHE_HEADER
-
+        response = self.no_cache_response(response)
+        response.mimetype = 'text/plain'
         return self.finalize_response(response)
 
     def get(self):
@@ -292,12 +303,5 @@ class AuthRequestHandler(BaseHandler):
         # HTTP redirect.
         response = self.respond(Response(redirect_url +'\n'))
         session.save()
-        return response
-
-
-class AuthenticatedEntry(BaseHandler):
-
-    def get(self):
-        response = Response(utils.render_template('federated_login'))
         return response
 

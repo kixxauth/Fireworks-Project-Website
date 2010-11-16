@@ -32,8 +32,11 @@ This script is only used locally for development when working offline.
 <!--
 <script type="text/javascript" src="/js/jquery.js"></script>
 -->
-{% endcomment %}
-<style type="text/css">
+{% endcomment %}{% comment %}TODO: Hide everything and show a warning if JS is not enabled.
+{% endcomment %}<style type="text/css">
+	#openid-form {
+		visibility: hidden;
+	}
 </style>
 <script type="text/javascript">
 //<![CDATA[
@@ -52,21 +55,77 @@ This script is only used locally for development when working offline.
 , maxlen: 80
 */
 
-/*global
-	window: false
-, console: true
-*/
+/*global window: false */
 
 // Page script is composed inside a closure.
 (function (window) {
 	// ECMAScript 5 strict mode.
 	"use strict";
 
+	if (!String.prototype.trim) {
+		String.prototype.trim = function () {
+			return String(this).replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+		};
+	}
+
 	// jQuery is assigned to j
 	var j = window.jQuery.noConflict()
-		;
+	  , setTimeout = window.setTimeout
+	  ;
+
+	function get_redirect(fid) {
+		var data = { continuation: j('#continuation').val()
+		           , federated_id: fid };
+		j.ajax({ url: '/auth_request'
+		       , data: data
+		       , success: function (result) {
+		         	window.location.href = result.trim();
+		         }
+		       , error: function (xhr, stat, err) {
+		         	var str = 'There was an error sending your request. '+
+		         	          'Give it another go.';
+		         	if ( xhr.responseText &&
+		         	     xhr.responseText.trim() === 'discovery failure') {
+		         		// TODO: The user should only get this error if they
+		         		// manually entered an OpenID. We need test for that
+		         		// condition before giving them this response:
+		         		str = 'Your ID was entered incorrectly. '+
+		         		      'Give it another go.';
+		         	}
+		         	alert(str);
+		         	setTimeout(function () {
+		         		throw new Error('Ajax error: '+ xhr.status +': '+ str);
+		         	}, 0);
+		         }
+		       });
+	}
+
+	function open_form() {
+		j('#login-button').click(function (ev) {
+			var fid = j('#federated_id').val();
+			if (fid) {
+				get_redirect(fid);
+			}
+			else {
+				alert('Enter an ID or choose a provider before continuing.');
+			}
+			return false;
+		});
+		j('#openid-form').css('visibility', 'visible');
+	}
 
 	j(function () {
+		j('a.options')
+			.click(function (ev) {
+				var prov = j(this).attr('href');
+				if (prov === '#') {
+					open_form();
+				}
+				else {
+					get_redirect(prov);
+				}
+				return false;
+			});
 	});
 }(window));
 //]]>
@@ -74,10 +133,13 @@ This script is only used locally for development when working offline.
 
 {% block body %}<div id="federated-login" class="inner-content-container">
 		<ul>
-			<li><a href="#">OpenID</a></li>
-			<li><a href="#http://google.com/accounts/o8/id">Google</a></li>
+			<li><a class="options" href="#">OpenID</a></li>
+			<li><a class="options" href="http://google.com/accounts/o8/id">Google</a></li>
 		</ul>
-		<p><input type="text" name="federated_id" /></p>
-		<p><button>Redirect me.</button></p>
+		<form id="openid-form" action="/" method="get">
+			<input type="hidden" id="continuation" name="continuation" value="{{continuation}}"/>
+			<p><input type="text" id="federated_id" name="federated_id" /></p>
+			<p><button id="login-button">Redirect me.</button></p>
+		</form>
 	</div><!-- end #federated-login -->{% endblock %}
 
