@@ -19,11 +19,11 @@
 </head>
 <body>
 
-<div class="slide">
+<div class="slide cover title">
 	<img width="80%" src="../img/presentations/wired_cover.jpg" alt="Wired Magazine cover" title="" />
 </div>
 
-<div class="slide cover title">
+<div class="slide">
 	<!-- Hide style graphics to ensure they are saved with other content like this
   <img class="hidden" src="graphics/bullet.png" alt="" />
 	-->
@@ -33,8 +33,9 @@
 	 class="cover" /><br clear="all" />
 	-->
 
-	<h1>How to get your Internet back:</h1>
-	<h2>The war for the Internet and how you can win it.</h2>
+	<h1>Agenda:</h1>
+	<h2>The war for the Internet</h2>
+    <p class="center">(and how we can win it.)</p>
 
 	<p id="hcard-Kris-Walker" class="vcard">
 	 <a class="url fn"
@@ -53,13 +54,15 @@
 </div>
 
 <div class="slide">
-	<h1>It's the end of the Web as we know it.</h1>
+    <h1>A paradigm shift</h1>
+    <h2>This is not really the end of the Web, just the end of the Web as we
+        know it.</h2>
 
 	<p class="big center">(But I feel fine.)</p>
 </div>
 
 <div class="slide">
-	<h1>Timeline</h1>
+	<h1>In context; a timeline.</h1>
 	<ul class="big center">
 	<li>How the Web began.</li>
 	<li>How it died.</li>
@@ -137,7 +140,7 @@
 <div class="slide">
 	<h1>1995</h1>
 	<p><img class="left" width="40%"src="../img/presentations/Bill_Gates_-_World_Economic_Forum_Annual_Meeting_New_York_2002.jpg" alt="Bill Gates" title="" /></p>
-	<p class="big">His Billness.</p>
+	<p class="big">His Billness is never one to lose a good fight.</p>
 
 	<ul class="citations">
 	<li><a href="http://en.wikipedia.org/wiki/History_of_Internet_Explorer">Wikipedia Internet Explorer</a></li>
@@ -159,10 +162,7 @@
 <div class="slide">
 	<h1>1996</h1>
 	<h2>No, really; we didn't copy it.</h2>
-	<p>"JavaScript" and "JScript" are perceived to be so similar that the terms are
-	often used interchangeably.</p>
-	<p>Microsoft, however, notes dozens of ways in which JScript is not
-	ECMA-compliant.</p>
+	<p>Microsoft notes dozens of ways in which JScript is not ECMA-compliant.</p>
 
 	<ul class="citations">
 	<li><a href="http://msdn2.microsoft.com/en-us/library/4tc5a343.aspx">Microsoft JScript</a></li>
@@ -264,6 +264,8 @@
 	<h1>2010</h1>
 	<h2>Web FOO</h2>
 	<p class="big center">Flickr, Facebook, Twitter, YouTube.</p>
+    <p class="center">The Web has become a big hack to accommodate the needs of
+        internet applications.</p>
 </div>
 
 <div class="slide">
@@ -354,27 +356,26 @@
 <div class="slide">
 	<h1>2010 continued</h1>
 	<h2>The Internet is <em>not</em> the Web.</h2>
-	<p>The Web is just one Internet application out of many.</p>
-	<p>Facebook, Twitter, Foursquare, Google Docs, Salesforce.com, Zimbra, etc.</p>
-	<p>We're spilling over from the web onto the Internet.</p>
+    <p>The Web is just one Internet <em>application</em> out of many.</p>
+    <p>Facebook, Twitter, Foursquare, Google Docs, Salesforce.com, Zimbra, etc.
+        are spilling over from the web onto the Internet.</p>
 </div>
 
 <div class="slide">
 	<h1>Act III</h1>
-	<p class="big">This is all out war for Internet 2.0.</p>
-	<p class="big">Will it be open, or controlled by gatekeepers?</p>
+	<p class="big center">This is all out war for Internet 2.0.</p>
+	<p class="center">Will it be open, or controlled by gatekeepers?</p>
 </div>
 
 <div class="slide">
-	<h1>The stockades are built and the nukes are pointed.</h1>
-	<h2>Control of the whole Internet is too valuable not to fight for.</h2>
-	<p>The space race during the cold war was not about controlling space, but
+	<h1>The nukes are pointed.</h1>
+	<p class="center">The space race was not about controlling space, but
 	<em>preventing anyone else</em> from controlling it alone.</p>
 </div>
 
 <div class="slide">
-	<h1>It is <em>not</em> a zero-sum game this time.</h1>
-	<h2>There is short window of opportunity for you to exploit as the nukes fly overhead.</h2>
+	<h1>It is <em>not</em> a zero-sum game.</h1>
+	<p class="center">No browser holds a majority of mind share this time.</p>
 	<table>
 	<caption>World wide usage share of browsers for October 2010</caption>
 	<tr>
@@ -405,9 +406,9 @@
 </div>
 
 <div class="slide">
-	<h1>Not even the iPhone holds a majority.</h1>
+	<h1>iPhone is king?</h1>
 	<p><img class="left" width="33%" src="../img/presentations/Smartphone_share_current.png" alt="Smartphone market share pie chart." title="" /></p>
-	<p class="big">(Contrary to popular belief).</p>
+	<p>The iPhone does not even hold a majority (Contrary to popular belief).</p>
 
 	<ul class="citations">
 	<li><a href="http://en.wikipedia.org/wiki/File:Smartphone_share_current.png">photo credit</a></li>
@@ -415,16 +416,22 @@
 </div>
 
 <div class="slide">
-	<h1>Full circle.</h1>
+	<h1>We've come full circle.</h1>
 	<h2>This is not your Grandma's web browser.</h2>
 	<p><img src="../img/presentations/youtube_ie6.png" alt="YouTube update screenshot" title="" /></p>
 </div>
 
 <div class="slide">
-	<h1><strike>Web</strike> Browsers.</h1>
-	<h2>Web browsers used to be only for Web browsing.</h2>
-	<p><strong>You</strong> can win the war for the internet.</p>
-	<p>Make the web browser <strong>your</strong> application delivery platform.</p>
+	<h1>This competition is good:</h1>
+	<p><img width="80%" src="../img/presentations/are_we_fast_yet.png" alt="arewefastyet.com screenshot" title="" /></p>
+	<p><a href="http://arewefastyet.com/">arewefastyet.com</a></p>
+</div>
+
+<div class="slide">
+	<h1>Give them a reason to compete.</h1>
+    <h2>Our window of opportunity:</h2>
+	<p class="center">If we don't start building awesome apps in the next generation web browsers; our
+	opportunity will be lost forever.</p>
 </div>
 
 <div class="slide">
@@ -443,18 +450,6 @@
 	<ul class="citations">
 	<li><a href="http://en.wikipedia.org/wiki/ECMAScript">Wikipedia ECMAScript</a></li>
 	</ul>
-</div>
-
-<div class="slide">
-	<h1>This kind of competition is good:</h1>
-	<p><img width="80%" src="../img/presentations/are_we_fast_yet.png" alt="arewefastyet.com screenshot" title="" /></p>
-	<p><a href="http://arewefastyet.com/">arewefastyet.com</a></p>
-</div>
-
-<div class="slide">
-	<h1>Give them a reason to compete.</h1>
-	<p class="center big">If we don't start building awesome apps in the next generation web browsers; our
-	opportunity will be lost forever.</p>
 </div>
 
 <div class="slide">
@@ -503,7 +498,7 @@
 <div class="slide">
 	<h1>Awesomeness: YQL</h1>
 	<p class="center big"><code>SELECT * FROM Internet</code> with Yahoo! Query Language</p>
-	<p class="center huge"><a href="http://developer.yahoo.com/yql/">developer.yahoo.com/yql/</a></p>
+	<p class="center big"><a href="http://developer.yahoo.com/yql/">developer.yahoo.com/yql/</a></p>
 </div>
 
 <div class="slide">
@@ -522,6 +517,9 @@
 	<strong>Open Internet 2.0</strong> a reality. Get your fight on and come join us.</p>
 	<p><a href="http://www.fireworksproject.com/pages/extraordinary_people.html">www.fireworksproject.com/pages/extraordinary_people.html</a></p>
 	<p id="hcard-Kris-Walker" class="vcard">
+	 <a class="url fn"
+			href="http://www.kixx.name"
+      title="Kris Walker's website.">Kris Walker</a>
 	 <a class="url twitter"
 			href="http://twitter.com/kixxauth"
       title="Follow Kris Walker on Twitter.">@kixxauth</a>
