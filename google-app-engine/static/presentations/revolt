@@ -37,20 +37,20 @@
 	<h2>The war for the Internet</h2>
     <p class="center">(and how we can win it.)</p>
 
-	<p id="hcard-Kris-Walker" class="vcard">
-	 <a class="url fn"
+	<div id="hcard-Kris-Walker" class="vcard">
+    <p><a class="url fn"
 			href="http://www.kixx.name"
-      title="Kris Walker's website.">Kris Walker</a>
-	 <a class="url twitter"
+      title="Kris Walker's website.">Kris Walker</a></p>
+	<p><a class="url twitter"
 			href="http://twitter.com/kixxauth"
-      title="Follow Kris Walker on Twitter.">@kixxauth</a>
-	 <a class="email"
+      title="Follow Kris Walker on Twitter.">@kixxauth</a></p>
+	<p><a class="email"
 			href="mailto:kixxauth@gmail.com"
-      title="email Kris Walker">kixxauth@gmail.com</a>
-	 <a class="org url"
+      title="email Kris Walker">kixxauth@gmail.com</a></p>
+	<p><a class="org url"
 			href="http://www.fireworksproject.com"
-      title="The Fireworks Project website.">The Fireworks Project</a>
-	</p>
+            title="The Fireworks Project website.">The Fireworks Project</a></p>
+	</div>
 </div>
 
 <div class="slide">
@@ -516,17 +516,17 @@
 	<p>We're The Fireworks Project and we'll be working to make
 	<strong>Open Internet 2.0</strong> a reality. Get your fight on and come join us.</p>
 	<p><a href="http://www.fireworksproject.com/pages/extraordinary_people.html">www.fireworksproject.com/pages/extraordinary_people.html</a></p>
-	<p id="hcard-Kris-Walker" class="vcard">
-	 <a class="url fn"
+	<div id="hcard-Kris-Walker" class="vcard">
+    <p><a class="url fn"
 			href="http://www.kixx.name"
-      title="Kris Walker's website.">Kris Walker</a>
-	 <a class="url twitter"
+      title="Kris Walker's website.">Kris Walker</a></p>
+	<p><a class="url twitter"
 			href="http://twitter.com/kixxauth"
-      title="Follow Kris Walker on Twitter.">@kixxauth</a>
-	 <a class="email"
+      title="Follow Kris Walker on Twitter.">@kixxauth</a></p>
+	<p><a class="email"
 			href="mailto:kixxauth@gmail.com"
-      title="email Kris Walker">kixxauth@gmail.com</a>
-	</p>
+      title="email Kris Walker">kixxauth@gmail.com</a></p>
+	</div>
 </div>
 
 <div class="slide">

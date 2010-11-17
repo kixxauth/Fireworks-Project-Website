@@ -72,7 +72,6 @@ div.slide table td {
 	text-align: center;
 }
 #hcard-Kris-Walker a {
-	display: block;
-	line-height: 2;
-	font-size: 180%;
+	line-height: 1.5;
+	font-size: 170%;
 }
