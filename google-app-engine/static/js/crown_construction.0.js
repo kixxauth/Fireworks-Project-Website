@@ -1009,8 +1009,9 @@ var env = (function (GLOBAL, undefined) {
     // special module.declare function used to bootstrap the main module
     GLOBAL.module.declare = function bootstrap(deps, factory) {
         var id = '';
-        // remove the declare instance method
-        delete this.declare; // the prototype.declare method remains
+
+        // remove this instance method
+        delete GLOBAL.module.declare; // the prototype.declare method remains
 
         // define the resource containing the main module
         resource(id, function () { this.declare(deps, factory); });
@@ -1566,3 +1567,64 @@ function forward(promise /*, op, resolved, ... */) {
 );
 
 }); });
+
+// ----------------------------------------------------------------------------
+env.resource('remote-procedure-call', function (window) {
+
+module.declare(function (require, exports, module) {
+'use strict';
+
+var create = Object.create
+
+  , gid = (function () {
+        var i = 0;
+        return function () {
+            return i += 1;
+        };
+    })
+  ;
+
+function Message() {
+    var self = create(Message.prototype);
+    self.id = gid();
+    return self;
+}
+Message.prototype.namespace = 'GLOBAL';
+Message.prototype.type = 'protocol_message';
+Message.prototype.id = null;
+Message.prototype.body = '';
+
+function MessageWrapper(message_instance) {
+    var self = create(MessageWrapper.prototype);
+    self.wrapped = message_instance;
+    return self;
+}
+MessageWrapper.prototype.wrapped = null;
+
+function BatchMessage(messages) {
+    var self = create(BatchMessage.prototype);
+    self.wrapped = messages;
+    return self;
+}
+BatchMessage.prototype.wrapped = [];
+BatchMessage.prototype.serialize = function () {
+    return JSON.stringify(this.wrapped);
+};
+
+function batch_send(batch) {
+    batch.serialize();
+}
+
+function RemoteProcedureService() {
+    var self = {};
+
+    self.start = function start() {
+        // Interval timing.
+    };
+
+    self.uri = null;
+    return self;
+}
+
+}); });
+
