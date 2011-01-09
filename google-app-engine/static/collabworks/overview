@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Collabworks Overview</title>
+<meta name="description" content="Overview page for The Fireworks Project collaboration tool chain." />
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
+<style type="text/css" media="screen and (min-device-width:900px)">
+	body {
+		background-color: #000;
+	}
+	.ui-page {
+		max-width: 800px;
+		left: 50%;
+		margin-left: -400px;
+	}
+	@media handheld {
+		.ui-page {
+			left: 0;
+			margin-left: 0;
+		}
+	}
+	#home-banner {
+		padding: 0;
+		margin: 0;
+		text-align: center;
+	}
+	#noob-info {
+		text-align: right;
+	}
+</style>
+<script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+<script type="text/javascript">
+	jQuery(document).bind('mobileinit', function () {
+			jQuery.mobile.defaultTransition = 'none';
+	});
+</script>
+<script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
+</head><body> 
+
+<div id="base" data-role="page" data-theme="c">
+	<div id="home-banner">
+		<h1 id="home-header"><img src="http://www.fireworksproject.com/img/the_fireworks_project_logo.gif" /></h1>
+		<h2 id="home-subheader">Collabworks Mashup</h2>
+	</div>
+	<div data-role="content" role="main">
+		<p id="noob-info">Press the info icon on the right of each item for more info.</p>
+	<ul id="main-menu" data-role="listview" data-inset="true" data-spliticon="info" data-theme="b">
+
+		<li>
+			<a href="http://redmine.fireworksproject.com/projects/fireworks/issues" target="_blank">
+				<h3>Priorities</h3>
+				<p><strong>Our master todo list.</strong></p>
+				<p>Fireworks Project: Issues (Redmine)</p>
+			</a>
+			<a href="#priority_dashboard_overview">Priority dashboard overview.</a>
+		</li>
+
+		<li>
+			<a href="http://github.com/FireworksProject" target="_blank">
+				<h3>Projects</h3>
+				<p><strong>Project management and source control.</strong></p>
+				<p>Github</p>
+			</a>
+			<a href="#project_management_overview">Project management overview.</a>
+		</li>
+
+		<li>
+			<a href="http://redmine.fireworksproject.com/projects/fireworks/boards" target="_blank">
+				<h3>Discussion</h3>
+				<p><strong>Unrestricted and open discussion forum.</strong></p>
+				<p>Redmine boards.</p>
+			</a>
+			<a href="#general_discussion_overview">General discussion overview.</a>
+		</li>
+
+		<li>
+			<a href="http://redmine.fireworksproject.com" target="_blank">
+				<h3>Skunk Works</h3>
+				<p><strong>The birthplace of crazy ideas.</strong></p>
+				<p>Redmine</p>
+			</a>
+			<a href="#skunk_works_overview">Skunk Works overview.</a>
+		</li>
+
+		<li>
+			<a href="https://fireworksfactory.basecamphq.com/projects/3775079/milestones" target="_blank">
+				<h3>Points</h3>
+				<p><strong>Member points voting.</strong></p>
+				<p>Basecamp (temporary)</p>
+			</a>
+			<a href="#points_voting_overview">Points voting overview.</a>
+		</li>
+
+	</ul>
+	</div>
+</div><!-- #base -->
+
+<div id="priority_dashboard_overview" data-role="page" data-theme="a">
+	<div data-role="header" role="banner">
+		<h2>Priority Dashboard</h2>
+	</div>
+	<div data-role="content" role="main">
+		<h2>What do I do?</h2>
+		<p>The "Priority Dashboard" is your way of instantly seeing what needs to be done, and what is most important. This is really nothing more than our master issue tracker.</p>
+		  <a href="http://redmine.fireworksproject.com/projects/fireworks/issues" data-role="button" data-theme="e" data-icon="arrow-r" data-iconpos="right" target="_blank">Go to the Priority Dashboard</a>
+	</div>
+</div><!-- #priority_dashboard_overview -->
+
+<div id="project_management_overview" data-role="page" data-theme="a">
+	<div data-role="header" role="banner">
+		<h2>Project Management</h2>
+	</div>
+	<div data-role="content" role="main">
+		<p>Of course project management is important in any organization, and we're no different. In our case, because we are a virtual company, we keep a repository of assets with every project we manage. These assets may include documents or images, but almost always include source code for a software project.</p>
+
+		<div data-role="collapsible" data-collapsed="true" data-theme="b">
+			<h3>Primary PM tool: Github</h3>
+
+			<p>The assets of our projects are the core of their existence. So, for project management we've chosen a tool that is capable of managing our digital assets well: <a href="http://github.com/">Github</a>, the web based source control and project mangement service.</p>
+
+			<p>Many of you may know Github as a popular code hosting service for open source software projects, but it also works very well as a generalized project management tool. This is especially true for us, because we need to keep versioned repositories of project assets like documentation, content, and source code all in the same place.</p>
+
+		  <a href="http://github.com/FireworksProject" data-role="button" data-theme="e" data-icon="arrow-r" data-iconpos="right" target="_blank">Go to Github</a>
+		</div>
+
+		<div data-role="collapsible" data-collapsed="true" data-theme="b">
+			<h3>The Skunk Works.</h3>
+
+			<p>However, projects do not begin in Github. Before that, they are incubated within a project management system we call the "<a href="#skunk_works_overview">Skunk Works</a>", which is a <a href="http://www.redmine.org/">Redmine</a> deployment. After a project has reached a milestone, it becomes an "official" project and is moved into Github.</p>
+
+			<p>With the Skunk Works -&gt; Github workflow we're able to make a mess first, and then clean it up when we think we might be on to something good. The goal is to promote a practice of creative freedome that will make great ideas into a reality.</p>
+
+		  <a href="http://redmine.fireworksproject.com/" data-role="button" data-theme="e" data-icon="arrow-r" data-iconpos="right" target="_blank">Go to the Skunk Works</a>
+		</div>
+	</div>
+</div><!-- #project_management_overview -->
+
+<div id="general_discussion_overview" data-role="page" data-theme="a">
+	<div data-role="header" role="banner">
+		<h2>The Boards</h2>
+	</div>
+	<div data-role="content" role="main">
+		<p>For general discussion topics (unrelated to a particular project) just cruise on over to "the boards" in the Skunk Works.</p>
+		  <a href="http://redmine.fireworksproject.com/projects/fireworks/boards" data-role="button" data-theme="e" data-icon="arrow-r" data-iconpos="right" target="_blank">Take me to the boards.</a>
+	</div>
+</div><!-- #general_discussion_overview -->
+
+<div id="skunk_works_overview" data-role="page" data-theme="a">
+	<div data-role="header" role="banner">
+		<h2>Skunk Works</h2>
+	</div>
+	<div data-role="content" role="main">
+		<blockquote>"Everything that's anything is happening in the Skunk Works"</blockquote>
+
+		<p>For an explanation behind the terminology check out the <a href="http://en.wikipedia.org/wiki/Skunk_Works" target="_blank">Wikipedia article</a>.</p>
+
+		<p>Our Skunk Works is where we build prototypes, host temporary projects, hack on code, and just generally exercise complete creative freedom.</p>
+
+			<p>If you you need an account for the Skunk Works send an email to <a href="mailto:kixxauth@gmail.com">kixxauth@gmail.com</a>.</p>
+
+		  <a href="http://redmine.fireworksproject.com" data-role="button" data-theme="e" data-icon="arrow-r" data-iconpos="right" target="_blank">Take me to the shed.</a>
+	</div>
+</div><!-- #skunk_works_overview -->
+
+<div id="points_voting_overview" data-role="page" data-theme="a">
+	<div data-role="header" role="banner">
+		<h2>Points Voting</h2>
+	</div>
+	<div data-role="content" role="main">
+		<h2>The quick and dirty guide to points voting.</h2>
+
+		<h3><em>In a hurry and just need to vote? This is the place to start.</em></h3>
+
+		<div data-role="collapsible" data-collapsed="true" data-theme="b">
+			<h3>Step 1: Consent.</h3>
+
+			<p>Make sure you have officially joined as a member, and consented to the
+			Operating Agreement. If you have not completed this step, go to our membership
+			page and send in your electronic signature at the bottom. You cannot vote or
+			receive points until you do.</p>
+
+			<a href="http://www.fireworksproject.com/join" data-role="button" data-inline="true" data-theme="e">www.fireworksproject.com/join</a>
+
+			<p>You are consenting to our <a href="http://groups.google.com/group/fireworks-project/web/limited-liability-company-operating-agreement">Operating Agreement</a>, which is explained in
+			plain English <a href="http://groups.google.com/group/fireworks-project/web/operating-agreement-explained">here</a>.</p>
+
+			<p>If you are not sure, you should send an email to <a href="mailto:kixxauth@gmail.com">kixxauth@gmail.com</a></code>.</p>
+		</div>
+
+		<div data-role="collapsible" data-collapsed="true" data-theme="b">
+			<h3>Step 2: Contribute.</h3>
+
+			<p>To be an <em>Active Member</em>, you must contribute to the Fireworks Project every
+			month. To contribute, hop on over to our project manager, <a href="http://redmine.fireworksproject.com">The Skunk Works</a>, and make yourself busy.</p>
+
+			<p>If you you need an account for the Skunk Works send an email to <a href="mailto:kixxauth@gmail.com">kixxauth@gmail.com</a>.</p>
+		</div>
+
+		<div data-role="collapsible" data-collapsed="true" data-theme="e">
+			<h3>Step 3: Time to vote.</h3>
+
+			<p>Around the 3rd or 4th of the month, someone in The Fireworks Project creates a milestone marker and a monthly review on <a href="https://fireworksfactory.basecamphq.com/projects/3775079/milestones">Basecamp</a> to recap what has been done within the company during the previous month.</p>
+
+			<p>On the latest milestone posting, you can expect to see the following:</p>
+
+			<ol>
+			<li>A spread sheet of the Fireworks Project financials.</li>
+			<li>A recap of all the activity on Fireworks Basecamp page and who has participated.</li>
+			<li>A recap of the code developed and who has contributed.</li>
+			<li>A recap of the current active members (i.e. who is eligible to vote points),
+			and a spread sheet of the current point totals for every member. </li>
+			</ol>
+
+			<p><strong>After that, you are asked to vote points (if you are a current member) to
+			other members and recruits who you deem worthy of receiving points. It is
+			recommended, but not mandatory, that you give the reasoning for your voting. For
+			now, you must vote points on the monthly review thread.</strong></p>
+
+		  <a href="https://fireworksfactory.basecamphq.com/projects/3775079/milestones" data-role="button" data-theme="e" data-icon="arrow-r" data-iconpos="right" target="_blank">I'm ready to vote.</a>
+		</div>
+	</div>
+</div><!-- #points_voting_overview -->
+
+</body></html>
+
