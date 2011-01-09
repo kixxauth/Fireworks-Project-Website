@@ -66,7 +66,7 @@ __If you have any questions please contact me, the project manager, at kixxauth@
 
 Copyright and License
 ---------------------
-copyright: (c) 2009 - 2010 by Fireworks Technology Projects Inc.
+copyright: (c) 2009 - 2011 by Fireworks Technology Projects Inc.
 
 Unless otherwise indicated, all source code is licensed under the MIT license.
 See MIT-LICENSE for details.
