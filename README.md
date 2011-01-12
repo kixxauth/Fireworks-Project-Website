@@ -7,8 +7,8 @@ It is hosted on the [Google App Engine platform in the Python runtime](http://co
 
 For more information, check out the [project wiki](http://github.com/FireworksProject/www.fireworksproject.com/wiki)
 
-Quickstart for hackers and explorers:
--------------------------------------
+Quickstart for hackers and hitchhikers:
+---------------------------------------
 
 #### 1. Make sure you have Python installed on your computer.
 
@@ -20,18 +20,18 @@ For Python: (Linux, Mac, and Windows) [code.google.com/appengine/downloads.html]
 
 #### 3. Get the source code.
 
-You can do this 1 of 2 ways. The best way is to learn how to use Git and create
-a GitHub user account if you don't have one already. Fork the repository
-into your GitHub account by clicking the 'Fork' button at
+You can do this 1 of 2 ways. The best way is to use Git and create a GitHub
+user account if you don't have one already. Fork the repository into your
+GitHub account by clicking the 'Fork' button at
 [github.com/FireworksProject/www.fireworksproject.com](http://github.com/FireworksProject/www.fireworksproject.com).
 Then, clone the repository from GitHub on your local machine with
 
   `git clone http://github.com/USERNAME/www.fireworksproject.com.git`
 
 where USERNAME is your GitHub username. Make sure to do this while you are in
-the directory you wish to clone the repo to. GitHub has [great
-instructions](http://help.github.com/forking/) on how to complete the forking
-operation.
+the directory you wish to clone the repo to.
+GitHub has [great instructions](http://help.github.com/forking/)
+on how to complete the forking operation.
 
 The second best way to get the source code is to download the latest package
 from
@@ -66,7 +66,7 @@ __If you have any questions please contact me, the project manager, at kixxauth@
 
 Copyright and License
 ---------------------
-copyright: (c) 2009 - 2010 by Fireworks Technology Projects Inc.
+copyright: (c) 2009 - 2011 by Fireworks Technology Projects Inc.
 
 Unless otherwise indicated, all source code is licensed under the MIT license.
 See MIT-LICENSE for details.
