@@ -13,20 +13,14 @@ import re
 import httplib
 import unittest
 
+from utils import session
+
 # The current host name we're testing on.
-HOST = None
+HOST = session.host()
 
 # True if we're running on the localhost:8080 dev_appserver.
 # False if not.
-LOCAL = True
-
-def setup(host, local):
-    """Global setup function called by testrunner.py"""
-    global HOST
-    global LOCAL
-
-    HOST = host
-    LOCAL = local
+LOCAL = session.islocal()
 
 # If you don't know what this is you need to read the HTTP spec.
 # http://tools.ietf.org/html/rfc2616#section-9

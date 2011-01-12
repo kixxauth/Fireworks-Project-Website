@@ -74,10 +74,9 @@ from tests import test_utils
 def main():
     host = session.host()
     if host is False:
+        localhost = session.localhost
+        remote_host = session.remote_host()
         raise Exception('no connection to %s or %s'% (localhost, remote_host))
-
-    # Inform the test suites of the host discovery.
-    test_utils.setup(host, session.islocal())
 
     # Get the command line arguments.
     cl_suites = sys.argv[1:]
