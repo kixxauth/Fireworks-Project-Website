@@ -61,7 +61,7 @@
     (see google_app_engine/app.yaml for more information)
 
     @author Kris Walker <kixxauth@gmail.com>
-    @copyright (c) 2010 by The Fireworks Project.
+    @copyright (c) 2010 - 2011 by The Fireworks Project.
     @license MIT, see MIT-LICENSE for more details.
 """
 
