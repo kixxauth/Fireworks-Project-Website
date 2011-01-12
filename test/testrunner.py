@@ -67,10 +67,9 @@
 
 import sys
 
+from tests.utils import session
 import suites
 from tests import test_utils
-
-import session
 
 def main():
     host = session.host()
