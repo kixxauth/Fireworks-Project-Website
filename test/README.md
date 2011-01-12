@@ -1,12 +1,12 @@
 Test Directory
 ==============
 
-This directory should contain all the test apparatus of this project that needs
-to be in source control; which is the vast majority of it (if not all of it).
+This directory contains all the test apparatus of the www.fireworksproject.com
+codebase.
 
 Copyright and License
 ---------------------
-copyright: (c) 2009 - 2010 by Fireworks Technology Projects Inc.
+copyright: (c) 2009 - 2011 by Fireworks Technology Projects Inc.
 
 Unless otherwise indicated, all source code is licensed under the MIT license.
 See MIT-LICENSE for details.
